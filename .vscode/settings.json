@@ -1,0 +1,10 @@
+{
+    "files.associations": {
+        "*.glsl": "fsharp",
+        "*.tcc": "cpp",
+        "memory": "cpp",
+        "future": "cpp",
+        "functional": "cpp",
+        "tuple": "cpp"
+    }
+}
