@@ -16,7 +16,7 @@ Node::traverse(const glm::mat4& accumulatedTrans)
     if(wantsUpdate) {
         m_transform = accumulatedTrans 
             * glm::translate(m_translation)
-            * glm::rotate(0.0f, m_rotation) // dice que le pasemos un ángulo, dice... buen chero
+            * glm::rotate(0.0f, m_rotation) // TODO:: comprobar si el ángulo a pasar es realmente cero
             * glm::scale(m_scale);
         
         m_wantsUpdate = false;

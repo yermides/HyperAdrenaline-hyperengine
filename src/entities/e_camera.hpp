@@ -3,14 +3,18 @@
 
 struct ECamera : public Entity
 {
-    ECamera(/* args */);
-    ~ECamera();
+	ECamera(/* args */);
+	~ECamera();
 
-    void draw(const glm::mat4& tranform) final;
+	void draw(const glm::mat4& tranform) final;
 
-    void setPerspective(const float& x, const float& y, const float& z, const float& w);
-    void setParallel(const float& x, const float& y, const float& z, const float& w);
+	constexpr void setPerspective(const float& x, const float& y, const float& z, const float& w)	noexcept
+		{ m_isPerspective = true; 	}	// TODO::
+
+	constexpr void setParallel(const float& x, const float& y, const float& z, const float& w)	noexcept
+		{ m_isPerspective = false; 	}	// TODO::
+		
 private:
-    bool isPerspective;
-    float left, right, lower, upper, close, far;
+	bool m_isPerspective;
+	float m_left, m_right, m_lower, m_upper, m_close, m_far;
 };

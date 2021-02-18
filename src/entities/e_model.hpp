@@ -3,7 +3,7 @@
 #include "entity.hpp"
 
 // TODO:: include instead of forward
-struct RMesh;
+// struct RMesh;
 
 struct EModel : public Entity
 {
@@ -13,5 +13,5 @@ struct EModel : public Entity
     void draw(const glm::mat4& tranform) final;
     void loadFromFile(const std::string& path);
 private:
-    RMesh* mesh;
+    // RMesh* mesh;
 };
