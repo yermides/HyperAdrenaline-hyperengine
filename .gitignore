@@ -1,2 +1,3 @@
-# Visual Code data
 .vscode/
+build
+executable

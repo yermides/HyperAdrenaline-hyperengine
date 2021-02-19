@@ -19,4 +19,5 @@ ELight::~ELight()
 void 
 ELight::draw(const glm::mat4& tranform)
 {
+    std::cout << "Soy una luz.\n";
 }
