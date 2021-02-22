@@ -15,10 +15,17 @@
 
 struct RShader : public Resource
 {
-    explicit RShader(/* args */);
+    explicit RShader();
     ~RShader();
 
     // TODO:: separar las partes, los encuentra y compila de una
-    static ProgramIdentifier loadShaders( Cstring path_vertex, Cstring path_fragment );
+    ProgramIdentifier loadShaders( Cstring path_vertex, Cstring path_fragment );
+
+    constexpr ProgramIdentifier getProgramID() const noexcept
+		{ return m_programID; }
+	constexpr void 				setProgramID(ProgramIdentifier newID) noexcept
+		{ m_programID = newID; }
+private:
+    ProgramIdentifier m_programID;
 };
 

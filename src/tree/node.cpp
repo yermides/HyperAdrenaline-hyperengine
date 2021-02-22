@@ -1,4 +1,5 @@
 #include "node.hpp"
+#include <util/macros.hpp>
 
 Node::Node(/* args */)
 {
@@ -34,19 +35,22 @@ Node::removeChild(Node* node)
 void                
 Node::translate(const glm::vec3& accumulation) 
 {
-    // TODO::
+    m_translation += accumulation;
+    m_wantsUpdate = true;
 }
 
 void                
 Node::rotate(const glm::vec3& accumulation) 
 {
-    // TODO::
+    m_rotation += accumulation;
+    m_wantsUpdate = true;
 }
 
 void                
 Node::scale(const glm::vec3& accumulation) 
 {
-    // TODO::
+    m_scale += accumulation;
+    m_wantsUpdate = true;
 }
 
 void 
@@ -58,7 +62,9 @@ Node::traverse(const glm::mat4& accumulatedTrans)
     if(wantsUpdate) {
         m_transform = accumulatedTrans 
             * glm::translate(m_translation)
-            * glm::rotate(0.0f, m_rotation) // TODO:: comprobar si el ángulo a pasar es realmente cero
+            * glm::rotate(m_rotation.x, glm::vec3(1,0,0))
+            * glm::rotate(m_rotation.y, glm::vec3(0,1,0))
+            * glm::rotate(m_rotation.z, glm::vec3(0,0,1))
             * glm::scale(m_scale);
         
         m_wantsUpdate = false;

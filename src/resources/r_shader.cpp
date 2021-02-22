@@ -1,12 +1,13 @@
 #include "r_shader.hpp"
 
-RShader::RShader(/* args */) 
+RShader::RShader() 
 : Resource{}
 {
 }
 
 RShader::~RShader()
 {
+	glDeleteProgram(m_programID);
 }
 
 ProgramIdentifier 
@@ -96,5 +97,7 @@ RShader::loadShaders( Cstring path_vertex, Cstring path_fragment )
 	glDeleteShader(VertexShaderID);
 	glDeleteShader(FragmentShaderID);
 
+	// Store program ID and return it
+	this->m_programID = ProgramID;
 	return ProgramID;
 }
