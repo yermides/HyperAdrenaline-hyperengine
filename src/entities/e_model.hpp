@@ -11,5 +11,5 @@ struct EModel : public Entity
     void draw(const glm::mat4& tranform) final;
     void loadFromFile(const std::string& path);
 private:
-    RMesh* m_rmesh {nullptr};
+    RMesh* m_rmesh { nullptr };
 };

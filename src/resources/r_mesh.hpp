@@ -1,17 +1,23 @@
 #pragma once
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
-#include <glm/glm.hpp>
-#include "resource.hpp"
 #include <string>
 #include <vector>
 
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
+#include <glm/glm.hpp>
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
+
+#include <resources/resource.hpp>
+#include <util/macros.hpp>
+
 struct Mesh 
 {
-    std::vector<float>  m_vertices          ;
-    std::vector<float>  m_normals           ;
-    std::vector<float>  m_texture_coords    ;
-    std::vector<int>    m_indexes           ;
+    std::vector<GLfloat>  m_vertices          ;
+    std::vector<GLfloat>  m_normals           ;
+    std::vector<GLfloat>  m_texture_coords    ;
+    std::vector<GLint>    m_indexes           ;
     // std::vector<Texture> m_texture ;
 
     void draw() 

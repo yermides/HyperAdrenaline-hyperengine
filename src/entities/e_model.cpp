@@ -33,5 +33,5 @@ void
 EModel::loadFromFile(const std::string& path)
 {
     m_rmesh = new RMesh();
-	m_rmesh->loadMesh("cubo precioso");
+	m_rmesh->loadMesh(path);
 }
