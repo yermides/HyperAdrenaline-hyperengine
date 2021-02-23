@@ -20,6 +20,7 @@ struct RShader : public Resource
 
     // TODO:: separar las partes, los encuentra y compila de una
     ProgramIdentifier loadShaders( Cstring path_vertex, Cstring path_fragment );
+    void loadFromFile( const std::string& path ) final;
 
     constexpr ProgramIdentifier getProgramID() const noexcept
 		{ return m_programID; }
@@ -27,5 +28,6 @@ struct RShader : public Resource
 		{ m_programID = newID; }
 private:
     ProgramIdentifier m_programID;
+    std::string m_vertexPath, m_fragmentPath;
 };
 

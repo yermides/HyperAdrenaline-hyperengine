@@ -13,6 +13,10 @@ RShader::~RShader()
 ProgramIdentifier 
 RShader::loadShaders( Cstring path_vertex, Cstring path_fragment )
 {
+	// Guardar los valores de las rutas en nuestra clase, por si acaso
+	m_vertexPath = path_vertex;
+	m_fragmentPath = path_fragment;
+
 	// Create the shaders
 	GLuint VertexShaderID = glCreateShader(GL_VERTEX_SHADER);
 	GLuint FragmentShaderID = glCreateShader(GL_FRAGMENT_SHADER);
@@ -100,4 +104,15 @@ RShader::loadShaders( Cstring path_vertex, Cstring path_fragment )
 	// Store program ID and return it
 	this->m_programID = ProgramID;
 	return ProgramID;
+}
+
+void 
+RShader::loadFromFile( const std::string& path )
+{
+	// TODO::
+	// Como necesita dos paths, lo suyo es usar un separador para la cadena que entra
+	// O hacer que el shader vertex y fragment estén en un solo archivo, y el separador dentro del archivo, eso mola más
+	// Pero de momento para que no se queje:
+	auto p = path.c_str();
+	this->loadShaders(p,p);
 }

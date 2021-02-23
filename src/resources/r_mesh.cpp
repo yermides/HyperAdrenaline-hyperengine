@@ -12,7 +12,18 @@ RMesh::~RMesh()
 	glDeleteVertexArrays(1, &vao);
 }
 
-void RMesh::draw()
+void 
+RMesh::draw()
+{
+	this->draw_ejemploCubo(); // TODO:: Comentar
+	return;
+
+	for(auto m : m_meshes) 
+		m->draw();
+}
+
+void 
+RMesh::draw_ejemploCubo()
 {
     // 1rst attribute buffer : vertices
     glEnableVertexAttribArray(0);
@@ -45,7 +56,17 @@ void RMesh::draw()
     glDisableVertexAttribArray(1);
 }
 
-void RMesh::loadMesh(const std::string& filepath)
+void 
+RMesh::loadMesh(const std::string& filepath)
+{
+	this->loadMesh_ejemploCubo(filepath); // TODO:: Comentar
+	return;
+
+	// TODO:: cargar mallas con assimp
+}
+
+void 
+RMesh::loadMesh_ejemploCubo(const std::string& filepath)
 {
 	glGenVertexArrays(1, &vao);
 	glBindVertexArray(vao);
@@ -140,4 +161,10 @@ void RMesh::loadMesh(const std::string& filepath)
 	glBufferData(GL_ARRAY_BUFFER, sizeof(g_color_buffer_data), g_color_buffer_data, GL_STATIC_DRAW);
 
     this->m_nVertex = 12*3;
+}
+
+void 
+RMesh::loadFromFile( const std::string& path )
+{
+	this->loadMesh(path);
 }

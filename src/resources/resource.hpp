@@ -7,12 +7,13 @@ struct Resource
     explicit Resource() {};
     virtual ~Resource() {};
 
-    inline const std::string&  getName( void ) const noexcept
+    constexpr   const std::string&  getName( void ) const noexcept
         { return m_name;    }
 
-    inline void                setName( const std::string& name ) noexcept
+    inline      void                setName( const std::string& name ) noexcept
         { m_name = name;    }
         
+    virtual     void                loadFromFile( const std::string& path ) {};
 private:
     std::string m_name;
 };
