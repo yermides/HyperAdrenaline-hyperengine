@@ -58,9 +58,14 @@ int cube_test(void) {
 	// Load a shader
 	RShader* rshader = new RShader();
 	// Create and compile our GLSL program from the shaders
+	// GLuint programID = rshader->loadShaders (
+    //         "src/shaders/TransformVertexShader.vertexshader"
+    //     ,   "src/shaders/ColorFragmentShader.fragmentshader" 
+    // );
+
 	GLuint programID = rshader->loadShaders (
-            "src/shaders/TransformVertexShader.vertexshader"
-        ,   "src/shaders/ColorFragmentShader.fragmentshader" 
+            "src/shaders/vertex.glsl"
+        ,   "src/shaders/fragment.glsl" 
     );
 
 	// Create a node

@@ -15,8 +15,8 @@ RMesh::~RMesh()
 void 
 RMesh::draw()
 {
-    this->draw_ejemploCubo(); // TODO:: Comentar
-    return;
+    // this->draw_ejemploCubo(); // TODO:: Comentar
+    // return;
 
     for(auto m : m_meshes) 
         m->draw();
@@ -59,7 +59,7 @@ RMesh::draw_ejemploCubo()
 void 
 RMesh::loadMesh(const std::string& filepath)
 {
-    this->loadMesh_ejemploCubo(filepath); // TODO:: Comentar
+    // this->loadMesh_ejemploCubo(filepath); // TODO:: Comentar
     // return;
 
     // TODO:: cargar mallas con assimp
@@ -83,16 +83,20 @@ RMesh::loadMesh(const std::string& filepath)
         auto amesh 	= scene->mMeshes[i];
         auto n2Elements = amesh->mNumVertices * 2;
         auto n3Elements = amesh->mNumVertices * 3;
+        auto n3Faces    = amesh->mNumFaces * 3;
+
         mesh->m_vertices.reserve(n3Elements);
         mesh->m_normals.reserve(n3Elements);
         mesh->m_texture_coords.reserve(n2Elements);
+        mesh->m_indexes.reserve(n3Faces);
 
         LOG("NAME::	" << amesh->mName.C_Str());
         LOG("FACES:: " << amesh->mNumFaces);
-        LOG("NUMBER OF ELEMENTS IN VERTEX ARRAY:: " << amesh->mNumVertices * 3);
+        LOG("NUMBER OF ELEMENTS IN VERTEX ARRAY:: " << n3Elements);
+        LOG("NUMBER OF ELEMENTS IN INDEX ARRAY:: " << n3Faces);
 
         // Guardar vértices, normales y coordenadas de textura
-        // TODO:: guardar índices
+        // Guardar índices
         // TODO:: guardar texturas y materiales
         auto* vertexarray       = amesh->mVertices;
         auto* normalsarray      = amesh->mNormals;
@@ -100,31 +104,48 @@ RMesh::loadMesh(const std::string& filepath)
 
         for(uint32_t j {0}; j < amesh->mNumVertices; ++j)
         {
-            // Duda, push_back o emplace_back (acuerdate que emplace_back crea un elemento)
-            // ¿Qué es mas rapido, crear o copiar un float?
+            // Almacenar posiciones de vértices
             mesh->m_vertices.push_back(vertexarray->x);
             mesh->m_vertices.push_back(vertexarray->y);
             mesh->m_vertices.push_back(vertexarray->z);
+            ++vertexarray;
             
+            // Almacenar normales de los vértices
             mesh->m_normals.push_back(normalsarray->x);
             mesh->m_normals.push_back(normalsarray->y);
             mesh->m_normals.push_back(normalsarray->z);
+            ++normalsarray;
             
-            // De esto no estoy seguro, pero creo que está bien
+            // Almacenar coordenadas de textura ¡Duda!
             mesh->m_texture_coords.push_back(texcoordsarray->x);
             mesh->m_texture_coords.push_back(texcoordsarray->y);
-
-            ++vertexarray;
-            ++normalsarray;
             ++texcoordsarray;
         }
 
+        // Duda de si usar el mNumIndices para recorrer el array
+        auto* indexarray        = amesh->mFaces;
+        for(uint32_t j {0}; j < amesh->mNumFaces; ++j)
+        {
+            // Almacenar los índices de las caras
+            mesh->m_indexes.push_back(indexarray->mIndices[0]);
+            mesh->m_indexes.push_back(indexarray->mIndices[1]);
+            mesh->m_indexes.push_back(indexarray->mIndices[2]);
+            ++indexarray;
+        }
+        
         LOG("Vertices values:: " << mesh->m_vertices.size());
         LOG("Normals values:: " << mesh->m_normals.size());
         LOG("TexCoords values:: " << mesh->m_texture_coords.size());
+        LOG("Indices values:: " << mesh->m_indexes.size());
 
         // Guardar malla en el array
         m_meshes.push_back(mesh);
+
+        // Antes de terminar, voy a tratar de crear los handles de vao y vbo
+        // No sé si hay que crearlos por cada mesh o fuera, pero allá vá
+        // Como de momento solo es una, debería funcionar
+        // Vale, creo que todo esto va en Mesh::draw()
+
 
         LOG("-- [END] Allocate new Mesh() --");
     }
