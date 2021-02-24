@@ -63,9 +63,10 @@ int cube_test(void) {
     //     ,   "src/shaders/ColorFragmentShader.fragmentshader" 
     // );
 
+
 	GLuint programID = rshader->loadShaders (
-            "src/shaders/vertex.glsl"
-        ,   "src/shaders/fragment.glsl" 
+            "src/shaders/TransformVertexShader.vertexshader"
+        ,   "src/shaders/ColorFragmentShader.fragmentshader" 
     );
 
 	// Create a node
@@ -148,9 +149,10 @@ int loading_models_assimp_test(void) {
 	// Load a shader
 	RShader* rshader = new RShader();
 	// Create and compile our GLSL program from the shaders
+
 	GLuint programID = rshader->loadShaders (
-            "src/shaders/TransformVertexShader.vertexshader"
-        ,   "src/shaders/ColorFragmentShader.fragmentshader" 
+            "src/shaders/vertex.glsl"
+        ,   "src/shaders/fragment.glsl" 
     );
 
 	// Create a node
@@ -169,6 +171,21 @@ int loading_models_assimp_test(void) {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		node->traverse(MVP);
+
+		if(glfwGetKey(window, GLFW_KEY_1 ) == GLFW_PRESS)
+			node->rotate({1,0,0});
+		if(glfwGetKey(window, GLFW_KEY_2 ) == GLFW_PRESS)
+			node->scale({1,1,1});
+		if(glfwGetKey(window, GLFW_KEY_3 ) == GLFW_PRESS)
+			node->scale({-1,-1,-1});
+		if(glfwGetKey(window, GLFW_KEY_4 ) == GLFW_PRESS)
+			node->translate({0.2,0.2,0.2});
+		if(glfwGetKey(window, GLFW_KEY_Q ) == GLFW_PRESS)
+			node->setTranslation({0,0,0});
+		if(glfwGetKey(window, GLFW_KEY_W ) == GLFW_PRESS)
+			node->setRotation({0,0,0});
+		if(glfwGetKey(window, GLFW_KEY_E ) == GLFW_PRESS)
+			node->setScale({1,1,1});
 
 		// Swap buffers
 		glfwSwapBuffers(window);
@@ -190,6 +207,13 @@ int loading_models_assimp_test(void) {
 
 int main(void) {
     // tree_test();
+
+
+	// Nota: para que el ejemplo del cubo se vea
+	// deben alterarse las funciones de RMesh::loadMesh y RMesh::draw
     // cube_test();
+
+
 	loading_models_assimp_test();
 }
+

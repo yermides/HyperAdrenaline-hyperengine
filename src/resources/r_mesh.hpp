@@ -91,22 +91,23 @@ struct Mesh
 
         glBindVertexArray(vao);
     
-        glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
         glEnableVertexAttribArray(0);
+        glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (GLubyte *)NULL);
 
-        glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
         glEnableVertexAttribArray(1);
+        glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
         glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, (GLubyte *)NULL);
 
-        glBindBuffer(GL_ARRAY_BUFFER, vbo[2]);
         glEnableVertexAttribArray(2);
+        glBindBuffer(GL_ARRAY_BUFFER, vbo[2]);
         glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, (GLubyte *)NULL);
 
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo[3]);
 
         // m_indexes.size() = Número de caras
-        glDrawElements(GL_TRIANGLES, m_indexes.size(), GL_UNSIGNED_INT, 0);
+        // glDrawElements(GL_TRIANGLES, m_indexes.size(), GL_UNSIGNED_INT, 0);
+        glDrawArrays(GL_TRIANGLES, 0, m_vertices.size() / 3);
 
         glDisableVertexAttribArray(2);
         glDisableVertexAttribArray(1);
