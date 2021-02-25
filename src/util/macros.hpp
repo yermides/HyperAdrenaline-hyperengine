@@ -1,4 +1,5 @@
 #pragma once
+#include <iostream>
 
 #define __HYPER_ENGINE_LOG_SYSTEM
 
