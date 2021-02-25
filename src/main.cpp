@@ -4,32 +4,8 @@
     is compiled into an .a file
 */
 #include <main.hpp>
-	// This matrix belongs to the ECamera
-	// Projection matrix : 45° Field of View, 16:9 ratio, display range : 0.1 unit <-> 100 units
-	static glm::mat4 Projection 
-		= glm::perspective(
-			glm::radians(45.0f)
-			, 16.0f / 9.0f
-			, 0.1f
-			, 100.0f
-	);
 
-	// This matrix belongs to the Node that contains ECamera (and is inverted)
-	// Camera matrix
-	static glm::mat4 View  
-		= glm::lookAt(
-			glm::vec3(4,3,-3), // Camera is at (4,3,-3), in World Space
-			glm::vec3(0,0,0), // and looks at the origin
-			glm::vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
-	);
-
-	// This matrix belongs to the Node that contains the EMesh
-	// Model matrix : an identity matrix (model will be at the origin)
-	static glm::mat4 Model      = glm::mat4(1.0f);
-
-	// Our ModelViewProjection : multiplication of our 3 matrices
-	static glm::mat4 MVP        = Projection * View * Model; // Remember, matrix multiplication is the other way around
-
+// Prueba de funcionamiento de los nodos
 void tree_test(void) {
     ELight* light = new ELight();
     light->setAperture(0.0f);
@@ -52,18 +28,14 @@ void tree_test(void) {
     delete shader;
 }
 
-int cube_test(void) {
+// Carga de cubo por vértices hardcoded, deben alterarse las funciones de RMesh::loadMesh y RMesh::draw
+void cube_test(void) {
     GLFWwindow* window = hrn::initializeWindow();
 
 	// Load a shader
 	RShader* rshader = new RShader();
+
 	// Create and compile our GLSL program from the shaders
-	// GLuint programID = rshader->loadShaders (
-    //         "src/shaders/TransformVertexShader.vertexshader"
-    //     ,   "src/shaders/ColorFragmentShader.fragmentshader" 
-    // );
-
-
 	GLuint programID = rshader->loadShaders (
             "src/shaders/TransformVertexShader.vertexshader"
         ,   "src/shaders/ColorFragmentShader.fragmentshader" 
@@ -80,29 +52,7 @@ int cube_test(void) {
 	modelEntity->setProgramID(programID);
 	modelEntity->loadFromFile("cubo precioso");
 
-	// // This matrix belongs to the ECamera
-	// // Projection matrix : 45° Field of View, 16:9 ratio, display range : 0.1 unit <-> 100 units
-	// glm::mat4 Projection = glm::perspective(
-	// 	glm::radians(45.0f)
-	// 	, 16.0f / 9.0f
-	// 	, 0.1f
-	// 	, 100.0f
-	// );
-
-	// // This matrix belongs to the Node that contains ECamera (and is inverted)
-	// // Camera matrix
-	// glm::mat4 View  = glm::lookAt(
-	// 					glm::vec3(4,3,-3), // Camera is at (4,3,-3), in World Space
-	// 					glm::vec3(0,0,0), // and looks at the origin
-	// 					glm::vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
-	// 				);
-
-	// // This matrix belongs to the Node that contains the EMesh
-	// // Model matrix : an identity matrix (model will be at the origin)
-	// glm::mat4 Model      = glm::mat4(1.0f);
-
-	// // Our ModelViewProjection : multiplication of our 3 matrices
-	// glm::mat4 MVP        = Projection * View * Model; // Remember, matrix multiplication is the other way around
+	// MVP matrix obtenida en el hpp, son variables static para no manchar el main.cpp
 
 	do{
 		// Clear the screen
@@ -139,11 +89,10 @@ int cube_test(void) {
 	delete rshader;
 	delete node;
 	delete modelEntity;
-
-	return 0;
 }
 
-int loading_models_assimp_test(void) {
+// Carga una isosphere (desde assets/) y la muestra con un color de shader básico
+void loading_models_assimp_test(void) {
     GLFWwindow* window = hrn::initializeWindow();
 
 	// Load a shader
@@ -162,10 +111,6 @@ int loading_models_assimp_test(void) {
 	EModel* modelEntity = new EModel();
 	node->setEntity(modelEntity);
 
-	// Load a shader and a mesh in the entity
-	modelEntity->setProgramID(programID);
-	modelEntity->loadFromFile("assets/icosphere.obj");
-
 	do{
 		// Clear the screen
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -201,19 +146,72 @@ int loading_models_assimp_test(void) {
 	delete rshader;
 	delete node;
 	delete modelEntity;
+}
 
-	return 0;
+// Carga de texturas, aún en proceso
+void loading_textures_soil_test(void) {
+    GLFWwindow* window = hrn::initializeWindow();
+
+	// RShader* rshader = new RShader();
+	// GLuint programID = rshader->loadShaders (
+    //         "src/shaders/vertex.glsl"
+    //     ,   "src/shaders/fragment.glsl" 
+    // );
+	// Node* node = new Node();
+
+	int width = 0, height = 0, channels = 0;
+	Image image = SOIL_load_image("assets/plantilla.png", &width, &height, &channels, 4);
+
+	if(image) {
+		LOG("SUCCESSFULLY LOADED IMAGE!!!!");
+	} else {
+		LOG("[ERROR]:: IMAGE COULDN'T LOAD");
+	}
+
+	SOIL_free_image_data(image);
+
+	// for (unsigned int i = 0;  i < pathcount;  i++)
+    // {
+	// 	   int width = 0, height = 0, channels = 0;
+    //     unsigned char* imagedata = SOIL_load_image(paths[i], &width, &height, &channels, 4);
+    //     if (imagedata)
+    //     {
+    //         glBindTexture(GL_TEXTURE_2D, textures[Texture_Vertices]);
+    //         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, imagedata);
+    //         glBindTexture(GL_TEXTURE_2D, 0);
+
+    //         glfwSetWindowSize(window, 800, (800 * height) / width);
+
+    //         cout << "loading image: \t"<< paths[i] << ": \t" << width << " x " << height << endl;
+    //         break;
+    //     }
+    //     else
+    //         cout << "cant load image: \t"<< paths[i] << endl;
+    //     SOIL_free_image_data(imagedata);
+    // }
+
+	do{
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		// node->traverse(MVP);
+
+		glfwSwapBuffers(window);
+		glfwPollEvents();
+	} 
+	while( glfwGetKey(window, GLFW_KEY_ESCAPE ) != GLFW_PRESS 
+			&& glfwWindowShouldClose(window) == 0 );
+
+	glfwTerminate();
+	// delete rshader;
+	// delete node;
 }
 
 int main(void) {
     // tree_test();
-
-
-	// Nota: para que el ejemplo del cubo se vea
-	// deben alterarse las funciones de RMesh::loadMesh y RMesh::draw
     // cube_test();
+	// loading_models_assimp_test();
+	loading_textures_soil_test();
 
-
-	loading_models_assimp_test();
+	return 0;
 }
 

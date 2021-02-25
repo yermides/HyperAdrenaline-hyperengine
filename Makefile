@@ -86,7 +86,7 @@ SUBDIRS		:= $(shell find $(SRC) -type d)
 OBJSUBDIRS	:= $(patsubst $(SRC)%,$(OBJ)%,$(SUBDIRS))
 
 ## Libraries and include paths
-OPENLG_LINK	:= -lglut -lGLU -lGL -lGLEW -lglfw -lX11 -lassimp # assimp is a file importer
+OPENLG_LINK	:= -lglut -lGLU -lGL -lGLEW -lglfw -lX11 -lSOIL -lassimp# assimp is a file importer, SOIL is an image loader
 MATH_LINK	:= -lm
 LINK_FLAGS	:= $(OPENLG_LINK) $(MATH_LINK)
 LIBS		:= $(LINK_FLAGS)
