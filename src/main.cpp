@@ -110,7 +110,11 @@ void loading_models_assimp_test(void) {
 	// Assign a model entity
 	EModel* modelEntity = new EModel();
 	modelEntity->setProgramID(programID);
-	modelEntity->loadFromFile("assets/icosphere.obj");
+	// modelEntity->loadFromFile("assets/cube.obj");
+	// modelEntity->loadFromFile("assets/missile-launcher.obj");
+	// modelEntity->loadFromFile("assets/icosphere.obj");
+	modelEntity->loadFromFile("assets/test_gun.obj");
+	
 	node->setEntity(modelEntity);
 
 	do{
@@ -259,8 +263,8 @@ void loading_textures_soil_test(void) {
 int main(void) {
     // tree_test();
     // cube_test();
-	// loading_models_assimp_test();
-	loading_textures_soil_test();
+	loading_models_assimp_test();
+	// loading_textures_soil_test();
 
 	return 0;
 }
