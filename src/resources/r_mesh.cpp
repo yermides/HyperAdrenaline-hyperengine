@@ -18,6 +18,8 @@ RMesh::draw()
     // this->draw_ejemploCubo(); // TODO:: Comentar
     // return;
 
+    LOG("m_meshes.size():: " << m_meshes.size());
+
     for(auto m : m_meshes) 
         m->draw();
 }
@@ -64,7 +66,13 @@ RMesh::loadMesh(const std::string& filepath)
 
     // TODO:: cargar mallas con assimp
     Assimp::Importer importer;
-    auto flags = aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace;
+    auto flags = 
+        0
+    |   aiProcess_Triangulate 
+    // |   aiProcess_GenSmoothNormals 
+    |   aiProcess_FlipUVs 
+    |   aiProcess_CalcTangentSpace
+    ;
     auto scene = importer.ReadFile(filepath, flags);
 
     if(!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)

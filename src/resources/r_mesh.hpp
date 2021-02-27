@@ -34,7 +34,7 @@ struct Mesh
         // }
         // Dibujar                                  (glDrawElements)
 
-        LOG("[PASO 1] SETUP");
+        // LOG("[PASO 1] SETUP");
 
         // Hacer allocation del size del array de vbo's por cada valor "in" del shader. Más tarde cambiaré a std::vector
         auto vbos           = 4;
@@ -51,14 +51,23 @@ struct Mesh
             GL_STATIC_DRAW
         );
 
-        // Generar el segundo vertex buffer object (vertex colors, esto se quitará, son los mismos valores que las posiciones)
+        // Generar el segundo vertex buffer object (vertex colors)
+        // esto se quitará, son los mismos valores que las normales
+        // solo para ver las caras más facilmente
         glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
         glBufferData(
             GL_ARRAY_BUFFER,
-            m_vertices.size() * sizeof(GLfloat),
-            &m_vertices.front(),
+            m_normals.size() * sizeof(GLfloat),
+            &m_normals.front(),
             GL_STATIC_DRAW
         );
+        // glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
+        // glBufferData(
+        //     GL_ARRAY_BUFFER,
+        //     m_vertices.size() * sizeof(GLfloat),
+        //     &m_vertices.front(),
+        //     GL_STATIC_DRAW
+        // );
 
         // Generar el tercer vertex buffer object (vertex textcoords). Métodos bind y data
         glBindBuffer(GL_ARRAY_BUFFER, vbo[2]);
@@ -87,7 +96,7 @@ struct Mesh
             GL_STATIC_DRAW
         );
 
-        LOG("[PASO 2] DRAW");
+        // LOG("[PASO 2] DRAW");
 
         glBindVertexArray(vao);
     

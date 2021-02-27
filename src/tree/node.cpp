@@ -12,6 +12,7 @@ Node::~Node()
 void                
 Node::addChild(Node* node) 
 {
+    node->m_parent = this;
     m_childs.push_back(node);
 }
 
@@ -62,15 +63,16 @@ Node::traverse(const glm::mat4& accumulatedTrans)
     if(wantsUpdate) {
         m_transform = accumulatedTrans 
             * glm::translate(m_translation)
-            * glm::rotate(m_rotation.x, glm::vec3(1,0,0))
-            * glm::rotate(m_rotation.y, glm::vec3(0,1,0))
-            * glm::rotate(m_rotation.z, glm::vec3(0,0,1))
+            * glm::rotate(m_rotation.x, glm::vec3(1.0f,0.0f,0.0f))
+            * glm::rotate(m_rotation.y, glm::vec3(0.0f,1.0f,0.0f))
+            * glm::rotate(m_rotation.z, glm::vec3(0.0f,0.0f,1.0f))
             * glm::scale(m_scale);
         
         m_wantsUpdate = false;
     }
     
-    m_entity->draw(m_transform);
+    if(m_entity)
+        m_entity->draw(m_transform);
 
     for(auto* child : m_childs) { 
         if(wantsUpdate)
