@@ -211,6 +211,8 @@ void loading_textures_soil_test(void) {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
+	//SOIL_
+
 	int width = 0, height = 0, channels = 0;
 	Image imagedata = SOIL_load_image("assets/plantilla.png", &width, &height, 0, SOIL_LOAD_RGB);
 
@@ -286,6 +288,8 @@ void loading_models_learnopengl_test(void) {
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 
+		if(glfwGetKey(window, GLFW_KEY_1 ) == GLFW_PRESS)
+			node->rotate({1,0,0});
 	} 
 	while( glfwGetKey(window, GLFW_KEY_ESCAPE ) != GLFW_PRESS &&
 		   glfwWindowShouldClose(window) == 0 );

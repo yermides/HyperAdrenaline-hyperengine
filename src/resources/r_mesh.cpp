@@ -23,6 +23,11 @@ RMesh::draw()
 void 
 RMesh::loadMesh(const std::string& filepath)
 {
+    std::vector<int> is = {1,1,1,1,1,1,1,1,1};
+    int is2[9] = {1,1,1,1,1,1,1,1,1};
+
+    LOG(sizeof(is) << ":::" << sizeof(is2) <<":::"<< sizeof(*is.data()));
+
     // this->loadMesh_ejemploCubo(filepath); // TODO:: Comentar
     // return;
 
@@ -111,6 +116,20 @@ RMesh::loadMesh(const std::string& filepath)
         LOG("Normals values:: " << mesh->m_normals.size());
         LOG("TexCoords values:: " << mesh->m_texture_coords.size());
         LOG("Indices values:: " << mesh->m_indexes.size());
+
+
+        LOG("SIZEOF(MESH):: " << 
+            (mesh->m_vertices.size()*sizeof(GLfloat) )
+        +   (mesh->m_normals.size()*sizeof(GLfloat) )
+        +   (mesh->m_texture_coords.size()*sizeof(GLfloat) )
+        +   (mesh->m_indexes.size()*sizeof(GLuint) )
+        +   (mesh->m_textures.size()*sizeof(Texture) )
+        );
+
+        LOG("SIZEOF(vertices):: " << sizeof(mesh->m_vertices));
+        LOG("SIZEOF(vectorint):: " << sizeof(std::vector<int>));
+        LOG("SIZEOF(vectorunsignedint):: " << sizeof(std::vector<unsigned int>));
+        LOG("SIZEOF(vectorfloat):: " << sizeof(std::vector<float>));
 
         // Inicializar valores de la malla en opengl
         mesh->initialize();

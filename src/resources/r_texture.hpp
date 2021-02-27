@@ -1,5 +1,6 @@
 #pragma once
 #include <resources/resource.hpp>
+#include <resources/helpers/texture.hpp>
 
 // // TODO::
 // struct Texture
