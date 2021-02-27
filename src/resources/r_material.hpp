@@ -11,11 +11,8 @@ struct RMaterial : public Resource
     void loadFromFile( const std::string& path ) final;
 
 private:
-    // coeficientes de reflexión ambiental, difusa, especular
-    glm::vec3 m_Ka, m_Kd, m_Ks;
-    // exponente especulary transparencia
-    float m_Ns, d;
-
-    // Imagen mapaKa, mapaKd, mapaKs
+    glm::vec3 m_Ka, m_Kd, m_Ks;     // coeficientes de reflexión ambiental, difusa, especular
+    float m_Ns, d;                  // exponente especulary transparencia
+    Image mapKa, mapKd, mapKs;      // Imagen mapaKa, mapaKd, mapaKs
     // ...
 };

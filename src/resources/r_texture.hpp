@@ -1,12 +1,11 @@
 #pragma once
 #include <resources/resource.hpp>
 
-// TODO::
-struct Texture
-{
-    // Image imagen
-};
-
+// // TODO::
+// struct Texture
+// {
+//     // Image imagen
+// };
 
 struct RTexture : public Resource
 {
@@ -17,4 +16,5 @@ struct RTexture : public Resource
     void loadFromFile( const std::string& path ) final;
 private:
     // Imagen imagenTextura
+    Image m_textureImage;
 };

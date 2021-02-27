@@ -260,12 +260,49 @@ void loading_textures_soil_test(void) {
 	// delete node;
 }
 
+// Carga una isosphere (desde assets/) y la muestra con un color de shader básico
+void loading_models_learnopengl_test(void) {
+    GLFWwindow* window = hrn::initializeWindow();
+
+	RShader* rshader = new RShader();
+	GLuint programID = rshader->loadShaders (
+            "src/shaders/vertex.glsl"
+        ,   "src/shaders/fragment.glsl" 
+    );
+
+	Node* node = new Node();
+	EModel* modelEntity = new EModel();
+	modelEntity->setProgramID(programID);
+	// modelEntity->loadFromFile("assets/learnopengl/backpack/backpack.obj");
+	modelEntity->loadFromFile("assets/missile-launcher.obj");
+	
+	node->setEntity(modelEntity);
+
+	do{
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		node->traverse(MVP);
+
+		glfwSwapBuffers(window);
+		glfwPollEvents();
+
+	} 
+	while( glfwGetKey(window, GLFW_KEY_ESCAPE ) != GLFW_PRESS &&
+		   glfwWindowShouldClose(window) == 0 );
+
+	glfwTerminate();
+
+	delete rshader;
+	delete node;
+	delete modelEntity;
+}
+
 int main(void) {
     // tree_test();
     // cube_test();
-	loading_models_assimp_test();
+	// loading_models_assimp_test();
 	// loading_textures_soil_test();
-
+	loading_models_learnopengl_test();
 	return 0;
 }
 
