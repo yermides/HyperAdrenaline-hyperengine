@@ -25,7 +25,7 @@ struct Mesh
     std::vector<GLfloat>    m_texture_coords    ;
 
     // Size = vertex count
-    std::vector<GLuint>     m_indexes           ;
+    std::vector<GLuint>     m_indices           ;
 
     // Size = undetermined
     std::vector<Texture>    m_textures          ;

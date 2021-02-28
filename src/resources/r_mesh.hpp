@@ -12,31 +12,11 @@ struct RMesh : public Resource
 
     void loadMesh(const std::string& filepath);
 
-    void loadFromFile( const std::string& path ) final;
+    void loadFromFile(const std::string& path) final;
 
-    constexpr uint32_t getVertexCount() const noexcept 
-        { return m_nVertex; }
+    // constexpr uint32_t getVertexCount() const noexcept 
+    //     { return m_nVertex; }
 private:
-    // Utils para el ejemplo de antes de cargar las mallas, aún podrían servir
-    GLuint vao;         // Vertex Array Object
-    GLuint vbo_position;// Vertex Buffer Object (positions)
-    GLuint vbo_color;   // Vertex Buffer Object (colors)
-    uint32_t m_nVertex {0};
-
-    // Con las mallas
     std::vector<Mesh*> m_meshes;
-    // Buffer handles, arrays
-    // GLuint m_vaoHandles;
-    // GLuint* m_vboHandles;
-
-    // vertices, normals, texturecoords (or std::vector<VertexData>)
+    // uint32_t m_nVertex {0};
 };
-
-// struct VertexData
-// {
-//     glm::vec3 position;
-//     glm::vec3 normal;
-//     glm::vec2 textureCoordinates;
-//     glm::vec3 tangent;
-//     glm::vec3 bitangent;
-// };

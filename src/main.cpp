@@ -272,11 +272,15 @@ void loading_models_learnopengl_test(void) {
         ,   "src/shaders/fragment.glsl" 
     );
 
+	LOG("Shader program:" << programID);
+
 	Node* node = new Node();
 	EModel* modelEntity = new EModel();
 	modelEntity->setProgramID(programID);
-	// modelEntity->loadFromFile("assets/learnopengl/backpack/backpack.obj");
 	modelEntity->loadFromFile("assets/missile-launcher.obj");
+	// modelEntity->loadFromFile("assets/cube.obj");
+	// modelEntity->loadFromFile("assets/icosphere.obj");
+	// modelEntity->loadFromFile("assets/learnopengl/backpack/backpack.obj");
 	
 	node->setEntity(modelEntity);
 

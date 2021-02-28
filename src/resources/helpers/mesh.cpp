@@ -6,26 +6,35 @@ Mesh::Mesh(/* args */)
 
 Mesh::~Mesh()
 {
-    // if(vbo) delete vbo;
+    if(vbo) delete vbo;
     m_vertices.clear();
     m_normals.clear();
     m_texture_coords.clear();
-    m_indexes.clear();
+    m_indices.clear();
     m_textures.clear();
+
+    // free buffers
+    glDeleteBuffers(3, vbo);
+    glDeleteBuffers(1, &ebo);
+    glDeleteVertexArrays(1, &vao);
+
+    // TODO:: free textures
 }
 
 void 
 Mesh::initialize(void)
 {
-    vbo = new GLuint[3];
     // create buffers/arrays
     glGenVertexArrays(1, &vao);
+    vbo = new GLuint[3];
     glGenBuffers(3, vbo);
     glGenBuffers(1, &ebo);
 
     glBindVertexArray(vao);
+
     // load data into vertex buffers
-    // es posible que se necesiten más vbo's por cómo hace él la struct
+    // se necesitan más vbo's por cómo hace él la struct, que le pasa los datos en bruto seguidos y luego los diferencia
+    // nosotros necesitamos un buffer por cada tipo de datos por no estar seguidos en memoria, de ahí el array de vbo
     glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
     glBufferData(GL_ARRAY_BUFFER, m_vertices.size() * sizeof(GLfloat), &m_vertices.front(), GL_STATIC_DRAW);  
 
@@ -35,11 +44,8 @@ Mesh::initialize(void)
     glBindBuffer(GL_ARRAY_BUFFER, vbo[2]);
     glBufferData(GL_ARRAY_BUFFER, m_texture_coords.size() * sizeof(GLfloat), &m_texture_coords.front(), GL_STATIC_DRAW); 
 
-    // glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-    // glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_normals.size() * sizeof(GLuint), &m_normals.front(), GL_STATIC_DRAW);
-
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_indexes.size() * sizeof(GLuint), &m_indexes.front(), GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_indices.size() * sizeof(GLuint), &m_indices.front(), GL_STATIC_DRAW);
 
     // set the vertex attribute pointers
     // vertex Positions
@@ -54,78 +60,24 @@ Mesh::initialize(void)
     glEnableVertexAttribArray(2);	
     glBindBuffer(GL_ARRAY_BUFFER, vbo[2]);
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
-    // // vertex tangent
-    // glEnableVertexAttribArray(3);
-    // glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
-    // // vertex bitangent
-    // glEnableVertexAttribArray(4);
-    // glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Bitangent));
 
     glBindVertexArray(0);
-
-    // Legacy
-    /*
-    {
-        // Hacer allocation del size del array de vbo's por cada valor "in" del shader. Más tarde cambiaré a std::vector
-        auto vbos           = 4;
-        auto vboallocsize   = vbos * sizeof(GLuint);
-        vbo        = (GLuint*)malloc(vboallocsize);
-        glGenBuffers(vbos, vbo);
-
-        // Generar el primer vertex buffer object (vertex positions). Métodos bind y data
-        glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
-        glBufferData(
-            GL_ARRAY_BUFFER,
-            m_vertices.size() * sizeof(GLfloat),
-            &m_vertices.front(),
-            GL_STATIC_DRAW
-        );
-
-        // Generar el segundo vertex buffer object (vertex colors)
-        // esto se quitará, son los mismos valores que las normales
-        // solo para ver las caras más facilmente
-        glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
-        glBufferData(
-            GL_ARRAY_BUFFER,
-            m_normals.size() * sizeof(GLfloat),
-            &m_normals.front(),
-            GL_STATIC_DRAW
-        );
-
-        // Generar el tercer vertex buffer object (vertex textcoords). Métodos bind y data
-        glBindBuffer(GL_ARRAY_BUFFER, vbo[2]);
-        glBufferData(
-            GL_ARRAY_BUFFER,
-            m_texture_coords.size() * sizeof(GLfloat),
-            &m_texture_coords.front(),
-            GL_STATIC_DRAW
-        );
-
-        // Generar el vertex array object que "contiene" a los vertex buffer objects anteriores
-        glGenVertexArrays(1, &vao);
-        glBindVertexArray(vao);
-
-        // Pequeño setup antes de dibujar elementos
-        glBindVertexArray(0);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-        // Generar el cuarto vertex buffer object (vertex normals). Element buffer
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo[3]);
-        glBufferData(
-            GL_ARRAY_BUFFER,
-            m_normals.size() * sizeof(GLfloat),
-            &m_normals.front(),
-            GL_STATIC_DRAW
-        );
-    }
-    */
 }
 
 
 void 
 Mesh::draw() 
 {
+    // Para cada buffer 
+    // {
+    //      Asociar los datos en memoria al buffer   (glBufferData)
+    //      Enlazar el buffer con su attribute       (glBindBuffer)
+    //      indicar estructura del buffer            (glVertexAttribPointer)
+    //      Habilitar el buffer                      (glEnableVertexAttribArray)
+    // }
+    // Dibujar                                      (glDrawElements)
+
+
     // bind appropriate textures
     // unsigned int diffuseNr  = 1;
     // unsigned int specularNr = 1;
@@ -155,50 +107,9 @@ Mesh::draw()
     
     // draw mesh
     glBindVertexArray(vao);
-    glDrawElements(GL_TRIANGLES, m_indexes.size(), GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_TRIANGLES, m_indices.size(), GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
 
     // always good practice to set everything back to defaults once configured.
-    // glActiveTexture(GL_TEXTURE0);
-
-    // Legacy
-    /*
-    {
-        // TODO:: terminar y revisar
-        // Para cada buffer {
-        // Asociar los datos en memoria al buffer   (glBufferData)
-        // Enlazar el buffer con su attribute       (glBindBuffer)
-        // indicar estructura del buffer            (glVertexAttribPointer)
-        // Habilitar el buffer                      (glEnableVertexAttribArray)
-        // }
-        // Dibujar                                  (glDrawElements)
-
-        glBindVertexArray(vao);
-
-        glEnableVertexAttribArray(0);
-        glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (GLubyte *)NULL);
-
-        glEnableVertexAttribArray(1);
-        glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
-        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, (GLubyte *)NULL);
-
-        glEnableVertexAttribArray(2);
-        glBindBuffer(GL_ARRAY_BUFFER, vbo[2]);
-        glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, (GLubyte *)NULL);
-
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo[3]);
-
-        // m_indexes.size() = Número de caras
-        // glDrawElements(GL_TRIANGLES, m_indexes.size(), GL_UNSIGNED_INT, 0);
-        glDrawArrays(GL_TRIANGLES, 0, m_vertices.size() / 3);
-
-        glDisableVertexAttribArray(2);
-        glDisableVertexAttribArray(1);
-        glDisableVertexAttribArray(0);
-        glBindVertexArray(0);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
-    }
-    */
+    glActiveTexture(GL_TEXTURE0);
 }
