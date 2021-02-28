@@ -76,7 +76,7 @@ RMesh::loadMesh(const std::string& filepath)
             mesh->m_normals.push_back(normalsarray->z);
             ++normalsarray;
             
-            // Almacenar coordenadas de textura ¡Duda!
+            // Almacenar coordenadas de textura
             mesh->m_texture_coords.push_back(texcoordsarray->x);
             mesh->m_texture_coords.push_back(texcoordsarray->y);
             ++texcoordsarray;

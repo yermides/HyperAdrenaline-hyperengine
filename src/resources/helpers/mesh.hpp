@@ -30,6 +30,7 @@ struct Mesh
     // Size = undetermined
     std::vector<Texture>    m_textures          ;
     
+private:
     // Handlers
     GLuint vao, *vbo, ebo;      
 };

@@ -15,5 +15,3 @@ class ResourceManager
 private:
     std::vector<Resource*> m_resources;
 };
-
-

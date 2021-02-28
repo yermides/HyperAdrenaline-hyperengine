@@ -292,8 +292,14 @@ void loading_models_learnopengl_test(void) {
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 
+		node->rotate({0.f,0.01f,0.f});
+
 		if(glfwGetKey(window, GLFW_KEY_1 ) == GLFW_PRESS)
-			node->rotate({1,0,0});
+			node->rotate({0.01f,0.f,0.f});
+		if(glfwGetKey(window, GLFW_KEY_2 ) == GLFW_PRESS)
+			node->rotate({0.f,0.01f,0.f});
+		if(glfwGetKey(window, GLFW_KEY_3 ) == GLFW_PRESS)
+			node->rotate({0.f,0.f,0.01f});
 	} 
 	while( glfwGetKey(window, GLFW_KEY_ESCAPE ) != GLFW_PRESS &&
 		   glfwWindowShouldClose(window) == 0 );
