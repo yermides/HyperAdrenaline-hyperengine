@@ -311,12 +311,79 @@ void loading_models_learnopengl_test(void) {
 	delete modelEntity;
 }
 
+void cube_with_textures(void) {
+    GLFWwindow* window = hrn::initializeWindow();
+
+	RShader* rshader = new RShader();
+	// GLuint programID = rshader->loadShaders (
+    //         "src/shaders/vertex.glsl"
+    //     ,   "src/shaders/fragment.glsl" 
+    // );
+
+	GLuint programID = rshader->loadShaders (
+            "src/shaders/1.model_loading.vs"
+        ,   "src/shaders/1.model_loading.fs" 
+    );
+
+	LOG("Shader program:" << programID);
+
+	Node* node = new Node();
+	EModel* modelEntity = new EModel();
+	modelEntity->setProgramID(programID);
+
+	// modelEntity->loadFromFile("assets/missile-launcher.obj");
+	// modelEntity->loadFromFile("assets/cube.obj");
+	// modelEntity->loadFromFile("assets/icosphere.obj");
+	// modelEntity->loadFromFile("assets/learnopengl/backpack/backpack.obj");
+
+	modelEntity->loadFromFile("assets/pruebastexturas/cubo_imagen.obj");
+	// modelEntity->loadFromFile("assets/pruebastexturas/cubo_substance.obj");
+	
+	node->setEntity(modelEntity);
+
+	do{
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		glUseProgram(programID); // Debería de seguir en emodel, pero sacado de ahi por estar en experimental
+		// view/projection transformations
+        glm::mat4 projection = Projection;
+        glm::mat4 view = View;
+		glUniformMatrix4fv(glGetUniformLocation(programID, "projection"), 1, GL_FALSE, &projection[0][0]);
+		glUniformMatrix4fv(glGetUniformLocation(programID, "view"), 1, GL_FALSE, &view[0][0]);
+        // ourShader.setMat4("projection", projection);
+        // ourShader.setMat4("view", view);
+
+        // render the loaded model
+        glm::mat4 model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
+        model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));	// it's a bit too big for our scene, so scale it down
+		glUniformMatrix4fv(glGetUniformLocation(programID, "model"), 1, GL_FALSE, &model[0][0]);
+        // ourShader.setMat4("model", model);
+
+		node->traverse(MVP);
+
+		glfwSwapBuffers(window);
+		glfwPollEvents();
+
+		node->rotate({0.f,0.007f,0.f});
+	} 
+	while( glfwGetKey(window, GLFW_KEY_ESCAPE ) != GLFW_PRESS &&
+		   glfwWindowShouldClose(window) == 0 );
+
+	glfwTerminate();
+
+	delete rshader;
+	delete node;
+	delete modelEntity;
+} 
+
 int main(void) {
     // tree_test();
     // cube_test();
 	// loading_models_assimp_test();
 	// loading_textures_soil_test();
-	loading_models_learnopengl_test();
+	// loading_models_learnopengl_test();
+	cube_with_textures();
 	return 0;
 }
 

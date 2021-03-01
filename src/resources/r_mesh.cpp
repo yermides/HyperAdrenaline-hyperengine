@@ -94,6 +94,39 @@ RMesh::loadMesh(const std::string& filepath)
 
         // TODO:: materiales
         auto* materialsarray = scene->mMaterials[amesh->mMaterialIndex];
+        for (int j {0}; j <= AI_TEXTURE_TYPE_MAX; j++)
+        {
+            // LOG("Numero de propiedades del material: {" << materialsarray->mNumProperties << "}")
+            // auto properties = materialsarray->mProperties[1];
+            // LOG(properties->mKey.C_Str());
+
+            // for (uint32_t m = 0; m < materialsarray->mNumProperties; m++)
+            // {
+            // }
+            
+            auto type = (aiTextureType)j;
+            auto count = materialsarray->GetTextureCount(type);
+            LOG("Texturas de tipo [" << type << "] = " << count );
+
+
+            // análogo de [loadMaterialTextures] solo que los pongo a lo bruto en el array
+            for (size_t k = 0; k < count; k++)
+            {
+                aiString str;
+                materialsarray->GetTexture(type, k, &str);
+                // lo suyo es hacer un split del delimitador "\\"
+                // por ahora estoy probando con una textura en la misma ruta y por eso no hay delimitador
+                LOG(str.C_Str());   
+
+                // Crear y guardar una textura en el array
+                // TODO:: usar el resource manager para no cargar la misma textura dos veces
+                Texture texture;
+                texture.loadTexture(str.C_Str(), "assets/pruebastexturas"); // TODO:: no ser hardcoded, es un test
+                mesh->m_textures.push_back(texture);
+            }
+            
+        }
+
         LOG("Nombre del material: " << materialsarray->GetName().C_Str());
         
         LOG("Nombre de la malla: " << amesh->mName.C_Str());
