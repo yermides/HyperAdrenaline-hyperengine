@@ -6,6 +6,7 @@
 #include <entities/e_model.hpp>
 #include <tree/node.hpp>
 #include <resources/r_shader.hpp>
+#include <managers/resource_manager.hpp>
 
 // Esto es para una prueba, cube_test
 using namespace glm;

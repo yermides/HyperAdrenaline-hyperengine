@@ -14,6 +14,6 @@ struct Resource
         { m_name = name;    }
         
     virtual     void                loadFromFile( const std::string& path ) {};
-private:
-    std::string m_name;
+protected:
+    std::string m_name {"default"};
 };

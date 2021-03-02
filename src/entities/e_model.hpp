@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <managers/resource_manager.hpp>
 #include <resources/r_mesh.hpp>
 #include "entity.hpp"
 

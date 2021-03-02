@@ -108,6 +108,7 @@ RMesh::loadMesh(const std::string& filepath)
             auto count = materialsarray->GetTextureCount(type);
             LOG("Texturas de tipo [" << type << "] = " << count );
 
+            LOG("llego");
 
             // análogo de [loadMaterialTextures] solo que los pongo a lo bruto en el array
             for (size_t k = 0; k < count; k++)
@@ -126,7 +127,6 @@ RMesh::loadMesh(const std::string& filepath)
             }
             
         }
-
         LOG("Nombre del material: " << materialsarray->GetName().C_Str());
         
         LOG("Nombre de la malla: " << amesh->mName.C_Str());
@@ -144,16 +144,20 @@ RMesh::loadMesh(const std::string& filepath)
 
         // Inicializar valores de la malla en opengl
         mesh->initialize();
+        LOG("inicializada?")
 
         // Guardar malla en el array
         m_meshes.push_back(mesh);
+        LOG("pusheada?")
+
 
         LOG("-- [END] loadMesh() --");
     }
 }
 
 void 
-RMesh::loadFromFile( const std::string& path )
+RMesh::loadFromFile(const std::string& path)
 {
+    this->setName(path);
     this->loadMesh(path);
 }
