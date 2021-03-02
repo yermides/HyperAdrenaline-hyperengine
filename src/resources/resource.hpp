@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <util/typealiases.hpp>
+#include <util/macros.hpp>
 
 struct Resource
 {

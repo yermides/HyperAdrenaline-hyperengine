@@ -30,5 +30,6 @@ RTexture::loadTexture( const std::string& path )
 void 
 RTexture::loadFromFile( const std::string& path ) 
 {
+    this->setName(path);
     this->loadTexture(path);
 }

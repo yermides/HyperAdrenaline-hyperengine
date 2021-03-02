@@ -113,6 +113,8 @@ RShader::loadFromFile( const std::string& path )
 	// Como necesita dos paths, lo suyo es usar un separador para la cadena que entra
 	// O hacer que el shader vertex y fragment estén en un solo archivo, y el separador dentro del archivo, eso mola más
 	// Pero de momento para que no se queje:
+    this->setName(path);
+
 	auto p = path.c_str();
 	this->loadShaders(p,p);
 }

@@ -158,6 +158,8 @@ RMesh::loadMesh(const std::string& filepath)
 void 
 RMesh::loadFromFile(const std::string& path)
 {
+    // auto mat = ResourceManager::getResource_t<RMaterial>("default");
+    // ResourceManager::freeResource("default");
     this->setName(path);
     this->loadMesh(path);
 }

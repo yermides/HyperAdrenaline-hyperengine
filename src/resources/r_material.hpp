@@ -1,6 +1,7 @@
 #pragma once
-#include <resources/resource.hpp>
 #include <glm/glm.hpp>
+#include <resources/resource.hpp>
+#include <util/macros.hpp>
 
 struct RMaterial : public Resource
 {

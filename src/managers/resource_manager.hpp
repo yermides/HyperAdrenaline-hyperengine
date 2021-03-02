@@ -15,6 +15,9 @@ struct ResourceManager
     constexpr static TResource* getResource_t(std::string const& name) 
         { return get().getResource<TResource>(name); }
 
+    inline static void freeResource(std::string const& name)
+        {return get().free(name);}
+
 protected:
     ResourceManager();
     ~ResourceManager();
@@ -47,6 +50,20 @@ protected:
         LOG("Resource found, returning...");
 
         return static_cast<TResource*>(*it);
+    }
+
+    inline void free(std::string const& name)
+    {
+        auto it = std::find_if(m_resources.begin(), m_resources.end(), [&](Resource* r) {
+            return r->getName() == name;
+        });
+
+        // Encuentra el recurso, por ende lo borra
+        if( it != m_resources.end() )
+        {
+            LOG("[INFO]:: He encontrado el recurso a borrar.");
+            delete *it;
+        }
     }
 
     // Test function to test templates
