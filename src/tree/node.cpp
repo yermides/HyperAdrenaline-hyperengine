@@ -63,9 +63,9 @@ Node::traverse(const glm::mat4& accumulatedTrans)
     if(wantsUpdate) {
         m_transform = accumulatedTrans 
             * glm::translate(m_translation)
-            * glm::rotate(m_rotation.x, glm::vec3(1.0f,0.0f,0.0f))
-            * glm::rotate(m_rotation.y, glm::vec3(0.0f,1.0f,0.0f))
-            * glm::rotate(m_rotation.z, glm::vec3(0.0f,0.0f,1.0f))
+            * glm::rotate(glm::radians( m_rotation.x ), glm::vec3(1.0f,0.0f,0.0f))
+            * glm::rotate(glm::radians( m_rotation.y ), glm::vec3(0.0f,1.0f,0.0f))
+            * glm::rotate(glm::radians( m_rotation.z ), glm::vec3(0.0f,0.0f,1.0f))
             * glm::scale(m_scale);
         
         m_wantsUpdate = false;

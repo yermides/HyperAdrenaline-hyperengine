@@ -11,8 +11,6 @@ EModel::EModel(std::string const& path)
 
 EModel::~EModel()
 {
-    // TODO:: Resource Manager should delete this, but there is no Resource Manager so delete it here
-    delete m_rmesh;
 }
 
 void 

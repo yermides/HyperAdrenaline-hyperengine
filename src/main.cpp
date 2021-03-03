@@ -333,7 +333,11 @@ void cube_with_textures(void) {
 	Node* node = new Node();
 	// EModel* modelEntity = new EModel("assets/missile-launcher.obj");
 	// EModel* modelEntity = new EModel("assets/pruebastexturas/cubo_substance.obj");
-	EModel* modelEntity = new EModel("assets/pruebastexturas/cubo_imagen.obj");
+	// EModel* modelEntity = new EModel("assets/pruebastexturas/cubo_imagen.obj");
+	EModel* modelEntity = new EModel("assets/pruebastexturas/cube_hardbytes.obj");
+	// EModel* modelEntity = new EModel("assets/learnopengl/backpack/backpack.obj"); // DONT 
+
+	
 	modelEntity->setProgramID(programID);
 
 	// modelEntity->loadFromFile("assets/pruebastexturas/cubo_imagen.obj");
@@ -371,7 +375,16 @@ void cube_with_textures(void) {
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 
-		node->rotate({0.0f,0.007f,0.f});
+		node->rotate({0.0f,0.5f,0.f});
+
+		if(glfwGetKey(window, GLFW_KEY_1 ) == GLFW_PRESS)
+			node->setRotation({0,0,0});
+		if(glfwGetKey(window, GLFW_KEY_2 ) == GLFW_PRESS)
+			node->setRotation({0,90,0});
+		if(glfwGetKey(window, GLFW_KEY_3 ) == GLFW_PRESS)
+			node->setRotation({0,180,0});
+		if(glfwGetKey(window, GLFW_KEY_4 ) == GLFW_PRESS)
+			node->setRotation({0,270,0});
 	} 
 	while( glfwGetKey(window, GLFW_KEY_ESCAPE ) != GLFW_PRESS &&
 		   glfwWindowShouldClose(window) == 0 );
@@ -381,6 +394,8 @@ void cube_with_textures(void) {
 	delete rshader;
 	delete node;
 	delete modelEntity;
+
+	ResourceManager::freeAllResources();
 } 
 
 // READ WARNING
@@ -411,4 +426,3 @@ int main(void) {
 	
 	return 0;
 }
-
