@@ -5,15 +5,15 @@
 
 struct Entity
 {
-	explicit Entity() {};
-	virtual ~Entity() {};  // posible, no sabemos aún
-	
-	virtual void draw(const glm::mat4& tranform) = 0;
+    explicit Entity() {};
+    virtual ~Entity() {};
+    
+    virtual void draw(const glm::mat4& tranform) = 0;
 
-	constexpr ProgramIdentifier getProgramID() const noexcept
-		{ return m_programID; }
-	constexpr void 				setProgramID(ProgramIdentifier newID) noexcept
-		{ m_programID = newID; }
+    constexpr ProgramIdentifier getProgramID() const noexcept
+        { return m_programID;  }
+    constexpr void              setProgramID(ProgramIdentifier newID) noexcept
+        { m_programID = newID; }
 protected:
-	ProgramIdentifier m_programID;
+    ProgramIdentifier m_programID;
 };

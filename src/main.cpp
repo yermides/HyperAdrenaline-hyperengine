@@ -331,9 +331,12 @@ void cube_with_textures(void) {
 	LOG("Shader program:" << programID);
 
 	Node* node = new Node();
-	EModel* modelEntity = new EModel();
+	// EModel* modelEntity = new EModel("assets/missile-launcher.obj");
+	// EModel* modelEntity = new EModel("assets/pruebastexturas/cubo_substance.obj");
+	EModel* modelEntity = new EModel("assets/pruebastexturas/cubo_imagen.obj");
 	modelEntity->setProgramID(programID);
-	modelEntity->loadFromFile("assets/pruebastexturas/cubo_imagen.obj");
+
+	// modelEntity->loadFromFile("assets/pruebastexturas/cubo_imagen.obj");
 
 	// modelEntity->loadFromFile("assets/missile-launcher.obj");
 	// modelEntity->loadFromFile("assets/cube.obj");

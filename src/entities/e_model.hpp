@@ -6,7 +6,8 @@
 
 struct EModel : public Entity
 {
-    EModel();
+    explicit EModel();
+    explicit EModel(std::string const& path);
     ~EModel();
 
     void draw(const glm::mat4& tranform) final;

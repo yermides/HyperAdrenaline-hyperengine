@@ -1,8 +1,9 @@
 #pragma once
-#include <util/typealiases.hpp>
-#include <util/macros.hpp>
+#include <unordered_map>
 #include <string>
 #include <stdint.h>
+#include <util/typealiases.hpp>
+#include <util/macros.hpp>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <SOIL/SOIL.h>
@@ -19,3 +20,7 @@ struct Texture
     std::string m_type;
     std::string m_path;
 };
+
+// std::unordered_map<unsigned int, std::string> texturenames = {
+//     { 1, ""}
+// };

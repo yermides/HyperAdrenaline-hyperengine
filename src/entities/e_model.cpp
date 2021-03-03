@@ -4,6 +4,11 @@ EModel::EModel(/* args */)
 {
 }
 
+EModel::EModel(std::string const& path)
+{
+    loadFromFile(path);
+}
+
 EModel::~EModel()
 {
     // TODO:: Resource Manager should delete this, but there is no Resource Manager so delete it here

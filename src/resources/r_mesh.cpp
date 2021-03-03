@@ -108,32 +108,39 @@ RMesh::loadMesh(const std::string& filepath)
             auto count = materialsarray->GetTextureCount(type);
             LOG("Texturas de tipo [" << type << "] = " << count );
 
-            LOG("llego");
-
             // análogo de [loadMaterialTextures] solo que los pongo a lo bruto en el array
             for (size_t k = 0; k < count; k++)
             {
                 aiString str;
                 materialsarray->GetTexture(type, k, &str);
-                // lo suyo es hacer un split del delimitador "\\"
-                // por ahora estoy probando con una textura en la misma ruta y por eso no hay delimitador
-                LOG(str.C_Str());   
 
                 // Crear y guardar una textura en el array
                 // TODO:: usar el resource manager para no cargar la misma textura dos veces
+                
+                // Formatea los \\ por /
+                std::string formattedpath = str.C_Str();
+
+                size_t pos = formattedpath.find("\\\\");
+                while( pos != std::string::npos)
+                {
+                    formattedpath.replace(pos, 2, "/");
+                    pos=formattedpath.find("\\\\", pos + 1);
+                }
+
                 Texture texture;
-                texture.loadTexture(str.C_Str(), "assets/pruebastexturas"); // TODO:: no ser hardcoded, es un test
-                mesh->m_textures.push_back(texture);
+                texture.loadTexture(formattedpath.c_str(), this->getDirectory()); // TODO:: revisar la ruta
+                mesh->m_textures.push_back(std::move(texture));
             }
-            
         }
+
         LOG("Nombre del material: " << materialsarray->GetName().C_Str());
-        
         LOG("Nombre de la malla: " << amesh->mName.C_Str());
         LOG("Posiciones: " << mesh->m_vertices.size());
         LOG("Normales: " << mesh->m_normals.size());
         LOG("Coordenadas de textura: " << mesh->m_texture_coords.size());
         LOG("Indices: " << mesh->m_indices.size());
+        LOG("Texturas: " << mesh->m_textures.size());
+        
         LOG("sizeof(mesh): " << 
             (mesh->m_vertices.size()*sizeof(GLfloat) )
         +   (mesh->m_normals.size()*sizeof(GLfloat) )
@@ -144,12 +151,9 @@ RMesh::loadMesh(const std::string& filepath)
 
         // Inicializar valores de la malla en opengl
         mesh->initialize();
-        LOG("inicializada?")
 
         // Guardar malla en el array
         m_meshes.push_back(mesh);
-        LOG("pusheada?")
-
 
         LOG("-- [END] loadMesh() --");
     }
@@ -158,8 +162,6 @@ RMesh::loadMesh(const std::string& filepath)
 void 
 RMesh::loadFromFile(const std::string& path)
 {
-    // auto mat = ResourceManager::getResource_t<RMaterial>("default");
-    // ResourceManager::freeResource("default");
     this->setName(path);
     this->loadMesh(path);
 }
