@@ -115,33 +115,39 @@ RMesh::loadMesh(std::string const& filepath)
             // LOG("Texturas de tipo [" << type << "] = " << count );
 
             // análogo de [loadMaterialTextures] solo que los pongo a lo bruto en el array
-            for (size_t k = 0; k < count; k++)
+            // TODO:: cargar todo tipo de texturas y ser capaz de interpretarlas (Mesh::draw())
+            if(type == aiTextureType_DIFFUSE)
             {
-                aiString str;
-                materialsarray->GetTexture(type, k, &str);
-
-                // Crear y guardar una textura en el array
-                // TODO:: usar el resource manager para no cargar la misma textura dos veces
-                
-                // Formatea los \\ por /
-                std::string formattedpath = str.C_Str();
-
-                size_t pos = formattedpath.find("\\\\");
-                while( pos != std::string::npos)
+                for (size_t k = 0; k < count; k++)
                 {
-                    formattedpath.replace(pos, 2, "/");
-                    pos=formattedpath.find("\\\\", pos + 1);
-                }
+                    aiString str;
+                    materialsarray->GetTexture(type, k, &str);
 
-                // Texture texture;
-                // texture.loadTexture(formattedpath.c_str(), this->getDirectory()); // TODO:: revisar la ruta
-                // mesh->m_textures.push_back(std::move(texture));
-                auto filepath = getDirectory() +"/"+ formattedpath;
-                auto texture  = ResourceManager::getResource_t<RTexture>(filepath);
-                // RTexture* texture = new RTexture(filepath);
-                // texture->initialize(); // voy a probar a hacer esto en el draw()
-                mesh->m_textures.push_back(texture);
+                    // Crear y guardar una textura en el array
+                    // TODO:: usar el resource manager para no cargar la misma textura dos veces
+                    
+                    // Formatea los \\ por /
+                    std::string formattedpath = str.C_Str();
+
+                    size_t pos = formattedpath.find("\\\\");
+                    while( pos != std::string::npos)
+                    {
+                        formattedpath.replace(pos, 2, "/");
+                        pos=formattedpath.find("\\\\", pos + 1);
+                    }
+
+                    // Texture texture;
+                    // texture.loadTexture(formattedpath.c_str(), this->getDirectory()); // TODO:: revisar la ruta
+                    // mesh->m_textures.push_back(std::move(texture));
+                    auto filepath = getDirectory() +"/"+ formattedpath;
+                    auto texture  = ResourceManager::getResource_t<RTexture>(filepath);
+                    // RTexture* texture = new RTexture(filepath);
+                    // texture->initialize(); // voy a probar a hacer esto en el draw()
+                    mesh->m_textures.push_back(texture);
+                }
             }
+
+
         }
 
         LOG("Nombre del material: " << materialsarray->GetName().C_Str());
