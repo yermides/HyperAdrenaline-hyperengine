@@ -328,24 +328,24 @@ void cube_with_textures(void) {
 	LOG("Shader program:" << programID);
 
 	Node* node = new Node();
-	// EModel* modelEntity = new EModel("assets/missile-launcher.obj");
+	EModel* modelEntity = new EModel("assets/missile-launcher.obj");
+	modelEntity->setProgramID(programID);
+	node->setEntity(modelEntity);
+
 	// EModel* modelEntity = new EModel("assets/pruebastexturas/cubo_substance.obj");
 	// EModel* modelEntity = new EModel("assets/pruebastexturas/cubo_imagen.obj");
-	EModel* modelEntity = new EModel("assets/pruebastexturas/cube_hardbytes.obj");
+	// EModel* modelEntity = new EModel("assets/pruebastexturas/cube_hardbytes.obj");
 	// EModel* modelEntity = new EModel("assets/learnopengl/backpack/backpack.obj"); // DONT 
 
-	
-	modelEntity->setProgramID(programID);
+	Node* node2 = new Node();
+	EModel* modelEntity2 = new EModel("assets/learnopengl/backpack/backpack.obj");
+	modelEntity2->setProgramID(programID);
+	node2->setEntity(modelEntity2);
 
-	// modelEntity->loadFromFile("assets/pruebastexturas/cubo_imagen.obj");
-
-	// modelEntity->loadFromFile("assets/missile-launcher.obj");
-	// modelEntity->loadFromFile("assets/cube.obj");
-	// modelEntity->loadFromFile("assets/icosphere.obj");
-	// modelEntity->loadFromFile("assets/learnopengl/backpack/backpack.obj");
-	// modelEntity->loadFromFile("assets/pruebastexturas/cubo_substance.obj");
+	node2->setTranslation({1,0,1});
+	node2->setRotation({0,180,0});
 	
-	node->setEntity(modelEntity);
+	
 
 	// // view/projection transformations
 	// glm::mat4 projection = Projection;
@@ -368,11 +368,13 @@ void cube_with_textures(void) {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		node->traverse(MVP);
+		node2->traverse(MVP);
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 
 		node->rotate({0.0f,0.5f,0.f});
+		node2->rotate({0.0f,0.5f,0.f});
 
 		if(glfwGetKey(window, GLFW_KEY_1 ) == GLFW_PRESS)
 			node->setRotation({0,0,0});
@@ -389,10 +391,9 @@ void cube_with_textures(void) {
 	glfwTerminate();
 
 	// delete rshader;
-	delete node;
-	delete modelEntity;
-
-	ResourceManager::freeAllResources();
+	if(node) delete node;
+	if(node2) delete node2;
+	if(modelEntity) delete modelEntity;
 } 
 
 // READ WARNING

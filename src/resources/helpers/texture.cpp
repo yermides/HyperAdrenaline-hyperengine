@@ -48,11 +48,11 @@ Texture::loadTexture(Cstring path, std::string const& directory, bool gamma)
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-        LOG("Texture succesfully loaded at path: " << filename);
+        INFOLOG("Texture succesfully loaded at path: " << VAR(filename));
     }
     else
     {
-        LOG("Texture failed to load at path: " << filename);
+        ERRLOG("Texture failed to load at path: " << filename);
     }
 
     SOIL_free_image_data(data);

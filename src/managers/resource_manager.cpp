@@ -6,4 +6,6 @@ ResourceManager::ResourceManager()
 
 ResourceManager::~ResourceManager()
 {
+    INFOLOG("~ResourceManager(), liberando los recursos...");
+    freeAllResources();
 }

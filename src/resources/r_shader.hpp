@@ -27,7 +27,7 @@ struct RShader : public Resource
 	constexpr void 				setProgramID(ProgramIdentifier newID) noexcept
 		{ m_programID = newID;  }
 private:
-    ProgramIdentifier m_programID;
+    ProgramIdentifier m_programID { 0 };
     std::string m_vertexPath, m_fragmentPath;
 };
 

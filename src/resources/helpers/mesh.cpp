@@ -18,7 +18,7 @@ Mesh::~Mesh()
     glDeleteBuffers(1, &ebo);
     glDeleteVertexArrays(1, &vao);
 
-    // TODO:: free textures
+    // textures are cleared once we exit thanks to the ResourceManager destructor
 }
 
 void 
@@ -62,6 +62,10 @@ Mesh::initialize(void)
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
     glBindVertexArray(0);
+
+    // Initialize textures
+    for(auto texture : m_textures)
+        texture->initialize();
 }
 
 
@@ -85,8 +89,10 @@ Mesh::draw()
     // unsigned int normalNr   = 1;
     // unsigned int heightNr   = 1;
 
-    for(unsigned int i = 0; i < m_textures.size(); i++)
+    for(uint32_t i {0}; i < m_textures.size(); ++i)
     {
+        auto& texture = m_textures[i];
+
         // glActiveTexture(GL_TEXTURE0 + i); // active proper texture unit before binding
         // // retrieve texture number (the N in diffuse_textureN)
         // string number;
@@ -136,7 +142,8 @@ Mesh::draw()
         // now set the sampler to the correct texture unit
         glUniform1i(glGetUniformLocation(3, (name + number).c_str()), i);
         // and finally bind the texture
-        glBindTexture(GL_TEXTURE_2D, m_textures[i].m_id);
+        // glBindTexture(GL_TEXTURE_2D, m_textures[i].m_id);
+        glBindTexture(GL_TEXTURE_2D, texture->getProgramID());
     }
     
     // draw mesh

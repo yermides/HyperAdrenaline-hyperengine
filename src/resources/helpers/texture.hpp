@@ -1,3 +1,9 @@
+/*
+    WARNING!! No estamos usando esta clase para nada ahora mismo
+    antes sí, puesto que el array de mesh->m_textures era de Texture
+    pero ahora es de RTexture* y los carga con el resourcemanager
+*/
+
 #pragma once
 #include <unordered_map>
 #include <string>

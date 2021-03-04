@@ -39,7 +39,7 @@ RMesh::loadMesh(std::string const& filepath)
     auto scene = importer.ReadFile(filepath, flags);
 
     if(!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
-        LOG("[ERROR]:: " << importer.GetErrorString());
+        ERRLOG(importer.GetErrorString());
     
     LOG("Número de mallas: " << scene->mNumMeshes);
 
@@ -112,7 +112,7 @@ RMesh::loadMesh(std::string const& filepath)
             
             auto type = (aiTextureType)j;
             auto count = materialsarray->GetTextureCount(type);
-            LOG("Texturas de tipo [" << type << "] = " << count );
+            // LOG("Texturas de tipo [" << type << "] = " << count );
 
             // análogo de [loadMaterialTextures] solo que los pongo a lo bruto en el array
             for (size_t k = 0; k < count; k++)
@@ -133,9 +133,14 @@ RMesh::loadMesh(std::string const& filepath)
                     pos=formattedpath.find("\\\\", pos + 1);
                 }
 
-                Texture texture;
-                texture.loadTexture(formattedpath.c_str(), this->getDirectory()); // TODO:: revisar la ruta
-                mesh->m_textures.push_back(std::move(texture));
+                // Texture texture;
+                // texture.loadTexture(formattedpath.c_str(), this->getDirectory()); // TODO:: revisar la ruta
+                // mesh->m_textures.push_back(std::move(texture));
+                auto filepath = getDirectory() +"/"+ formattedpath;
+                auto texture  = ResourceManager::getResource_t<RTexture>(filepath);
+                // RTexture* texture = new RTexture(filepath);
+                // texture->initialize(); // voy a probar a hacer esto en el draw()
+                mesh->m_textures.push_back(texture);
             }
         }
 

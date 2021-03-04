@@ -6,10 +6,11 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 #include <resources/helpers/texture.hpp>
+#include <resources/r_texture.hpp>
 
 struct Mesh 
 {
-    Mesh();
+    explicit Mesh();
     ~Mesh();
 
     void initialize(void);
@@ -26,7 +27,7 @@ struct Mesh
     std::vector<GLuint>     m_indices           ;
 
     // Size = undetermined
-    std::vector<Texture>    m_textures          ;
+    std::vector<RTexture*>    m_textures          ;
     
 private:
     // Handlers

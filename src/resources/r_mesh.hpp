@@ -1,7 +1,7 @@
 #pragma once
-#include <resources/resource.hpp>
-#include <resources/r_material.hpp>
 #include <managers/resource_manager.hpp>
+#include <resources/r_material.hpp>
+#include <resources/r_texture.hpp>
 #include <resources/helpers/mesh.hpp>
 #include <util/macros.hpp>
 

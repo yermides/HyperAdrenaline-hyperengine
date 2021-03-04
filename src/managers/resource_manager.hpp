@@ -67,7 +67,7 @@ protected:
 
     inline void freeAll() 
     {
-        LOG(m_resources.size())
+        INFOLOG("Longitud del array de recursos al borrar: " << VAR(m_resources.size()));
 
         for(auto r : m_resources) {
             if(r) { delete r; }
