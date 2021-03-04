@@ -7,14 +7,14 @@ constexpr Cstring define_default_resource_name { "" };
 
 struct Resource
 {
-    explicit Resource() {};
-    virtual ~Resource() {};
+    explicit Resource(void) = default;
+    virtual ~Resource(void) = default;
 
     // Resources are identified by their full relative route (example: assets/cube.obj)
     constexpr   std::string const&  getName( void ) const noexcept
         { return m_name;    }
 
-    inline      void                setName( const std::string& name ) noexcept
+    inline      void                setName( std::string const& name ) noexcept
         { m_name = name;    }
 
     // Obtains the route without the last '/'
@@ -38,7 +38,7 @@ struct Resource
             return m_name; 
         };
         
-    virtual     void                loadFromFile( const std::string& path ) {};
+    virtual     void                loadFromFile( std::string const& path ) = 0;
 protected:
     std::string m_name { define_default_resource_name };
 };

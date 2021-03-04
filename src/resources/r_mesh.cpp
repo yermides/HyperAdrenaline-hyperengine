@@ -5,6 +5,12 @@ RMesh::RMesh()
 {
 }
 
+RMesh::RMesh(std::string const& path)
+: Resource{}
+{
+    this->loadFromFile(path);
+}
+
 RMesh::~RMesh()
 {
     for(auto m : m_meshes)
@@ -19,7 +25,7 @@ RMesh::draw()
 }
 
 void 
-RMesh::loadMesh(const std::string& filepath)
+RMesh::loadMesh(std::string const& filepath)
 {
     // Cargar mallas con assimp
     Assimp::Importer importer;
@@ -160,7 +166,7 @@ RMesh::loadMesh(const std::string& filepath)
 }
 
 void 
-RMesh::loadFromFile(const std::string& path)
+RMesh::loadFromFile(std::string const& path)
 {
     this->setName(path);
     this->loadMesh(path);

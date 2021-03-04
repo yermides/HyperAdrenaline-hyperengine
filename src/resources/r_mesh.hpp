@@ -7,14 +7,15 @@
 
 struct RMesh : public Resource
 {
-    explicit RMesh();
+    explicit RMesh();    
+    explicit RMesh(std::string const& path);
     ~RMesh();
 
     void draw();
 
-    void loadMesh(const std::string& filepath);
+    void loadMesh(std::string const& filepath);
 
-    void loadFromFile(const std::string& path) final;
+    void loadFromFile(std::string const& path) final;
 
     // constexpr uint32_t getVertexCount() const noexcept 
     //     { return m_nVertex; }

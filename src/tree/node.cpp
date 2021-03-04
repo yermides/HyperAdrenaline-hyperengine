@@ -1,7 +1,7 @@
 #include "node.hpp"
 #include <util/macros.hpp>
 
-Node::Node(/* args */)
+Node::Node()
 {
 }
 
@@ -34,28 +34,28 @@ Node::removeChild(Node* node)
 }
 
 void                
-Node::translate(const glm::vec3& accumulation) 
+Node::translate(glm::vec3 const& accumulation) 
 {
     m_translation += accumulation;
     m_wantsUpdate = true;
 }
 
 void                
-Node::rotate(const glm::vec3& accumulation) 
+Node::rotate(glm::vec3 const& accumulation) 
 {
     m_rotation += accumulation;
     m_wantsUpdate = true;
 }
 
 void                
-Node::scale(const glm::vec3& accumulation) 
+Node::scale(glm::vec3 const& accumulation) 
 {
     m_scale += accumulation;
     m_wantsUpdate = true;
 }
 
 void 
-Node::traverse(const glm::mat4& accumulatedTrans) 
+Node::traverse(glm::mat4 const& accumulatedTrans) 
 {
     // TODO:: comprobar esto
     bool wantsUpdate = m_wantsUpdate;

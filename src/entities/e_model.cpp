@@ -1,6 +1,7 @@
 #include "e_model.hpp"
 
-EModel::EModel(/* args */)
+EModel::EModel() 
+: Entity{}
 {
 }
 
@@ -14,7 +15,7 @@ EModel::~EModel()
 }
 
 void 
-EModel::draw(const glm::mat4& transform)
+EModel::draw(glm::mat4 const& transform)
 {
     // Use our shader
     glUseProgram(m_programID);
@@ -36,9 +37,7 @@ EModel::draw(const glm::mat4& transform)
 }
 
 void 
-EModel::loadFromFile(const std::string& path)
+EModel::loadFromFile(std::string const& path)
 {
-    // m_rmesh = new RMesh();
-	// m_rmesh->loadMesh(path);
     m_rmesh = ResourceManager::getResource_t<RMesh>(path);
 }

@@ -2,20 +2,14 @@
 #include <resources/resource.hpp>
 #include <resources/helpers/texture.hpp>
 
-// // TODO::
-// struct Texture
-// {
-//     // Image imagen
-// };
-
 struct RTexture : public Resource
 {
-    RTexture(/* args */);
-    ~RTexture();
+    explicit RTexture(void);
+    explicit RTexture(std::string const& path);
+    ~RTexture(void);
 
-    void loadTexture ( const std::string& path );
-    void loadFromFile( const std::string& path ) final;
+    void loadTexture (std::string const& path);
+    void loadFromFile(std::string const& path) final;
 private:
-    // Imagen imagenTextura
     Image m_textureImage;
 };

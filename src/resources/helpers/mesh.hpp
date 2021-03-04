@@ -9,7 +9,7 @@
 
 struct Mesh 
 {
-    Mesh(/* args */);
+    Mesh();
     ~Mesh();
 
     void initialize(void);

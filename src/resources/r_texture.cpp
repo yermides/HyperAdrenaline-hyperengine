@@ -1,7 +1,14 @@
 #include "r_texture.hpp"
 
-RTexture::RTexture(/* args */)
+RTexture::RTexture()
+: Resource{}
 {
+}
+
+RTexture::RTexture(std::string const& path)
+: Resource{}
+{
+	this->loadFromFile(path);
 }
 
 RTexture::~RTexture()
@@ -9,7 +16,7 @@ RTexture::~RTexture()
 }
 
 void 
-RTexture::loadTexture( const std::string& path ) 
+RTexture::loadTexture( std::string const& path ) 
 {
     // int width = 0, height = 0, channels = 0;
 	// Image imagedata = SOIL_load_image("assets/plantilla.png", &width, &height, 0, SOIL_LOAD_RGB);
@@ -28,7 +35,7 @@ RTexture::loadTexture( const std::string& path )
 }
 
 void 
-RTexture::loadFromFile( const std::string& path ) 
+RTexture::loadFromFile( std::string const& path ) 
 {
     this->setName(path);
     this->loadTexture(path);

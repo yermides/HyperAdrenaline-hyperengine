@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include <string>
 #include <vector>
 #include <iostream>
 #include <fstream>
@@ -16,16 +15,17 @@
 struct RShader : public Resource
 {
     explicit RShader();
+    explicit RShader(std::string const& path);
     ~RShader();
 
     // TODO:: separar las partes, los encuentra y compila de una
     ProgramIdentifier loadShaders( Cstring path_vertex, Cstring path_fragment );
-    void loadFromFile( const std::string& path ) final;
+    void loadFromFile( std::string const& path ) final;
 
     constexpr ProgramIdentifier getProgramID() const noexcept
-		{ return m_programID; }
+		{ return m_programID;   }
 	constexpr void 				setProgramID(ProgramIdentifier newID) noexcept
-		{ m_programID = newID; }
+		{ m_programID = newID;  }
 private:
     ProgramIdentifier m_programID;
     std::string m_vertexPath, m_fragmentPath;

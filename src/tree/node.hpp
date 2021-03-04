@@ -9,16 +9,16 @@ struct Node
 {
     using NodeList = std::vector<Node*>;
     
-    Node();
+    explicit Node();
     ~Node();
 
     void                addChild(Node* node);
     void                removeChild(Node* node);
     
-    constexpr void                setMatrixTransform(const glm::mat4& newTransform)		noexcept 
+    constexpr void                setMatrixTransform(glm::mat4 const& newTransform)		noexcept 
         { m_transform = newTransform; m_wantsUpdate = true;	}
     
-    constexpr const glm::mat4&    getMatrixTransform(void)								const noexcept 
+    constexpr glm::mat4 const&    getMatrixTransform(void)								const noexcept 
         { return m_transform; 				}
     
     constexpr void                setEntity(Entity* newEntity)							noexcept 
@@ -33,29 +33,29 @@ struct Node
     constexpr Node*               getParent(void)										const noexcept 
         { return m_parent; 					}
     
-    constexpr void                setTranslation(const glm::vec3& newTranslation)		noexcept 
+    constexpr void                setTranslation(glm::vec3 const& newTranslation)		noexcept 
         { m_translation = newTranslation; m_wantsUpdate = true; }
     
-    constexpr const glm::vec3&    getTranslation(void)									const noexcept 
+    constexpr glm::vec3 const&    getTranslation(void)									const noexcept 
         { return m_translation; 			}
     
-    constexpr void                setRotation(const glm::vec3& newRotation)				noexcept 
+    constexpr void                setRotation(glm::vec3 const& newRotation)				noexcept 
         { m_rotation = newRotation; m_wantsUpdate = true; }
     
-    constexpr const glm::vec3&    getRotation(void)										const noexcept 
+    constexpr glm::vec3 const&    getRotation(void)										const noexcept 
         { return m_rotation; 				}
     
-    constexpr void                setScale(const glm::vec3& newScale)					noexcept 
+    constexpr void                setScale(glm::vec3 const& newScale)					noexcept 
         { m_scale = newScale; m_wantsUpdate = true;	}
     
-    constexpr const glm::vec3&    getScale(void)										const noexcept 
+    constexpr glm::vec3 const&    getScale(void)										const noexcept 
         { return m_scale;					}
 
-    void                translate(const glm::vec3& accumulation);
-    void                rotate(const glm::vec3& accumulation);
-    void                scale(const glm::vec3& accumulation);
+    void                translate(glm::vec3 const& accumulation);
+    void                rotate(glm::vec3 const& accumulation);
+    void                scale(glm::vec3 const& accumulation);
 
-    void                traverse(const glm::mat4& accumulatedTrans);
+    void                traverse(glm::mat4 const& accumulatedTrans);
 
 private:
     glm::mat4 m_transform {1.0f};

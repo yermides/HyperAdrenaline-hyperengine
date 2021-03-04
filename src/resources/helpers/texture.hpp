@@ -10,7 +10,7 @@
 
 struct Texture
 {
-    Texture(/* args */);
+    Texture();
     ~Texture();
 
     // Análogo al [TextureFromFile] de learnOpenGL

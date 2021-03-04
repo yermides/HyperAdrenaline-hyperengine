@@ -317,16 +317,13 @@ void loading_models_learnopengl_test(void) {
 void cube_with_textures(void) {
     GLFWwindow* window = hrn::initializeWindow();
 
-	RShader* rshader = new RShader();
+	// RShader* rshader = new RShader();
 	// GLuint programID = rshader->loadShaders (
-    //         "src/shaders/vertex.glsl"
-    //     ,   "src/shaders/fragment.glsl" 
+    //         "src/shaders/1.model_loading.vs"
+    //     ,   "src/shaders/1.model_loading.fs" 
     // );
-
-	GLuint programID = rshader->loadShaders (
-            "src/shaders/1.model_loading.vs"
-        ,   "src/shaders/1.model_loading.fs" 
-    );
+	auto rshader = ResourceManager::getResource_t<RShader>("src/shaders/1.model_loading");
+	auto programID = rshader->getProgramID();
 
 	LOG("Shader program:" << programID);
 
@@ -391,7 +388,7 @@ void cube_with_textures(void) {
 
 	glfwTerminate();
 
-	delete rshader;
+	// delete rshader;
 	delete node;
 	delete modelEntity;
 

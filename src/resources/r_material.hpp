@@ -5,11 +5,12 @@
 
 struct RMaterial : public Resource
 {
-    RMaterial(/* args */);
+    explicit RMaterial();
+    explicit RMaterial(std::string const& path);
     ~RMaterial();
 
-    void loadMaterial( Cstring path );
-    void loadFromFile( const std::string& path ) final;
+    void loadMaterial(std::string const& path);
+    void loadFromFile(std::string const& path) final;
 
 private:
     glm::vec3 m_Ka, m_Kd, m_Ks;     // coeficientes de reflexión ambiental, difusa, especular

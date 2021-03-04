@@ -1,14 +1,14 @@
 #pragma once
 #include <glm/glm.hpp>
-#include <iostream> 	// TODO:: borrar después del debug
 #include <util/typealiases.hpp>
+#include <util/macros.hpp>
 
 struct Entity
 {
-    explicit Entity() {};
-    virtual ~Entity() {};
+    explicit Entity() = default;
+    virtual ~Entity() = default;
     
-    virtual void draw(const glm::mat4& tranform) = 0;
+    virtual void draw(glm::mat4 const& tranform) = 0;
 
     constexpr ProgramIdentifier getProgramID() const noexcept
         { return m_programID;  }

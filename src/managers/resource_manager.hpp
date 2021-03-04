@@ -3,11 +3,6 @@
 #include <algorithm>
 #include <util/macros.hpp>
 #include <resources/resource.hpp>
-// #include <resources/r_mesh.hpp>
-// struct RMesh;
-// struct RMaterial;
-// struct RShader;
-// struct RTexture;
 
 struct ResourceManager
 {
@@ -25,7 +20,7 @@ protected:
     ResourceManager();
     ~ResourceManager();
     ResourceManager(ResourceManager const&) = delete;
-    ResourceManager& operator=(const ResourceManager&) = delete;
+    ResourceManager& operator=(ResourceManager const&) = delete;
 
     inline static ResourceManager& get() 
         { static ResourceManager instance; return instance; }
