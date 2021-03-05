@@ -10,8 +10,8 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 2
-map_Bump /home/lucas/Escritorio/ProyectoABP/HyperAdrenaline/assets/weapons/texture/shotgun/cable_normal.png
-map_Kd /home/lucas/Escritorio/ProyectoABP/HyperAdrenaline/assets/weapons/texture/shotgun/cable_metallic.jpg
+map_Bump weapons/texture/shotgun/cable_normal.png
+map_Kd weapons/texture/shotgun/cable_metallic.jpg
 
 newmtl cable.001
 Ns 500.000001
@@ -22,8 +22,8 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 2
-map_Bump /home/lucas/Escritorio/ProyectoABP/HyperAdrenaline/assets/weapons/texture/shotgun/cable.001_normal.png
-map_Kd /home/lucas/Escritorio/ProyectoABP/HyperAdrenaline/assets/weapons/texture/shotgun/cable.001_metallic.jpg
+map_Bump weapons/texture/shotgun/cable.001_normal.png
+map_Kd weapons/texture/shotgun/cable.001_metallic.jpg
 
 newmtl cannon
 Ns 225.000000
@@ -34,8 +34,8 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 2
-map_Bump /home/lucas/Escritorio/ProyectoABP/HyperAdrenaline/assets/weapons/texture/shotgun/cannon_normal.png
-map_Kd /home/lucas/Escritorio/ProyectoABP/HyperAdrenaline/assets/weapons/texture/shotgun/cannon_metallic.jpg
+map_Bump weapons/texture/shotgun/cannon_normal.png
+map_Kd weapons/texture/shotgun/cannon_metallic.jpg
 
 newmtl cargador
 Ns 225.000000
@@ -46,8 +46,8 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 2
-map_Bump /home/lucas/Escritorio/ProyectoABP/HyperAdrenaline/assets/weapons/texture/shotgun/cargador_normal.png
-map_Kd /home/lucas/Escritorio/ProyectoABP/HyperAdrenaline/assets/weapons/texture/shotgun/cargador_metallic.jpg
+map_Bump weapons/texture/shotgun/cargador_normal.png
+map_Kd weapons/texture/shotgun/cargador_metallic.jpg
 
 newmtl cerrojo
 Ns 225.000000
@@ -58,8 +58,8 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 2
-map_Bump /home/lucas/Escritorio/ProyectoABP/HyperAdrenaline/assets/weapons/texture/shotgun/cerrojo_normal.png
-map_Kd /home/lucas/Escritorio/ProyectoABP/HyperAdrenaline/assets/weapons/texture/shotgun/cerrojo_metallic.jpg
+map_Bump weapons/texture/shotgun/cerrojo_normal.png
+map_Kd weapons/texture/shotgun/cerrojo_metallic.jpg
 
 newmtl corredera
 Ns 225.000000
@@ -70,8 +70,8 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 2
-map_Bump /home/lucas/Escritorio/ProyectoABP/HyperAdrenaline/assets/weapons/texture/shotgun/corredera_normal.png
-map_Kd /home/lucas/Escritorio/ProyectoABP/HyperAdrenaline/assets/weapons/texture/shotgun/corredera_metallic.jpg
+map_Bump weapons/texture/shotgun/corredera_normal.png
+map_Kd weapons/texture/shotgun/corredera_metallic.jpg
 
 newmtl corredera_principal
 Ns 225.000000
@@ -82,8 +82,8 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 2
-map_Bump /home/lucas/Escritorio/ProyectoABP/HyperAdrenaline/assets/weapons/texture/shotgun/corredera_principal_normal.png
-map_Kd /home/lucas/Escritorio/ProyectoABP/HyperAdrenaline/assets/weapons/texture/shotgun/corredera_principal_metallic.jpg
+map_Bump weapons/texture/shotgun/corredera_principal_normal.png
+map_Kd weapons/texture/shotgun/corredera_principal_metallic.jpg
 
 newmtl culata
 Ns 225.000000
@@ -94,8 +94,8 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 2
-map_Bump /home/lucas/Escritorio/ProyectoABP/HyperAdrenaline/assets/weapons/texture/shotgun/culata_normal.png
-map_Kd /home/lucas/Escritorio/ProyectoABP/HyperAdrenaline/assets/weapons/texture/shotgun/culata_metallic.jpg
+map_Bump weapons/texture/shotgun/culata_normal.png
+map_Kd weapons/texture/shotgun/culata_metallic.jpg
 
 newmtl mango
 Ns 225.000000
@@ -106,8 +106,8 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 2
-map_Bump /home/lucas/Escritorio/ProyectoABP/HyperAdrenaline/assets/weapons/texture/shotgun/mango_normal.png
-map_Kd /home/lucas/Escritorio/ProyectoABP/HyperAdrenaline/assets/weapons/texture/shotgun/mango_metallic.jpg
+map_Bump weapons/texture/shotgun/mango_normal.png
+map_Kd weapons/texture/shotgun/mango_metallic.jpg
 
 newmtl mango_corredera
 Ns 500.000001
@@ -118,8 +118,8 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 2
-map_Bump /home/lucas/Escritorio/ProyectoABP/HyperAdrenaline/assets/weapons/texture/shotgun/mango_corredera_normal.png
-map_Kd /home/lucas/Escritorio/ProyectoABP/HyperAdrenaline/assets/weapons/texture/shotgun/mango_corredera_metallic.jpg
+map_Bump weapons/texture/shotgun/mango_corredera_normal.png
+map_Kd weapons/texture/shotgun/mango_corredera_metallic.jpg
 
 newmtl negro.001
 Ns 225.000000
@@ -130,5 +130,5 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 2
-map_Bump /home/lucas/Escritorio/ProyectoABP/HyperAdrenaline/assets/weapons/texture/shotgun/negro.001_normal.png
-map_Kd /home/lucas/Escritorio/ProyectoABP/HyperAdrenaline/assets/weapons/texture/shotgun/negro.001_metallic.jpg
+map_Bump weapons/texture/shotgun/negro.001_normal.png
+map_Kd weapons/texture/shotgun/negro.001_metallic.jpg

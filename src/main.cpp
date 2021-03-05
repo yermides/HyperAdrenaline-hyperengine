@@ -322,6 +322,7 @@ void cube_with_textures(void) {
     //         "src/shaders/1.model_loading.vs"
     //     ,   "src/shaders/1.model_loading.fs" 
     // );
+	auto rootnode = new Node();
 	auto rshader = ResourceManager::getResource_t<RShader>("src/shaders/1.model_loading");
 	auto programID = rshader->getProgramID();
 
@@ -335,17 +336,19 @@ void cube_with_textures(void) {
 	// EModel* modelEntity = new EModel("assets/pruebastexturas/cubo_substance.obj");
 	// EModel* modelEntity = new EModel("assets/pruebastexturas/cubo_imagen.obj");
 	// EModel* modelEntity = new EModel("assets/pruebastexturas/cube_hardbytes.obj");
-	// EModel* modelEntity = new EModel("assets/learnopengl/backpack/backpack.obj"); // DONT 
+	// EModel* modelEntity = new EModel("assets/learnopengl/backpack/backpack.obj"); 
 
 	Node* node2 = new Node();
-	EModel* modelEntity2 = new EModel("assets/learnopengl/backpack/backpack.obj");
+	EModel* modelEntity2 = new EModel("assets/missile-launcher.obj");
+	// EModel* modelEntity2 = new EModel("assets/HA_funador_pesado.obj");
 	modelEntity2->setProgramID(programID);
 	node2->setEntity(modelEntity2);
 
-	node2->setTranslation({1,0,1});
-	node2->setRotation({0,180,0});
-	
-	
+	node2->setTranslation({-2,0,0});
+	// node2->setRotation({0,90,0});
+
+	rootnode->addChild(node);
+	rootnode->addChild(node2);
 
 	// // view/projection transformations
 	// glm::mat4 projection = Projection;
@@ -367,23 +370,44 @@ void cube_with_textures(void) {
 	do{
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		node->traverse(MVP);
-		node2->traverse(MVP);
+		// node->traverse(MVP);
+		// node2->traverse(MVP);
+		rootnode->traverse(MVP);
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 
-		node->rotate({0.0f,0.5f,0.f});
-		node2->rotate({0.0f,0.5f,0.f});
+
+		static bool goup = true;
+		if(rootnode->getTranslation().y > 1.f)
+			goup = false;
+		else if (rootnode->getTranslation().y < -1.f)
+			goup = true;
+		
+		goup ?
+		rootnode->translate({0.0f,0.005f,0.f})
+		: rootnode->translate({0.0f,-0.005f,0.f})
+		;
+		rootnode->rotate({0.0f,0.5f,0.f});
+		// node2->rotate({0.0f,0.5f,0.f});
+
+		// node->rotate({0.0f,0.5f,0.f});
+		// node2->rotate({0.0f,0.5f,0.f});
 
 		if(glfwGetKey(window, GLFW_KEY_1 ) == GLFW_PRESS)
-			node->setRotation({0,0,0});
+			rootnode->setRotation({0,0,0});
 		if(glfwGetKey(window, GLFW_KEY_2 ) == GLFW_PRESS)
-			node->setRotation({0,90,0});
+			rootnode->setRotation({0,90,0});
 		if(glfwGetKey(window, GLFW_KEY_3 ) == GLFW_PRESS)
-			node->setRotation({0,180,0});
+			rootnode->setRotation({0,180,0});
 		if(glfwGetKey(window, GLFW_KEY_4 ) == GLFW_PRESS)
-			node->setRotation({0,270,0});
+			rootnode->setRotation({0,270,0});
+		if(glfwGetKey(window, GLFW_KEY_5 ) == GLFW_PRESS)
+		{
+			static bool action = true;
+			action ? rootnode->removeChild(node2) : rootnode->addChild(node2);
+			action = !action;
+		}
 	} 
 	while( glfwGetKey(window, GLFW_KEY_ESCAPE ) != GLFW_PRESS &&
 		   glfwWindowShouldClose(window) == 0 );
@@ -393,6 +417,7 @@ void cube_with_textures(void) {
 	// delete rshader;
 	if(node) delete node;
 	if(node2) delete node2;
+	if(rootnode) delete rootnode;
 	if(modelEntity) delete modelEntity;
 } 
 
@@ -410,17 +435,30 @@ void resourcemanager_test(void) {
 	// LOG(res2->getName());
 }
 
+void test_cpp_ptr_const() {
+	// const a la izquierda del * significa "apuntando a un objeto no modificable", o sea, inhibes los set()
+	// const a la derecha del * significa "apuntando constantemente a un objeto", o sea, no se puede asignar a otro puntero
+	// este último const es el que hay que poner al rootnode de nuestra futura clase Engine()
+
+	Node const * const node { new Node };
+	Node* node2 { new Node };
+
+	// node->setScale({1,1,1});
+	// node = node2;
+
+	delete node;
+	delete node2;
+}
+
 int main(void) {
     // tree_test();
     // cube_test();
 	// loading_models_assimp_test();
 	// loading_textures_soil_test();
-
 	// loading_models_learnopengl_test();
-
-	cube_with_textures();	// in progress
-	
 	// resourcemanager_test();
+	// test_cpp_ptr_const();
 	
+	cube_with_textures();	// in progress
 	return 0;
 }

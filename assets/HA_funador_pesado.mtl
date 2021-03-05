@@ -1,0 +1,72 @@
+# Blender MTL File: 'funador_pesado.blend'
+# Material Count: 5
+
+newmtl barrel
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.023763 0.031060 0.014963
+Ks 0.016667 0.016667 0.016667
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump texture\\funadorpesado\\barrel_normal.png
+map_Ns texture\\funadorpesado\\barrel_roughness.jpg
+map_Kd texture\\funadorpesado\\barrel_baseColor.jpg
+refl texture\\funadorpesado\\barrel_metallic.jpg
+
+newmtl body
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.007194 0.007194 0.007194
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump texture\\funadorpesado\\body_normal.png
+map_Ns texture\\funadorpesado\\body_roughness.jpg
+map_Kd texture\\funadorpesado\\body_baseColor.jpg
+refl texture\\funadorpesado\\body_metallic.jpg
+
+newmtl magazine
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 0.055380 0.032553
+Ks 0.208333 0.208333 0.208333
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump texture\\funadorpesado\\magazine_normal.png
+map_Ns texture\\funadorpesado\\magazine_roughness.jpg
+map_Kd texture\\funadorpesado\\magazine_baseColor.jpg
+refl texture\\funadorpesado\\magazine_metallic.jpg
+
+newmtl stock
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 0.948730 0.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Bump texture\\funadorpesado\\stock_normal.png
+map_Ns texture\\funadorpesado\\stock_roughness.jpg
+map_Kd texture\\funadorpesado\\stock_baseColor.jpg
+refl texture\\funadorpesado\\stock_metallic.jpg
+
+newmtl trigger_group
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump texture\\funadorpesado\\trigger group_normal.png
+map_Ns texture\\funadorpesado\\trigger group_roughness.jpg
+map_Kd texture\\funadorpesado\\trigger group_baseColor.jpg
+refl texture\\funadorpesado\\trigger group_metallic.jpg
