@@ -70,6 +70,7 @@ RShader::loadShaders( Cstring path_vertex, Cstring path_fragment )
 		std::vector<char> VertexShaderErrorMessage(InfoLogLength+1);
 		glGetShaderInfoLog(VertexShaderID, InfoLogLength, NULL, &VertexShaderErrorMessage[0]);
 		printf("%s\n", &VertexShaderErrorMessage[0]);
+		VertexShaderErrorMessage.clear();
 	}
 
 	// Compile Fragment Shader
@@ -85,6 +86,7 @@ RShader::loadShaders( Cstring path_vertex, Cstring path_fragment )
 		std::vector<char> FragmentShaderErrorMessage(InfoLogLength+1);
 		glGetShaderInfoLog(FragmentShaderID, InfoLogLength, NULL, &FragmentShaderErrorMessage[0]);
 		printf("%s\n", &FragmentShaderErrorMessage[0]);
+		FragmentShaderErrorMessage.clear();
 	}
 
 	// Link the program
@@ -101,6 +103,7 @@ RShader::loadShaders( Cstring path_vertex, Cstring path_fragment )
 		std::vector<char> ProgramErrorMessage(InfoLogLength+1);
 		glGetProgramInfoLog(ProgramID, InfoLogLength, NULL, &ProgramErrorMessage[0]);
 		printf("%s\n", &ProgramErrorMessage[0]);
+		ProgramErrorMessage.clear();
 	}
 
 	glDetachShader(ProgramID, VertexShaderID);

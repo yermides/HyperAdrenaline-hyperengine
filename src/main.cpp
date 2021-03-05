@@ -317,38 +317,24 @@ void loading_models_learnopengl_test(void) {
 void cube_with_textures(void) {
     GLFWwindow* window = hrn::initializeWindow();
 
-	// RShader* rshader = new RShader();
-	// GLuint programID = rshader->loadShaders (
-    //         "src/shaders/1.model_loading.vs"
-    //     ,   "src/shaders/1.model_loading.fs" 
-    // );
 	auto rootnode = new Node();
-	auto rshader = ResourceManager::getResource_t<RShader>("src/shaders/1.model_loading");
-	auto programID = rshader->getProgramID();
 
+	auto programID = ResourceManager::getResource_t<RShader>("src/shaders/1.model_loading")->getProgramID();
 	LOG("Shader program:" << programID);
 
 	Node* node = new Node();
 	EModel* modelEntity = new EModel("assets/missile-launcher.obj");
 	modelEntity->setProgramID(programID);
 	node->setEntity(modelEntity);
-
-	// EModel* modelEntity = new EModel("assets/pruebastexturas/cubo_substance.obj");
-	// EModel* modelEntity = new EModel("assets/pruebastexturas/cubo_imagen.obj");
-	// EModel* modelEntity = new EModel("assets/pruebastexturas/cube_hardbytes.obj");
-	// EModel* modelEntity = new EModel("assets/learnopengl/backpack/backpack.obj"); 
+	rootnode->addChild(node);
 
 	Node* node2 = new Node();
-	EModel* modelEntity2 = new EModel("assets/missile-launcher.obj");
-	// EModel* modelEntity2 = new EModel("assets/HA_funador_pesado.obj");
+	EModel* modelEntity2 = new EModel("assets/pruebastexturas/cube_hardbytes.obj");
 	modelEntity2->setProgramID(programID);
 	node2->setEntity(modelEntity2);
-
 	node2->setTranslation({-2,0,0});
-	// node2->setRotation({0,90,0});
-
-	rootnode->addChild(node);
 	rootnode->addChild(node2);
+
 
 	// // view/projection transformations
 	// glm::mat4 projection = Projection;
@@ -357,11 +343,8 @@ void cube_with_textures(void) {
 	// glm::mat4 model = glm::mat4(1.0f);
 	// model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
 	// model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));	// it's a bit too big for our scene, so scale it down
-	
 	// glm::mat4 mvp = projection * view * model;
-
 	// glUseProgram(programID); // Debería de seguir en emodel, pero sacado de ahi por estar en experimental
-
 	// // glUniformMatrix4fv(glGetUniformLocation(programID, "projection"), 1, GL_FALSE, &projection[0][0]);
 	// // glUniformMatrix4fv(glGetUniformLocation(programID, "view"), 1, GL_FALSE, &view[0][0]);
 	// // glUniformMatrix4fv(glGetUniformLocation(programID, "model"), 1, GL_FALSE, &model[0][0]);
@@ -370,55 +353,53 @@ void cube_with_textures(void) {
 	do{
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		// node->traverse(MVP);
-		// node2->traverse(MVP);
 		rootnode->traverse(MVP);
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 
 
-		static bool goup = true;
-		if(rootnode->getTranslation().y > 1.f)
-			goup = false;
-		else if (rootnode->getTranslation().y < -1.f)
-			goup = true;
+		// static bool goup = true;
+		// if(rootnode->getTranslation().y > 1.f)
+		// 	goup = false;
+		// else if (rootnode->getTranslation().y < -1.f)
+		// 	goup = true;
 		
-		goup ?
-		rootnode->translate({0.0f,0.005f,0.f})
-		: rootnode->translate({0.0f,-0.005f,0.f})
-		;
-		rootnode->rotate({0.0f,0.5f,0.f});
-		// node2->rotate({0.0f,0.5f,0.f});
+		// goup ?
+		// rootnode->translate({0.0f,0.005f,0.f})
+		// : rootnode->translate({0.0f,-0.005f,0.f})
+		// ;
+		// rootnode->rotate({0.0f,0.5f,0.f});
 
-		// node->rotate({0.0f,0.5f,0.f});
-		// node2->rotate({0.0f,0.5f,0.f});
+		// if(glfwGetKey(window, GLFW_KEY_1 ) == GLFW_PRESS)
+		// 	rootnode->setRotation({0,0,0});
+		// if(glfwGetKey(window, GLFW_KEY_2 ) == GLFW_PRESS)
+		// 	rootnode->setRotation({0,90,0});
+		// if(glfwGetKey(window, GLFW_KEY_3 ) == GLFW_PRESS)
+		// 	rootnode->setRotation({0,180,0});
+		// if(glfwGetKey(window, GLFW_KEY_4 ) == GLFW_PRESS)
+		// 	rootnode->setRotation({0,270,0});
+		// if(glfwGetKey(window, GLFW_KEY_5 ) == GLFW_PRESS)
+		// {
+		// 	static bool action = true;
+		// 	action ? rootnode->removeChild(node2) : rootnode->addChild(node2);
+		// 	action = !action;
+		// }
 
-		if(glfwGetKey(window, GLFW_KEY_1 ) == GLFW_PRESS)
-			rootnode->setRotation({0,0,0});
-		if(glfwGetKey(window, GLFW_KEY_2 ) == GLFW_PRESS)
-			rootnode->setRotation({0,90,0});
-		if(glfwGetKey(window, GLFW_KEY_3 ) == GLFW_PRESS)
-			rootnode->setRotation({0,180,0});
-		if(glfwGetKey(window, GLFW_KEY_4 ) == GLFW_PRESS)
-			rootnode->setRotation({0,270,0});
-		if(glfwGetKey(window, GLFW_KEY_5 ) == GLFW_PRESS)
-		{
-			static bool action = true;
-			action ? rootnode->removeChild(node2) : rootnode->addChild(node2);
-			action = !action;
-		}
 	} 
 	while( glfwGetKey(window, GLFW_KEY_ESCAPE ) != GLFW_PRESS &&
 		   glfwWindowShouldClose(window) == 0 );
 
+	glfwDestroyWindow(window);
 	glfwTerminate();
 
-	// delete rshader;
-	if(node) delete node;
-	if(node2) delete node2;
 	if(rootnode) delete rootnode;
+	if(node) delete node;
 	if(modelEntity) delete modelEntity;
+	// if(node2) delete node2;
+	// if(modelEntity2) delete modelEntity2;
+
+	ResourceManager::freeAllResources();
 } 
 
 // READ WARNING

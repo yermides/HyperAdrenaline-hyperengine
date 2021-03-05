@@ -98,6 +98,9 @@ RMesh::loadMesh(std::string const& filepath)
             ++indexarray;
         }
 
+        // Resize to the size to skip possible 4th vertex
+        mesh->m_indices.resize(mesh->m_indices.size());
+
         // TODO:: materiales
         auto* materialsarray = scene->mMaterials[amesh->mMaterialIndex];
         for (int j {0}; j <= AI_TEXTURE_TYPE_MAX; j++)

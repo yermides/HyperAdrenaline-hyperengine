@@ -6,7 +6,6 @@ Mesh::Mesh()
 
 Mesh::~Mesh()
 {
-    if(vbo) delete vbo;
     m_vertices.clear();
     m_normals.clear();
     m_texture_coords.clear();
@@ -17,6 +16,7 @@ Mesh::~Mesh()
     glDeleteBuffers(3, vbo);
     glDeleteBuffers(1, &ebo);
     glDeleteVertexArrays(1, &vao);
+    if(vbo) delete[] vbo;
 
     // textures are cleared once we exit thanks to the ResourceManager destructor
 }

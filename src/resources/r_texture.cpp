@@ -15,7 +15,10 @@ RTexture::~RTexture()
 {
     // Si se inicializó, destruye la textura
     if(m_textureImage)
-        delete m_textureImage;
+    {
+        SOIL_free_image_data(m_textureImage);
+        m_textureImage = nullptr;
+    }
     if(m_textureID)
         glDeleteTextures(1, &m_textureID);
 }
