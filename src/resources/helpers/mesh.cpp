@@ -70,7 +70,7 @@ Mesh::initialize(void)
 
 
 void 
-Mesh::draw() 
+Mesh::draw(ProgramIdentifier const shaderID) 
 {
     // Para cada buffer 
     // {
@@ -140,7 +140,7 @@ Mesh::draw()
         string name = "texture_diffuse";
 
         // now set the sampler to the correct texture unit
-        glUniform1i(glGetUniformLocation(3, (name + number).c_str()), i);
+        glUniform1i(glGetUniformLocation(shaderID, (name + number).c_str()), i);
         // and finally bind the texture
         // glBindTexture(GL_TEXTURE_2D, m_textures[i].m_id);
         glBindTexture(GL_TEXTURE_2D, texture->getProgramID());

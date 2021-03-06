@@ -30,7 +30,7 @@ EModel::draw(glm::mat4 const& transform)
     );
 
     // Draw the mesh now that everything is setup
-    m_rmesh->draw();
+    m_rmesh->draw(m_programID);
 
     // Unbind shader, if other shader is being used for other models
     glUseProgram(0);

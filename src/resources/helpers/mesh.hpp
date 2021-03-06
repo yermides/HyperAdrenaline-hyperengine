@@ -14,7 +14,7 @@ struct Mesh
     ~Mesh();
 
     void initialize(void);
-    void draw(void);            // Maybe pass a shader->programID
+    void draw(ProgramIdentifier const shaderID = 0);
 
     // Size = vertex count * 3
     std::vector<GLfloat>    m_vertices          ;
@@ -27,7 +27,7 @@ struct Mesh
     std::vector<GLuint>     m_indices           ;
 
     // Size = undetermined
-    std::vector<RTexture*>    m_textures          ;
+    std::vector<RTexture*>  m_textures          ;
     
 private:
     // Handlers
