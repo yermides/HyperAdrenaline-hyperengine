@@ -1,6 +1,7 @@
 #include "e_camera.hpp"
 
-ECamera::ECamera(/* args */)
+ECamera::ECamera()
+: Entity{}
 {
 }
 
@@ -9,6 +10,6 @@ ECamera::~ECamera()
 }
 
 void 
-ECamera::draw(const glm::mat4& tranform) 
+ECamera::draw(glm::mat4 const& tranform) 
 {
 }

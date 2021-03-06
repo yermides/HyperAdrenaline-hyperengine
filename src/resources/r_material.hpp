@@ -1,21 +1,20 @@
 #pragma once
-#include <resources/resource.hpp>
 #include <glm/glm.hpp>
+#include <resources/resource.hpp>
+#include <util/macros.hpp>
 
 struct RMaterial : public Resource
 {
-    RMaterial(/* args */);
+    explicit RMaterial();
+    explicit RMaterial(std::string const& path);
     ~RMaterial();
 
-    void loadMaterial( Cstring path );
-    void loadFromFile( const std::string& path ) final;
+    void loadMaterial(std::string const& path);
+    void loadFromFile(std::string const& path) final;
 
 private:
-    // coeficientes de reflexión ambiental, difusa, especular
-    glm::vec3 m_Ka, m_Kd, m_Ks;
-    // exponente especulary transparencia
-    float m_Ns, d;
-
-    // Imagen mapaKa, mapaKd, mapaKs
+    glm::vec3 m_Ka, m_Kd, m_Ks;     // coeficientes de reflexión ambiental, difusa, especular
+    float m_Ns, d;                  // exponente especulary transparencia
+    Image mapKa, mapKd, mapKs;      // Imagen mapaKa, mapaKd, mapaKs
     // ...
 };

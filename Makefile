@@ -86,12 +86,14 @@ SUBDIRS		:= $(shell find $(SRC) -type d)
 OBJSUBDIRS	:= $(patsubst $(SRC)%,$(OBJ)%,$(SUBDIRS))
 
 ## Libraries and include paths
-OPENLG_LINK	:= -lglut -lGLU -lGL -lGLEW -lglfw -lX11 -lSOIL -lassimp# assimp is a file importer, SOIL is an image loader
-MATH_LINK	:= -lm
-LINK_FLAGS	:= $(OPENLG_LINK) $(MATH_LINK)
-LIBS		:= $(LINK_FLAGS)
-SHARED		:= 
-INCDIRS		:= -I$(LIB) -I$(SRC) -I/usr/include/GL/ -I/usr/include/GLFW/ -I/usr/local/include -L/usr/local/lib 
+OPENLG_LINK		:= -lglut -lGLU -lGL -lGLEW -lglfw -lX11 
+IMPORTERS_LINK 	:= -lSOIL -lassimp	# assimp is a file importer, SOIL is an image loader (missing freetype, a text importer)
+MATH_LINK		:= -lm
+IMGUI_LINK 		:= $(LIB)/imgui/libimgui.a
+LINK_FLAGS		:= -L$(LIB) $(OPENLG_LINK) $(IMPORTERS_LINK) $(MATH_LINK) $(IMGUI_LINK)
+LIBS			:= $(LINK_FLAGS)
+SHARED			:= 
+INCDIRS			:= -I$(LIB) -I$(LIB)/imgui -I$(SRC) -I/usr/include/GL/ -I/usr/include/GLFW/ -I/usr/local/include -L/usr/local/lib 
 
 ## Tools
 MKDIR		:= mkdir -p
@@ -129,10 +131,3 @@ libsclean:
 	$(MAKE) -C $(LIB) clean
 libscleanall:
 	$(MAKE) -C $(LIB) cleanall
-
-
-## Libraries and include paths
-# FMODLIBS	:= $(LIB)/fmodapi/api/core/lib/x86_64/libfmod.so $(LIB)/fmodapi/api/studio/lib/x86_64/libfmodstudio.so
-# LIBS		:= $(FMODLIBS) $(LIB)/irrlicht/libIrrlicht.a -lGL -lX11 -lboost_system -lboost_random -lboost_thread -lpthread
-# SHARED		:= -L$(LIB)/fmodapi/api/studio/lib/x86_64 -L$(LIB)/fmodapi/api/core/lib/x86_64 -Wl,-rpath=$(LIB)/fmodapi/api/core/lib/x86_64,-rpath=$(LIB)/fmodapi/api/studio/lib/x86_64
-# INCDIRS		:= -I$(LIB)/irrlicht/include -I$(LIB)/rapidJson/include -I$(LIB)/fmodapi/api/core/inc/ -I$(LIB)/fmodapi/api/studio/inc/ -I$(LIB)/websocketpp

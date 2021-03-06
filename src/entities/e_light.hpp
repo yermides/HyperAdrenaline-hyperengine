@@ -9,15 +9,15 @@ enum class LightType {
 
 struct ELight : public Entity
 {
-	ELight(/* args */);
+	explicit ELight();
 	~ELight();
 
-	void draw(const glm::mat4& tranform) final;
+	void draw(glm::mat4 const& tranform) final;
 
-	constexpr	void            	setIntensity(const glm::vec4& newIntensity)     noexcept 
+	constexpr	void            	setIntensity(glm::vec4 const& newIntensity)     noexcept 
 		{ m_intensity = newIntensity; 	}
 
-	constexpr	const glm::vec4&	getIntensity(void)                              const noexcept 
+	constexpr	glm::vec4 const&	getIntensity(void)                              const noexcept 
 		{ return m_intensity; 			}
 
 	constexpr	void            	setType(const LightType& newType)               noexcept 

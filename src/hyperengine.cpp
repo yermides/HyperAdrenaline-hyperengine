@@ -6,7 +6,7 @@ namespace hrn
 
 GLFWwindow* initializeWindow()
 {
-    GLFWwindow* window;
+    GLFWwindow* window { nullptr };
 
     // Initialise GLFW
 	if( !glfwInit() )
@@ -16,7 +16,7 @@ GLFWwindow* initializeWindow()
 		exit(-1);
 	}
 
-	glfwWindowHint(GLFW_SAMPLES, 4);
+	glfwWindowHint(GLFW_SAMPLES, 4);					// antialiasing x4
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // To make MacOS happy; should not be needed
@@ -24,7 +24,7 @@ GLFWwindow* initializeWindow()
 
 	// Open a window and create its OpenGL context
 	window = glfwCreateWindow( 1366, 768, "HyperEngine Test 1", NULL, NULL);
-	if( window == NULL ){
+	if( !window ){
 		fprintf( stderr, "Failed to open GLFW window. If you have an Intel GPU, they are not 3.3 compatible. Try the 2.1 version of the tutorials.\n" );
 		getchar();
 		glfwTerminate();

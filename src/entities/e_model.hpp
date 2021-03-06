@@ -1,15 +1,17 @@
 #pragma once
 #include <string>
+#include <managers/resource_manager.hpp>
 #include <resources/r_mesh.hpp>
 #include "entity.hpp"
 
 struct EModel : public Entity
 {
-    EModel();
+    explicit EModel();
+    explicit EModel(std::string const& path);
     ~EModel();
 
-    void draw(const glm::mat4& tranform) final;
-    void loadFromFile(const std::string& path);
+    void draw(glm::mat4 const& tranform) final;
+    void loadFromFile(std::string const& path);
 private:
     RMesh* m_rmesh { nullptr };
 };

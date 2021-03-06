@@ -1,20 +1,23 @@
 #pragma once
 #include <resources/resource.hpp>
-
-// TODO::
-struct Texture
-{
-    // Image imagen
-};
-
+#include <resources/helpers/texture.hpp>
 
 struct RTexture : public Resource
 {
-    RTexture(/* args */);
+    explicit RTexture(void);
+    explicit RTexture(std::string const& path);
     ~RTexture();
 
-    void loadTexture ( const std::string& path );
-    void loadFromFile( const std::string& path ) final;
+    void initialize(void);
+    // void bind(void);        // Podría ser útil un método así
+
+    void loadTexture (std::string const& path);
+    void loadFromFile(std::string const& path) final;
+
+    constexpr ProgramIdentifier getProgramID(void)
+        { return m_textureID; }
 private:
-    // Imagen imagenTextura
+    Image m_textureImage { nullptr };
+    int m_width, m_height, m_numComponents;
+    ProgramIdentifier m_textureID { 0 };
 };

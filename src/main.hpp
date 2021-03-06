@@ -6,6 +6,7 @@
 #include <entities/e_model.hpp>
 #include <tree/node.hpp>
 #include <resources/r_shader.hpp>
+#include <managers/resource_manager.hpp>
 
 // Esto es para una prueba, cube_test
 using namespace glm;
@@ -13,7 +14,11 @@ using namespace glm;
 
 // Esto es para una prueba, loading_textures_soil_test
 #include <SOIL/SOIL.h>
-// Esto es para una prueba, loading_textures_soil_test
+
+// Esto es para una prueba, imgui_testing
+#include <imgui/imgui.h>
+#include <imgui/imgui_impl_opengl3.h>
+#include <imgui/imgui_impl_glfw.h>
 
 
 // This matrix belongs to the ECamera

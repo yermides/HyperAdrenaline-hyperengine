@@ -1,23 +1,17 @@
 #include "e_light.hpp"
 
-ELight::ELight(/* args */)
+ELight::ELight()
 :	Entity{}
-// ,   m_intensity{0,0,0,0}
-// ,   m_type{LightType::Directional}
-// ,   m_aperture{0.0f}
-// ,   m_aten_angular{0.0f}
-// ,   m_aten_const{0.0f}
-// ,   m_aten_linear{0.0f}
-// ,   m_aten_quadratic{0.0f}
 {
+    INFOLOG("Constructing ELight");
 }
 
 ELight::~ELight()
 {
+    INFOLOG("Deleting ELight");
 }
 
 void 
-ELight::draw(const glm::mat4& tranform)
+ELight::draw(glm::mat4 const& tranform)
 {
-    std::cout << "Soy una luz.\n";
 }

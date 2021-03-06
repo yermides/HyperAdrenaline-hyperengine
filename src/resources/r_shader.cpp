@@ -5,6 +5,12 @@ RShader::RShader()
 {
 }
 
+RShader::RShader(std::string const& path)
+: Resource{}
+{
+	this->loadFromFile(path);
+}
+
 RShader::~RShader()
 {
 	glDeleteProgram(m_programID);
@@ -24,12 +30,13 @@ RShader::loadShaders( Cstring path_vertex, Cstring path_fragment )
 	// Read the Vertex Shader code from the file
 	std::string VertexShaderCode;
 	std::ifstream VertexShaderStream(path_vertex, std::ios::in);
+
 	if(VertexShaderStream.is_open()){
 		std::stringstream sstr;
 		sstr << VertexShaderStream.rdbuf();
 		VertexShaderCode = sstr.str();
 		VertexShaderStream.close();
-	}else{
+	} else {
 		printf("Impossible to open %s. Are you in the right directory ? Don't forget to read the FAQ !\n", path_vertex);
 		getchar();
 		return 0;
@@ -38,6 +45,7 @@ RShader::loadShaders( Cstring path_vertex, Cstring path_fragment )
 	// Read the Fragment Shader code from the file
 	std::string FragmentShaderCode;
 	std::ifstream FragmentShaderStream(path_fragment, std::ios::in);
+
 	if(FragmentShaderStream.is_open()){
 		std::stringstream sstr;
 		sstr << FragmentShaderStream.rdbuf();
@@ -57,10 +65,12 @@ RShader::loadShaders( Cstring path_vertex, Cstring path_fragment )
 	// Check Vertex Shader
 	glGetShaderiv(VertexShaderID, GL_COMPILE_STATUS, &Result);
 	glGetShaderiv(VertexShaderID, GL_INFO_LOG_LENGTH, &InfoLogLength);
+
 	if ( InfoLogLength > 0 ){
 		std::vector<char> VertexShaderErrorMessage(InfoLogLength+1);
 		glGetShaderInfoLog(VertexShaderID, InfoLogLength, NULL, &VertexShaderErrorMessage[0]);
 		printf("%s\n", &VertexShaderErrorMessage[0]);
+		VertexShaderErrorMessage.clear();
 	}
 
 	// Compile Fragment Shader
@@ -76,6 +86,7 @@ RShader::loadShaders( Cstring path_vertex, Cstring path_fragment )
 		std::vector<char> FragmentShaderErrorMessage(InfoLogLength+1);
 		glGetShaderInfoLog(FragmentShaderID, InfoLogLength, NULL, &FragmentShaderErrorMessage[0]);
 		printf("%s\n", &FragmentShaderErrorMessage[0]);
+		FragmentShaderErrorMessage.clear();
 	}
 
 	// Link the program
@@ -92,9 +103,9 @@ RShader::loadShaders( Cstring path_vertex, Cstring path_fragment )
 		std::vector<char> ProgramErrorMessage(InfoLogLength+1);
 		glGetProgramInfoLog(ProgramID, InfoLogLength, NULL, &ProgramErrorMessage[0]);
 		printf("%s\n", &ProgramErrorMessage[0]);
+		ProgramErrorMessage.clear();
 	}
 
-	
 	glDetachShader(ProgramID, VertexShaderID);
 	glDetachShader(ProgramID, FragmentShaderID);
 	
@@ -107,12 +118,17 @@ RShader::loadShaders( Cstring path_vertex, Cstring path_fragment )
 }
 
 void 
-RShader::loadFromFile( const std::string& path )
+RShader::loadFromFile( std::string const& path )
 {
-	// TODO::
-	// Como necesita dos paths, lo suyo es usar un separador para la cadena que entra
-	// O hacer que el shader vertex y fragment estén en un solo archivo, y el separador dentro del archivo, eso mola más
-	// Pero de momento para que no se queje:
-	auto p = path.c_str();
-	this->loadShaders(p,p);
+	constexpr static Cstring extensionVertex 	{ ".vs" };
+	constexpr static Cstring extensionFragment 	{ ".fs" };
+	// constexpr static Cstring extensionGeometry 	{ ".gs" };
+
+	// Como necesita dos paths, el método asume mismo nombre
+    this->setName(path);
+	m_vertexPath 	= path + extensionVertex; 
+	m_fragmentPath 	= path + extensionFragment; 
+	// TODO:: incluir el geometry opcional
+
+	this->loadShaders(m_vertexPath.c_str(), m_fragmentPath.c_str());
 }

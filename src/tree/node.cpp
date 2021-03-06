@@ -1,7 +1,7 @@
 #include "node.hpp"
 #include <util/macros.hpp>
 
-Node::Node(/* args */)
+Node::Node()
 {
 }
 
@@ -30,32 +30,33 @@ Node::removeChild(Node* node)
     if( it == m_childs.end() )
         return;
 
+    (*it)->m_parent = nullptr;
     m_childs.erase(it);
 }
 
 void                
-Node::translate(const glm::vec3& accumulation) 
+Node::translate(glm::vec3 const& accumulation) 
 {
     m_translation += accumulation;
     m_wantsUpdate = true;
 }
 
 void                
-Node::rotate(const glm::vec3& accumulation) 
+Node::rotate(glm::vec3 const& accumulation) 
 {
     m_rotation += accumulation;
     m_wantsUpdate = true;
 }
 
 void                
-Node::scale(const glm::vec3& accumulation) 
+Node::scale(glm::vec3 const& accumulation) 
 {
     m_scale += accumulation;
     m_wantsUpdate = true;
 }
 
 void 
-Node::traverse(const glm::mat4& accumulatedTrans) 
+Node::traverse(glm::mat4 const& accumulatedTrans) 
 {
     // TODO:: comprobar esto
     bool wantsUpdate = m_wantsUpdate;
@@ -63,9 +64,9 @@ Node::traverse(const glm::mat4& accumulatedTrans)
     if(wantsUpdate) {
         m_transform = accumulatedTrans 
             * glm::translate(m_translation)
-            * glm::rotate(m_rotation.x, glm::vec3(1.0f,0.0f,0.0f))
-            * glm::rotate(m_rotation.y, glm::vec3(0.0f,1.0f,0.0f))
-            * glm::rotate(m_rotation.z, glm::vec3(0.0f,0.0f,1.0f))
+            * glm::rotate(glm::radians( m_rotation.x ), glm::vec3(1.0f,0.0f,0.0f))
+            * glm::rotate(glm::radians( m_rotation.y ), glm::vec3(0.0f,1.0f,0.0f))
+            * glm::rotate(glm::radians( m_rotation.z ), glm::vec3(0.0f,0.0f,1.0f))
             * glm::scale(m_scale);
         
         m_wantsUpdate = false;
