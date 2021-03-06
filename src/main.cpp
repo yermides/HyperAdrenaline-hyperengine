@@ -5,6 +5,7 @@
 */
 #include <main.hpp>
 
+
 // Prueba de funcionamiento de los nodos
 void tree_test(void) {
     ELight* light = new ELight();
@@ -329,7 +330,8 @@ void cube_with_textures(void) {
 	rootnode->addChild(node);
 
 	Node* node2 = new Node();
-	EModel* modelEntity2 = new EModel("assets/pruebastexturas/cube_hardbytes.obj");
+	EModel* modelEntity2 = new EModel("assets/HA_funador_pesado.obj");
+	// "assets/learnopengl/backpack/backpack.obj"
 	modelEntity2->setProgramID(programID);
 	node2->setEntity(modelEntity2);
 	node2->setTranslation({-2,0,0});
@@ -359,17 +361,16 @@ void cube_with_textures(void) {
 		glfwPollEvents();
 
 
-		// static bool goup = true;
-		// if(rootnode->getTranslation().y > 1.f)
-		// 	goup = false;
-		// else if (rootnode->getTranslation().y < -1.f)
-		// 	goup = true;
-		
-		// goup ?
-		// rootnode->translate({0.0f,0.005f,0.f})
-		// : rootnode->translate({0.0f,-0.005f,0.f})
-		// ;
-		// rootnode->rotate({0.0f,0.5f,0.f});
+		static bool goup = true;
+		if(rootnode->getTranslation().y > 1.f)
+			goup = false;
+		else if (rootnode->getTranslation().y < -1.f)
+			goup = true;
+		goup ?
+		rootnode->translate({0.0f,0.005f,0.f})
+		: rootnode->translate({0.0f,-0.005f,0.f})
+		;
+		rootnode->rotate({0.0f,0.5f,0.f});
 
 		// if(glfwGetKey(window, GLFW_KEY_1 ) == GLFW_PRESS)
 		// 	rootnode->setRotation({0,0,0});
@@ -396,8 +397,8 @@ void cube_with_textures(void) {
 	if(rootnode) delete rootnode;
 	if(node) delete node;
 	if(modelEntity) delete modelEntity;
-	// if(node2) delete node2;
-	// if(modelEntity2) delete modelEntity2;
+	if(node2) delete node2;
+	if(modelEntity2) delete modelEntity2;
 
 	ResourceManager::freeAllResources();
 } 
@@ -431,6 +432,92 @@ void test_cpp_ptr_const() {
 	delete node2;
 }
 
+void voidfunc() {
+	// 203,562 bytes at exit only cause of this, and 844 definitely lost, 304 maybe lost
+	auto window = hrn::initializeWindow();
+	glfwDestroyWindow(window);
+	glfwTerminate();
+}
+
+void imgui_testing(void) {
+	GLFWwindow* window = hrn::initializeWindow();
+
+	// Imgui setup
+	IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    ImGuiIO& io = ImGui::GetIO(); (void)io;
+    ImGui::StyleColorsDark();
+    ImGui_ImplGlfw_InitForOpenGL(window, true);
+    ImGui_ImplOpenGL3_Init("#version 130");
+	bool show_another_window { true };
+	glm::vec3 rspeed {0,0,0};
+	// end (Imgui setup)
+
+	auto rootnode = new Node();
+	auto programID = ResourceManager::getResource_t<RShader>("src/shaders/1.model_loading")->getProgramID();
+	LOG("Shader program:" << programID);
+
+	Node* node = new Node();
+	EModel* modelEntity = new EModel("assets/missile-launcher.obj");
+	modelEntity->setProgramID(programID);
+	node->setEntity(modelEntity);
+	rootnode->addChild(node);
+
+	Node* node2 = new Node();
+	EModel* modelEntity2 = new EModel("assets/HA_funador_pesado.obj");
+	modelEntity2->setProgramID(programID);
+	node2->setEntity(modelEntity2);
+	node2->setTranslation({-2,0,0});
+	rootnode->addChild(node2);
+
+	do{
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		rootnode->traverse(MVP);
+
+		ImGui_ImplOpenGL3_NewFrame();
+        ImGui_ImplGlfw_NewFrame();
+        ImGui::NewFrame();
+
+		if(show_another_window){
+			ImGui::Begin("Another Window", &show_another_window);   // Pass a pointer to our bool variable (the window will have a closing button that will clear the bool when clicked)
+			ImGui::Text("Hello from another window!");
+			// Drags
+			ImGui::Text("Velocidad de rotación en X: %f", rspeed.x);
+			ImGui::DragFloat("rspeed.x (-0.1 -> +0.1)", &rspeed.x, 0.003f, -2.0f, 2.0f, "%.3f", 0);
+			ImGui::Text("Velocidad de rotación en Y: %f", rspeed.y);
+			ImGui::DragFloat("rspeed.y (-0.1 -> +0.1)", &rspeed.y, 0.003f, -2.0f, 2.0f, "%.3f", 0);
+			ImGui::Text("Velocidad de rotación en Z: %f", rspeed.z);
+			ImGui::DragFloat("rspeed.z (-0.1 -> +0.1)", &rspeed.z, 0.003f, -2.0f, 2.0f, "%.3f", 0);
+			if (ImGui::Button("Ciérrame"))
+				show_another_window = false;
+			ImGui::End();
+		}
+
+		ImGui::Render();
+		int display_w, display_h;
+        glfwGetFramebufferSize(window, &display_w, &display_h);
+        glViewport(0, 0, display_w, display_h);
+		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+		glfwSwapBuffers(window);
+		glfwPollEvents();
+
+		rootnode->rotate(rspeed);
+	} 
+	while( glfwGetKey(window, GLFW_KEY_ESCAPE ) != GLFW_PRESS &&
+		   glfwWindowShouldClose(window) == 0 );
+
+	glfwDestroyWindow(window);
+	glfwTerminate();
+
+	if(rootnode) delete rootnode;
+	if(node) delete node;
+	if(modelEntity) delete modelEntity;
+	if(node2) delete node2;
+	if(modelEntity2) delete modelEntity2;
+}
+
 int main(void) {
     // tree_test();
     // cube_test();
@@ -440,6 +527,9 @@ int main(void) {
 	// resourcemanager_test();
 	// test_cpp_ptr_const();
 	
-	cube_with_textures();	// in progress
+	// voidfunc();
+
+	// cube_with_textures();	// in progress
+	imgui_testing();
 	return 0;
 }

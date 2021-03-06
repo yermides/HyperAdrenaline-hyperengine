@@ -1,3 +1,8 @@
 .vscode/
 build
 executable
+
+# Ignore all imgui compilation junk
+lib/imgui/build 
+# Ignore imgui last window saved state
+imgui.ini
