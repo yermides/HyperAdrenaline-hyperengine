@@ -18,10 +18,10 @@ RMesh::~RMesh()
 }
 
 void 
-RMesh::draw()
+RMesh::draw(ProgramIdentifier const shaderID)
 {
     for(auto m : m_meshes) 
-        m->draw();
+        m->draw(shaderID);
 }
 
 void 

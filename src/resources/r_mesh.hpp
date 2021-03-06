@@ -11,7 +11,7 @@ struct RMesh : public Resource
     explicit RMesh(std::string const& path);
     ~RMesh();
 
-    void draw();
+    void draw(ProgramIdentifier const shaderID = 0);
 
     void loadMesh(std::string const& filepath);
 

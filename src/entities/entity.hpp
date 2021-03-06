@@ -15,5 +15,5 @@ struct Entity
     constexpr void              setProgramID(ProgramIdentifier newID) noexcept
         { m_programID = newID; }
 protected:
-    ProgramIdentifier m_programID;
+    ProgramIdentifier m_programID {0};
 };

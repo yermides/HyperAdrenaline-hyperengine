@@ -52,6 +52,8 @@ GLFWwindow* initializeWindow()
 	// Accept fragment if it closer to the camera than the former one
 	glDepthFunc(GL_LESS); 
 
+	glfwSwapInterval(1);	// VSync
+
     return window;
 }
 

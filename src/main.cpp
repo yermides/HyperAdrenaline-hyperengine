@@ -5,7 +5,6 @@
 */
 #include <main.hpp>
 
-
 // Prueba de funcionamiento de los nodos
 void tree_test(void) {
     ELight* light = new ELight();
@@ -470,7 +469,15 @@ void imgui_testing(void) {
 	node2->setTranslation({-2,0,0});
 	rootnode->addChild(node2);
 
+	// timing
+	float deltaTime = 0.0f;
+	float lastFrame = 0.0f;
+
 	do{
+		float currentFrame = glfwGetTime();
+        deltaTime = currentFrame - lastFrame;
+        lastFrame = currentFrame;
+
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		rootnode->traverse(MVP);
@@ -508,6 +515,10 @@ void imgui_testing(void) {
 	while( glfwGetKey(window, GLFW_KEY_ESCAPE ) != GLFW_PRESS &&
 		   glfwWindowShouldClose(window) == 0 );
 
+    // Cleanup
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplGlfw_Shutdown();
+    ImGui::DestroyContext();
 	glfwDestroyWindow(window);
 	glfwTerminate();
 

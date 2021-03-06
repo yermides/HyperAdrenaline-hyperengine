@@ -17,8 +17,8 @@ struct ResourceManager
         { return get().freeAll();                       } 
 
 protected:
-    ResourceManager();
-    ~ResourceManager();
+    explicit ResourceManager() = default;
+    ~ResourceManager() { get().freeAllResources(); }
     ResourceManager(ResourceManager const&) = delete;
     ResourceManager& operator=(ResourceManager const&) = delete;
 
