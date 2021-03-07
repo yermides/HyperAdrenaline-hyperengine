@@ -101,8 +101,23 @@ RMesh::loadMesh(std::string const& filepath)
         // Resize to the size to skip possible 4th vertex
         mesh->m_indices.resize(mesh->m_indices.size());
 
+        // ----------------------------------------------------------------------------------------------
+        // --------------------------Danger zone: materiales in progress---------------------------------
+        // ----------------------------------------------------------------------------------------------
         // TODO:: materiales
         auto* materialsarray = scene->mMaterials[amesh->mMaterialIndex];
+
+        glm::vec3 diffuse_color;
+        materialsarray->Get(AI_MATKEY_COLOR_DIFFUSE, &diffuse_color.x, NULL);
+        INFOLOG("Diffuse color: "<<VAR(diffuse_color.x) << VAR(diffuse_color.y) <<VAR(diffuse_color.z) );
+
+        // for(uint32_t j {0}; j<materialsarray->mNumProperties; ++j)
+        // {
+            // auto property = materialsarray->mProperties[j];
+            // INFOLOG("Propiedad " << VAR(property->mKey.C_Str()) <<":"<< VAR(property->mData) );
+            // INFOLOG("Propiedad " << VAR( property->mKey.C_Str() ) <<":"<< VAR( property->mType ) );
+        // }
+
         for (int j {0}; j <= AI_TEXTURE_TYPE_MAX; j++)
         {
             // LOG("Numero de propiedades del material: {" << materialsarray->mNumProperties << "}")
@@ -115,7 +130,7 @@ RMesh::loadMesh(std::string const& filepath)
             
             auto type = (aiTextureType)j;
             auto count = materialsarray->GetTextureCount(type);
-            // LOG("Texturas de tipo [" << type << "] = " << count );
+            LOG("Texturas de tipo [" << type << "] = " << count );
 
             // análogo de [loadMaterialTextures] solo que los pongo a lo bruto en el array
             // TODO:: cargar todo tipo de texturas y ser capaz de interpretarlas (Mesh::draw())
@@ -168,6 +183,10 @@ RMesh::loadMesh(std::string const& filepath)
         +   (mesh->m_indices.size()*sizeof(GLuint) )
         +   (mesh->m_textures.size()*sizeof(Texture) )
         );
+
+        // ----------------------------------------------------------------------------------------------
+        // -----------------------(end) Danger zone: materiales in progress------------------------------
+        // ----------------------------------------------------------------------------------------------
 
         // Inicializar valores de la malla en opengl
         mesh->initialize();

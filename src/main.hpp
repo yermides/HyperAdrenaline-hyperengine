@@ -9,6 +9,9 @@
 #include <managers/resource_manager.hpp>
 
 // Esto es para una prueba, cube_test
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 using namespace glm;
 // Esto es para una prueba, cube_test
 
@@ -19,7 +22,6 @@ using namespace glm;
 #include <imgui/imgui.h>
 #include <imgui/imgui_impl_opengl3.h>
 #include <imgui/imgui_impl_glfw.h>
-
 
 // This matrix belongs to the ECamera
 // Projection matrix : 45° Field of View, 16:9 ratio, display range : 0.1 unit <-> 100 units
