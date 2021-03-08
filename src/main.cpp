@@ -21,20 +21,21 @@ void test_models_and_imgui(void) {
 
 	auto rootnode = new Node();
 	auto programID = ResourceManager::getResource_t<RShader>("src/shaders/1.model_loading")->getProgramID();
-	LOG("Shader program:" << programID);
 
 	Node* node = new Node();
 	EModel* modelEntity = new EModel("assets/missile-launcher.obj");
+	// EModel* modelEntity = new EModel("assets/pruebastexturas/cube_hardbytes.obj");
+	// EModel* modelEntity = new EModel("assets/pruebastexturas/cubo_substance.obj");
 	modelEntity->setProgramID(programID);
 	node->setEntity(modelEntity);
 	rootnode->addChild(node);
 
-	Node* node2 = new Node();
-	EModel* modelEntity2 = new EModel("assets/HA_funador_pesado.obj");
-	modelEntity2->setProgramID(programID);
-	node2->setEntity(modelEntity2);
-	node2->setTranslation({-2,0,0});
-	rootnode->addChild(node2);
+	// Node* node2 = new Node();
+	// EModel* modelEntity2 = new EModel("assets/HA_funador_pesado.obj");
+	// modelEntity2->setProgramID(programID);
+	// node2->setEntity(modelEntity2);
+	// node2->setTranslation({-2,0,0});
+	// rootnode->addChild(node2);
 
 	do{
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -84,8 +85,8 @@ void test_models_and_imgui(void) {
 	if(rootnode) delete rootnode;
 	if(node) delete node;
 	if(modelEntity) delete modelEntity;
-	if(node2) delete node2;
-	if(modelEntity2) delete modelEntity2;
+	// if(node2) delete node2;
+	// if(modelEntity2) delete modelEntity2;
 }
 
 void test_basic_lights() {

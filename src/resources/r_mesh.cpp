@@ -105,32 +105,39 @@ RMesh::loadMesh(std::string const& filepath)
         // --------------------------Danger zone: materiales in progress---------------------------------
         // ----------------------------------------------------------------------------------------------
         // TODO:: materiales
-        auto* materialsarray = scene->mMaterials[amesh->mMaterialIndex];
+        auto* amaterial = scene->mMaterials[amesh->mMaterialIndex];
 
-        glm::vec3 diffuse_color;
-        materialsarray->Get(AI_MATKEY_COLOR_DIFFUSE, &diffuse_color.x, NULL);
-        INFOLOG("Diffuse color: "<<VAR(diffuse_color.x) << VAR(diffuse_color.y) <<VAR(diffuse_color.z) );
+        // glm::vec3 diffuse_color;
+        // auto res = amaterial->Get(AI_MATKEY_COLOR_DIFFUSE, &diffuse_color.x, NULL);
 
-        // for(uint32_t j {0}; j<materialsarray->mNumProperties; ++j)
-        // {
-            // auto property = materialsarray->mProperties[j];
-            // INFOLOG("Propiedad " << VAR(property->mKey.C_Str()) <<":"<< VAR(property->mData) );
-            // INFOLOG("Propiedad " << VAR( property->mKey.C_Str() ) <<":"<< VAR( property->mType ) );
-        // }
+        // aiString str1;
+        // amaterial->GetTexture((aiTextureType)11, 0, &str1);
+        // INFOLOG("xxxxxxxx: "<<VAR(str1.C_Str()))
+
+        // if(res == aiReturn_SUCCESS)
+        //     INFOLOG("Diffuse color: "<<VAR(diffuse_color.x) << VAR(diffuse_color.y) <<VAR(diffuse_color.z) );
+            
+        // INFOLOG("Número de propiedades: "<< VAR(amaterial->mNumProperties));
+
+        for(uint32_t j {0}; j<amaterial->mNumProperties; ++j)
+        {
+            auto property = amaterial->mProperties[j];
+            // INFOLOG("Propiedad " << VAR(property->mKey.C_Str()) <<":"<< VAR(property->mData) <<":"<< VAR( property->mType ) );
+        }
 
         for (int j {0}; j <= AI_TEXTURE_TYPE_MAX; j++)
         {
-            // LOG("Numero de propiedades del material: {" << materialsarray->mNumProperties << "}")
-            // auto properties = materialsarray->mProperties[1];
+            // LOG("Numero de propiedades del material: {" << amaterial->mNumProperties << "}")
+            // auto properties = amaterial->mProperties[1];
             // LOG(properties->mKey.C_Str());
 
-            // for (uint32_t m = 0; m < materialsarray->mNumProperties; m++)
+            // for (uint32_t m = 0; m < amaterial->mNumProperties; m++)
             // {
             // }
             
             auto type = (aiTextureType)j;
-            auto count = materialsarray->GetTextureCount(type);
-            LOG("Texturas de tipo [" << type << "] = " << count );
+            auto count = amaterial->GetTextureCount(type);
+            // LOG("Texturas de tipo [" << type << "] = " << count );
 
             // análogo de [loadMaterialTextures] solo que los pongo a lo bruto en el array
             // TODO:: cargar todo tipo de texturas y ser capaz de interpretarlas (Mesh::draw())
@@ -138,25 +145,16 @@ RMesh::loadMesh(std::string const& filepath)
             {
                 for (size_t k = 0; k < count; k++)
                 {
-                    aiString str;
-                    materialsarray->GetTexture(type, k, &str);
-
+                    RMaterial* rmaterial = new RMaterial();
+                    rmaterial->loadMaterial(amaterial);
+                    delete rmaterial;
                     // Crear y guardar una textura en el array
-                    // TODO:: usar el resource manager para no cargar la misma textura dos veces
-                    
-                    // Formatea los \\ por /
+                    aiString str;
+                    amaterial->GetTexture(type, k, &str);
+
                     std::string formattedpath = str.C_Str();
+                    util::replaceCharacters(formattedpath, "\\\\", "/");
 
-                    size_t pos = formattedpath.find("\\\\");
-                    while( pos != std::string::npos)
-                    {
-                        formattedpath.replace(pos, 2, "/");
-                        pos=formattedpath.find("\\\\", pos + 1);
-                    }
-
-                    // Texture texture;
-                    // texture.loadTexture(formattedpath.c_str(), this->getDirectory()); // TODO:: revisar la ruta
-                    // mesh->m_textures.push_back(std::move(texture));
                     auto filepath = getDirectory() +"/"+ formattedpath;
                     auto texture  = ResourceManager::getResource_t<RTexture>(filepath);
                     // RTexture* texture = new RTexture(filepath);
@@ -168,7 +166,7 @@ RMesh::loadMesh(std::string const& filepath)
 
         }
 
-        LOG("Nombre del material: " << materialsarray->GetName().C_Str());
+        LOG("Nombre del material: " << amaterial->GetName().C_Str());
         LOG("Nombre de la malla: " << amesh->mName.C_Str());
         LOG("Posiciones: " << mesh->m_vertices.size());
         LOG("Normales: " << mesh->m_normals.size());

@@ -4,6 +4,7 @@
 #include <resources/r_texture.hpp>
 #include <resources/helpers/mesh.hpp>
 #include <util/macros.hpp>
+#include <util/functions.hpp>
 
 struct RMesh : public Resource
 {
