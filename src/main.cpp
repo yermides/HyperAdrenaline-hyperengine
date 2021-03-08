@@ -6,7 +6,9 @@
 #include <main.hpp>
 
 void test_models_and_imgui(void) {
-	GLFWwindow* window = hrn::initializeWindow();
+    auto engine = new HyperEngine;
+    engine->initialize();
+	auto window = engine->getWindow();
 
 	// Imgui setup
 	IMGUI_CHECKVERSION();
@@ -22,13 +24,20 @@ void test_models_and_imgui(void) {
 	auto rootnode = new Node();
 	auto programID = ResourceManager::getResource_t<RShader>("src/shaders/1.model_loading")->getProgramID();
 
-	Node* node = new Node();
-	EModel* modelEntity = new EModel("assets/missile-launcher.obj");
-	// EModel* modelEntity = new EModel("assets/pruebastexturas/cube_hardbytes.obj");
-	// EModel* modelEntity = new EModel("assets/pruebastexturas/cubo_substance.obj");
-	modelEntity->setProgramID(programID);
-	node->setEntity(modelEntity);
-	rootnode->addChild(node);
+    Node* node = engine->createModel("assets/missile-launcher.obj", rootnode);
+    node->getEntity()->setProgramID(programID);
+    Node* node2 = engine->createModel("assets/HA_funador_pesado.obj", rootnode, {1,0,0});
+    node2->getEntity()->setProgramID(programID);
+
+
+	// Node* node = new Node();
+	// EModel* modelEntity = new EModel("assets/missile-launcher.obj");
+    
+	// // "assets/pruebastexturas/cube_hardbytes.obj"
+	// // "assets/pruebastexturas/cubo_substance.obj"
+	// modelEntity->setProgramID(programID);
+	// node->setEntity(modelEntity);
+	// rootnode->addChild(node);
 
 	// Node* node2 = new Node();
 	// EModel* modelEntity2 = new EModel("assets/HA_funador_pesado.obj");
@@ -36,6 +45,8 @@ void test_models_and_imgui(void) {
 	// node2->setEntity(modelEntity2);
 	// node2->setTranslation({-2,0,0});
 	// rootnode->addChild(node2);
+
+    // Node* node2 = engine->createModel(rootnode, {0,0,0}, {0,0,0}, {1,1,1}, "assets/HA_funador_pesado.obj");
 
 	do{
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -84,13 +95,15 @@ void test_models_and_imgui(void) {
 
 	if(rootnode) delete rootnode;
 	if(node) delete node;
-	if(modelEntity) delete modelEntity;
+	// if(modelEntity) delete modelEntity;
 	// if(node2) delete node2;
 	// if(modelEntity2) delete modelEntity2;
 }
 
 void test_basic_lights() {
-	GLFWwindow* window = hrn::initializeWindow();
+    auto engine = new HyperEngine;
+    engine->initialize();
+	auto window = engine->getWindow();
 	// build and compile our shader zprogram
     // ------------------------------------
 

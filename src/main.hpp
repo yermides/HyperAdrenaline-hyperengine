@@ -1,7 +1,7 @@
 #pragma once
 #include <iostream>
 #include <util/macros.hpp>
-#include <hyperengine.hpp>
+#include <engine/hyperengine.hpp>
 #include <entities/e_light.hpp>
 #include <entities/e_model.hpp>
 #include <tree/node.hpp>
