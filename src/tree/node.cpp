@@ -7,6 +7,16 @@ Node::Node()
 
 Node::~Node()
 {
+    // Borrado recursivo, TODO:: revisar
+    if(m_entity)
+        delete m_entity;
+    if(m_parent)
+        m_parent->removeChild(this);
+
+    for(auto n : m_childs)
+        delete n;
+
+    m_childs.clear();
 }
 
 void                

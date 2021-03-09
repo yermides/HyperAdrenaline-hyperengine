@@ -24,11 +24,11 @@ void test_models_and_imgui(void) {
 	auto rootnode = new Node();
 	auto programID = ResourceManager::getResource_t<RShader>("src/shaders/1.model_loading")->getProgramID();
 
-    Node* node = engine->createModel("assets/missile-launcher.obj", rootnode);
+    // Node* node = engine->create<EModel>(rootnode, default_matrix_params, "assets/missile-launcher.obj");
+    Node* node = engine->createModel(rootnode, default_matrix_params, "assets/missile-launcher.obj");
     node->getEntity()->setProgramID(programID);
-    Node* node2 = engine->createModel("assets/HA_funador_pesado.obj", rootnode, {1,0,0});
+    Node* node2 = engine->createModel(rootnode, {1.0f, 0.0f, 0.0f}, default_rot, default_scale, "assets/HA_funador_pesado.obj");
     node2->getEntity()->setProgramID(programID);
-
 
 	// Node* node = new Node();
 	// EModel* modelEntity = new EModel("assets/missile-launcher.obj");
@@ -94,10 +94,7 @@ void test_models_and_imgui(void) {
 	glfwTerminate();
 
 	if(rootnode) delete rootnode;
-	if(node) delete node;
-	// if(modelEntity) delete modelEntity;
-	// if(node2) delete node2;
-	// if(modelEntity2) delete modelEntity2;
+    if(engine) delete engine;
 }
 
 void test_basic_lights() {

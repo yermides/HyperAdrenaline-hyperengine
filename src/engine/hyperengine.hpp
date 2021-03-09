@@ -11,6 +11,12 @@
 #include <entities/e_light.hpp>
 #include <entities/e_model.hpp>
 
+#define default_trans                       {0.0f,0.0f,0.0f}
+#define default_rot                         {0.0f,0.0f,0.0f}
+#define default_scale                       {1.0f,1.0f,1.0f}
+#define default_matrix_params               default_trans, default_rot, default_scale
+#define default_createnode_params           nullptr, default_matrix_params
+
 struct HyperEngine
 {
     explicit HyperEngine();
@@ -27,63 +33,64 @@ struct HyperEngine
 
     template <typename... Args>
     Node* createCamera(
-            Args... args
-        ,   Node* const parent      = nullptr
+            Node* const parent      = nullptr
         ,   glm::vec3 const& trans  = {0.0f,0.0f,0.0f}
         ,   glm::vec3 const& rot    = {0.0f,0.0f,0.0f}
         ,   glm::vec3 const& scale  = {1.0f,1.0f,1.0f} 
+        ,   Args... args
         )
         {
-            auto node       = createNode(parent, trans, rot, scale);
-            auto camera     = new ECamera(args...);
-            node->setEntity(camera);
-            return node;
+            // auto node       = createNode(parent, trans, rot, scale);
+            // auto camera     = new ECamera(args...);
+            // node->setEntity(camera);
+            // return node;
+            return create<ECamera>(parent, trans, rot, scale, args...);
         }
     
     template <typename... Args>
     Node* createLight(
-            Args... args
-        ,   Node* const parent      = nullptr
+            Node* const parent      = nullptr
         ,   glm::vec3 const& trans  = {0.0f,0.0f,0.0f}
         ,   glm::vec3 const& rot    = {0.0f,0.0f,0.0f}
         ,   glm::vec3 const& scale  = {1.0f,1.0f,1.0f} 
+        ,   Args... args
         )
         {
-            auto node   = createNode(parent, trans, rot, scale);
-            auto light  = new ELight(args...);
-            node->setEntity(light);
-            return node;
+            // auto node   = createNode(parent, trans, rot, scale);
+            // auto light  = new ELight(args...);
+            // node->setEntity(light);
+            // return node;
+            return create<ELight>(parent, trans, rot, scale, args...);
         }
 
-    // template <typename... Args>
-    // Node* createModel(
-    //         Args... args
-    //     ,   Node* const parent      = nullptr
-    //     ,   glm::vec3 const& trans  = {0.0f,0.0f,0.0f}
-    //     ,   glm::vec3 const& rot    = {0.0f,0.0f,0.0f}
-    //     ,   glm::vec3 const& scale  = {1.0f,1.0f,1.0f} 
-    //     )
-    //     {
-    //         auto node   = createNode(parent, trans, rot, scale);
-    //         auto model  = new EModel(args...);
-    //         node->setEntity(model);
-    //         return node;
-    //     }
-
-
-    // TODO:: tratar de hacer el mapeo de la variadic template al principio
-    // Mirar https://www.bfilipek.com/2020/09/variadic-pack-first.html
+    template <typename... Args>
     Node* createModel(
-            std::string const& path
-        ,   Node* const parent      = nullptr
+            Node* const parent      = nullptr
         ,   glm::vec3 const& trans  = {0.0f,0.0f,0.0f}
         ,   glm::vec3 const& rot    = {0.0f,0.0f,0.0f}
         ,   glm::vec3 const& scale  = {1.0f,1.0f,1.0f} 
+        ,   Args... args
         )
         {
-            auto node   = createNode(parent, trans, rot, scale);
-            auto model  = new EModel(path);
-            node->setEntity(model);
+            // auto node   = createNode(parent, trans, rot, scale);
+            // auto model  = new EModel(args...);
+            // node->setEntity(model);
+            // return node;
+            return create<EModel>(parent, trans, rot, scale, args...);
+        }
+    
+    template <typename Entity_t, typename... Args>
+    Node* create(
+            Node* const parent      = nullptr
+        ,   glm::vec3 const& trans  = {0.0f,0.0f,0.0f}
+        ,   glm::vec3 const& rot    = {0.0f,0.0f,0.0f}
+        ,   glm::vec3 const& scale  = {1.0f,1.0f,1.0f} 
+        ,   Args... args
+        )
+        {
+            auto node       = createNode(parent, trans, rot, scale);
+            auto entity     = new Entity_t(args...);
+            node->setEntity(entity);
             return node;
         }
     
@@ -93,6 +100,7 @@ struct HyperEngine
         { return m_window; }
 
 private:
+    // Leer el remark del final sobre los nodos
     Node* const     m_rootnode { new Node   };
     // No se necesita el resource manager por su naturaleza singleton
 
@@ -100,3 +108,16 @@ private:
     GLFWwindow*     m_window   { nullptr    };
 };
 
+// Él propone que se creen los nodos cámara y luz antes de los modelos, pero eso supone que 
+// no se puedan meter más de una (porque se añadirían a la derecha de los hijos del rootnode)
+// , por lo que una solucion sería que el rootnode tenga tres hijos
+// y que cada uno administre las luces, cámara y modelos
+// y las inserciones de nuevos nodos se hagan en estos que actúan de manejadores
+// 
+// Declarados en orden, el esquema sería:
+// 
+//               ---------- lightmanagernode (hijos...)
+//               ^
+// rootnode ----- > ------- cameramanagernode (hijos...)
+//               v
+//               ---------- modelmanagernode (hijos...)
