@@ -57,7 +57,7 @@ void test_models_and_imgui(void) {
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-		if(show_another_window){
+		if(show_another_window) {
 			ImGui::Begin("Another Window", &show_another_window);   // Pass a pointer to our bool variable (the window will have a closing button that will clear the bool when clicked)
 			ImGui::Text("Hello from another window!");
 			// Drags
@@ -253,7 +253,30 @@ void test_basic_lights() {
     glfwTerminate();
 }
 
+void test_hyperengine_traverse(void) {
+    auto engine = new HyperEngine(true);
+
+	auto shaderID = ResourceManager::getResource_t<RShader>("src/shaders/1.model_loading")->getProgramID();
+
+    Node* node = engine->createModel(default_createnode_params, "assets/missile-launcher.obj");
+    Node* node2 = engine->createModel(nullptr, {2.0f, 0.0f, 0.0f}, default_rot, default_scale, "assets/HA_funador_pesado.obj");
+    node->getEntity()->setProgramID(shaderID);
+    node2->getEntity()->setProgramID(shaderID);
+
+    while(engine->isWindowActive() && !engine->isKeyPressed(GLFW_KEY_ESCAPE))
+    {
+        engine->beginRender();
+        engine->drawScene();
+        engine->endRender();
+
+        node->rotate({0.0f,1.0f,0.0f});
+    }
+
+    delete engine;
+}
+
 int main(void) {
-	test_models_and_imgui();
+	// test_models_and_imgui();
 	// test_basic_lights();
+    test_hyperengine_traverse();
 }

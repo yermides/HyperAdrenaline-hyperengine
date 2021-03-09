@@ -1,17 +1,20 @@
 #include "hyperengine.hpp"
 
-HyperEngine::HyperEngine()
+HyperEngine::HyperEngine(bool const init)
 {
+	if(init)
+		this->initialize();
 }
 
 HyperEngine::~HyperEngine()
 {
+	delete m_rootnode;
 	glfwDestroyWindow(m_window);
 	glfwTerminate();
 }
 
 void 
-HyperEngine::initialize()
+HyperEngine::initialize(void)
 {
     // Initialise GLFW
 	if( !glfwInit() )
@@ -82,8 +85,30 @@ HyperEngine::createNode(Node* const parent, glm::vec3 const& trans, glm::vec3 co
 }
 
 void 
-HyperEngine::drawScene() 
+HyperEngine::clearScreen(void) const
+{ 
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); 
+}
+
+void 
+HyperEngine::beginRender(void) const
+{ 
+	this->clearScreen(); 
+}
+
+void 
+HyperEngine::drawScene(void) const
 {
-	// TODO:: Temporal, empezar con la matriz identidad
-	m_rootnode->traverse(glm::mat4{1.0f});
+	// TODO:: Temporal, empezar con la matriz identidad y recoger las matrices vista, proyección y modelos
+	// m_rootnode->traverse(glm::mat4{1.0f});
+	
+	// Test, usar la MVP
+	m_rootnode->traverse(MVP);
+}
+
+void 
+HyperEngine::endRender(void) const
+{ 
+	glfwSwapBuffers(m_window); 
+	glfwPollEvents(); 
 }
