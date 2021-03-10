@@ -14,6 +14,11 @@ struct Node
 
     void                addChild(Node* node);
     void                removeChild(Node* node);
+
+    inline glm::mat4 const    getUpdatedMatrixTransform()
+    { 
+        return m_transform * glm::translate(m_translation)*glm::rotate(glm::radians( m_rotation.x ), glm::vec3(1.0f,0.0f,0.0f))*glm::rotate(glm::radians( m_rotation.y ), glm::vec3(0.0f,1.0f,0.0f))*glm::rotate(glm::radians( m_rotation.z ), glm::vec3(0.0f,0.0f,1.0f))*glm::scale(m_scale); 
+    }
     
     constexpr void                setMatrixTransform(glm::mat4 const& newTransform)		noexcept 
         { m_transform = newTransform; m_wantsUpdate = true;	}

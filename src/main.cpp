@@ -275,8 +275,43 @@ void test_hyperengine_traverse(void) {
     delete engine;
 }
 
+void printMat4(glm::mat4 const& m)
+{
+    LOG(glm::to_string(m));
+}
+
+void test_view_matrix_inverse(void) {
+    auto engine = new HyperEngine(true);
+	auto window = engine->getWindow();
+
+    Node* cameranode = engine->createNode(nullptr, {4, 3, -3}, default_rot, default_scale);
+    cameranode->setRotation({30,120,30});
+    auto viewmatrix = glm::inverse(cameranode->getUpdatedMatrixTransform());
+    auto newMVP = Projection * viewmatrix * Model;
+
+    INFOLOG("Matriz vista original:: ");
+    printMat4(View);
+    INFOLOG("Matriz vista nueva:: ");
+    printMat4(glm::inverse(viewmatrix));
+
+	do{
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		glfwSwapBuffers(window);
+		glfwPollEvents();
+	} 
+	while( glfwGetKey(window, GLFW_KEY_ESCAPE ) != GLFW_PRESS &&
+		   glfwWindowShouldClose(window) == 0 );
+
+	glfwDestroyWindow(window);
+	glfwTerminate();
+
+    if(engine) delete engine;
+}
+
 int main(void) {
 	// test_models_and_imgui();
 	// test_basic_lights();
+    // test_view_matrix_inverse();
     test_hyperengine_traverse();
 }
