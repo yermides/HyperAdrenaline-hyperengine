@@ -73,4 +73,5 @@ private:
     glm::vec3 m_scale {1.0f};
 
     bool m_wantsUpdate { true };
+    bool m_ignoreDraw  { false };
 };

@@ -8,7 +8,10 @@ HyperEngine::HyperEngine(bool const init)
 
 HyperEngine::~HyperEngine()
 {
-	delete m_rootnode;
+	// if(m_camrootnode) delete m_camrootnode;
+	// if(m_lightrootnode) delete m_lightrootnode;
+	// if(m_modelrootnode) delete m_modelrootnode;
+	if(m_rootnode) delete m_rootnode;
 	glfwDestroyWindow(m_window);
 	glfwTerminate();
 }
@@ -81,6 +84,9 @@ HyperEngine::createNode(Node* const parent, glm::vec3 const& trans, glm::vec3 co
 	node->setRotation(rot);
 	node->setScale(scale);
 
+	INFOLOG("Memory address of rootnode is " << VAR(m_rootnode));
+	INFOLOG("Memory address of new created rootnode child is " << VAR(node));
+
 	return node;
 }
 
@@ -93,7 +99,7 @@ HyperEngine::clearScreen(void) const
 void 
 HyperEngine::beginRender(void) const
 { 
-	this->clearScreen(); 
+	this->clearScreen();
 }
 
 void 
@@ -102,6 +108,24 @@ HyperEngine::drawScene(void) const
 	// TODO:: Temporal, empezar con la matriz identidad y recoger las matrices vista, proyección y modelos
 	// m_rootnode->traverse(glm::mat4{1.0f});
 	
+	// TODO:: seguir por https://youtu.be/5CVUSiYGOgk?t=507
+
+	// Si no hay cámara activa, no renderizar la escena
+	// if(m_active_camera == engine_invalid_id)
+	// 	return;
+
+	// for(auto light : m_lights) {
+	// 	auto lightmatrix = light->getMatrixTransform();
+	// 	auto shaderID = light->getEntity()->getProgramID();
+	// 	// pasarle el dato a opengl, puede ser en la función draw() de la entidad light
+	// 	// glUniform3f(glGetUniformLocation(shaderID, "propiedad", x, y, z);
+	// }
+
+	// auto activeCamera = this->m_cameras[m_active_camera];
+	// auto cameraMatrix = activeCamera->getMatrixTransform();
+	// auto viewmatrix = glm::inverse(cameraMatrix);
+
+
 	// Test, usar la MVP
 	m_rootnode->traverse(MVP);
 }
@@ -109,6 +133,48 @@ HyperEngine::drawScene(void) const
 void 
 HyperEngine::endRender(void) const
 { 
-	glfwSwapBuffers(m_window); 
-	glfwPollEvents(); 
+	glfwSwapBuffers(m_window);
+	glfwPollEvents();
+}
+
+int 
+HyperEngine::registerCamera(Node* const camera) 
+{
+	m_cameras.push_back(camera);
+	return ++nextCameraID;
+}
+
+int 
+HyperEngine::registerLight(Node* const light) 
+{
+	m_lights.push_back(light);
+	return ++nextLightID;
+}
+
+int 
+HyperEngine::registerViewport(int x, int y, int height, int width) 
+{
+	Viewport viewport;
+	viewport.x = x; viewport.y = y;
+	viewport.height = height; viewport.width = width;
+	m_viewports.push_back(std::move(viewport));
+	return ++nextViewportID;
+}
+
+void 
+HyperEngine::setActiveCamera(int const camID) 
+{
+	m_active_camera = camID;
+}
+
+void 
+HyperEngine::setActiveLight(int const lightID, bool const isActive) 
+{
+	m_active_lights[lightID] = isActive;
+}
+
+void 
+HyperEngine::setActiveViewport(int const viewportID) 
+{
+	m_active_viewport = viewportID;
 }

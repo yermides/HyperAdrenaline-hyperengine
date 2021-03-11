@@ -3,18 +3,35 @@
 
 Node::Node()
 {
+    INFOLOG("I am the node "<<VAR(this));
 }
 
 Node::~Node()
 {
-    // Borrado recursivo, TODO:: revisar
+    // Borrado recursivo, TODO:: revisar, pues ha habido double frees
+    INFOLOG("Deleting entity from node "<< VAR(this));
+
     if(m_entity)
+    {
         delete m_entity;
+        m_entity = nullptr;
+    }
+
+    INFOLOG("Removing parent from node "<< VAR(this));
+
     if(m_parent)
         m_parent->removeChild(this);
 
-    for(auto n : m_childs)
-        delete n;
+    INFOLOG("Starting to delete all childs from node "<< VAR(this));
+
+    for(auto n : m_childs) {
+        if(n) 
+        {
+            delete n;
+            n = nullptr;
+            INFOLOG("Deleted node "<< VAR(n));
+        }
+    }
 
     m_childs.clear();
 }
@@ -22,6 +39,9 @@ Node::~Node()
 void                
 Node::addChild(Node* node) 
 {
+    if(node->m_parent)
+        node->m_parent->removeChild(node);
+
     node->m_parent = this;
     m_childs.push_back(node);
 }
@@ -29,9 +49,9 @@ Node::addChild(Node* node)
 void                
 Node::removeChild(Node* node) 
 {
-    // TODO:: revisar implementación, no lo borra, solo lo remueve del arbol
-    if( m_childs.empty() ) 
-        return;
+    // No lo borra, solo lo remueve del arbol
+    if(!node->m_parent) return;
+    if(m_childs.empty()) return;
 
     auto it = std::find_if(m_childs.begin(), m_childs.end(), [&](Node* n) {
         return n == node;

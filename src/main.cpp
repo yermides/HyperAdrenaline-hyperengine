@@ -284,10 +284,19 @@ void test_view_matrix_inverse(void) {
     auto engine = new HyperEngine(true);
 	auto window = engine->getWindow();
 
-    Node* cameranode = engine->createNode(nullptr, {4, 3, -3}, default_rot, default_scale);
-    cameranode->setRotation({30,120,30});
-    auto viewmatrix = glm::inverse(cameranode->getUpdatedMatrixTransform());
-    auto newMVP = Projection * viewmatrix * Model;
+    auto root = new Node;
+
+    Node* cameranode = new Node;
+    cameranode->setTranslation({0, 1.f, 3.f});
+    cameranode->setRotation({-20,0,0});
+    cameranode->setScale({1,1,1});
+    auto viewmatrix = cameranode->getUpdatedMatrixTransform();
+    auto newMVP =  Projection * glm::inverse(viewmatrix) * Model;
+
+    auto programID = ResourceManager::getResource_t<RShader>("src/shaders/1.model_loading")->getProgramID();
+
+    Node* node = engine->createModel(root, default_matrix_params, "assets/missile-launcher.obj");
+    node->getEntity()->setProgramID(programID);
 
     INFOLOG("Matriz vista original:: ");
     printMat4(View);
@@ -296,6 +305,8 @@ void test_view_matrix_inverse(void) {
 
 	do{
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        node->traverse(newMVP);
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
@@ -312,6 +323,7 @@ void test_view_matrix_inverse(void) {
 int main(void) {
 	// test_models_and_imgui();
 	// test_basic_lights();
-    // test_view_matrix_inverse();
     test_hyperengine_traverse();
+
+    // test_view_matrix_inverse();
 }

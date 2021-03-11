@@ -16,19 +16,18 @@
 #define default_scale                       {1.0f,1.0f,1.0f}
 #define default_matrix_params               default_trans, default_rot, default_scale
 #define default_createnode_params           nullptr, default_matrix_params
+#define engine_invalid_id                   -1
 
-// This matrix belongs to the ECamera
-// Projection matrix : 45° Field of View, 16:9 ratio, display range : 0.1 unit <-> 100 units
+// Projection matrix
 static glm::mat4 Projection 
 	= glm::perspective(
-		glm::radians(45.0f)
-		, 16.0f / 9.0f
-		, 0.1f
-		, 100.0f
+		glm::radians(45.0f) // 45° Field of View
+		, 16.0f / 9.0f      // 16:9 ratio
+		, 0.1f              // display range : 0.1 unit <--
+		, 100.0f            // --> 100 units
 );
 
-// This matrix belongs to the Node that contains ECamera (and is inverted)
-// Camera matrix
+// View matrix
 static glm::mat4 View  
 	= glm::lookAt(
 		glm::vec3(4,3,-3), // Camera is at (4,3,-3), in World Space
@@ -36,12 +35,14 @@ static glm::mat4 View
 		glm::vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
 );
 
-// This matrix belongs to the Node that contains the EMesh
-// Model matrix : an identity matrix (model will be at the origin)
+// Model matrix, default model at 0,0,0
 static glm::mat4 Model      = glm::mat4(1.0f);
 
 // Our ModelViewProjection : multiplication of our 3 matrices
 static glm::mat4 MVP        = Projection * View * Model; // Remember, matrix multiplication is the other way around
+
+static glm::mat4 const test_projection = glm::lookAt(glm::vec3(4,3,-3), glm::vec3(0,0,0), glm::vec3(0,1,0));
+static glm::mat4 test_view = glm::mat4(1.0f);
 
 struct HyperEngine
 {
@@ -128,6 +129,17 @@ struct HyperEngine
 
     void endRender(void) const;
 
+    int registerCamera(Node* const camera);
+
+    int registerLight(Node* const light);
+
+    int registerViewport(int x, int y, int height, int width);
+
+    void setActiveCamera(int const camID);
+
+    void setActiveLight(int const lightID, bool const isActive);
+
+    void setActiveViewport(int const viewportID);
 
     constexpr bool const isWindowActive(void) const noexcept
         { 
@@ -135,7 +147,6 @@ struct HyperEngine
                 return false;
 
             return true;
-            // return m_window ? glfwWindowShouldClose(m_window) : false; 
         }
 
     constexpr GLFWwindow* getWindow(void) const noexcept
@@ -150,12 +161,25 @@ struct HyperEngine
         }
 
 private:
-    // Leer el remark del final sobre los nodos
-    Node* const     m_rootnode { new Node   };
+    inline static int nextCameraID {0};
+    inline static int nextLightID {0};
+    inline static int nextViewportID {0};
+
+    struct Viewport {
+        int x, y, height, width;
+    };
+
+    Node* const     m_rootnode      { new Node   };
     // No se necesita el resource manager por su naturaleza singleton
 
     // Atributos para mantenimiento de las cámaras, luces y viewports
     GLFWwindow*     m_window   { nullptr    };
+    std::vector<Node*> m_cameras;
+    std::vector<Node*> m_lights;
+    std::vector<Viewport> m_viewports;
+    int m_active_camera  {engine_invalid_id} 
+    ,   m_active_viewport{engine_invalid_id};
+    std::vector<bool> m_active_lights;
 };
 
 // Él propone que se creen los nodos cámara y luz antes de los modelos, pero eso supone que 
@@ -172,4 +196,5 @@ private:
 //               v
 //               ---------- modelmanagernode (hijos...)
 
-
+// Atención, solución descartada. Otra opción es tener una variable activo, para no duplicar la transformación
+// al recorrer un hijo de un modelo que resulte ser una cámara
