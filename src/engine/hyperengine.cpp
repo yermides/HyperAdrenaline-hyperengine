@@ -111,8 +111,8 @@ HyperEngine::drawScene(void) const
 	// TODO:: seguir por https://youtu.be/5CVUSiYGOgk?t=507
 
 	// Si no hay cámara activa, no renderizar la escena
-	// if(m_active_camera == engine_invalid_id)
-	// 	return;
+	if(m_active_camera == engine_invalid_id)
+		return;
 
 	// for(auto light : m_lights) {
 	// 	auto lightmatrix = light->getMatrixTransform();
@@ -121,13 +121,16 @@ HyperEngine::drawScene(void) const
 	// 	// glUniform3f(glGetUniformLocation(shaderID, "propiedad", x, y, z);
 	// }
 
-	// auto activeCamera = this->m_cameras[m_active_camera];
+	auto activeCamNode = this->m_cameras[m_active_camera];
 	// auto cameraMatrix = activeCamera->getMatrixTransform();
 	// auto viewmatrix = glm::inverse(cameraMatrix);
+	auto camentity = static_cast<ECamera*>(activeCamNode->getEntity());
+	camentity->draw(glm::mat4{1.0f});
 
+	auto projectionview = camentity->getProjectionMatrix() * camentity->getViewMatrix();
 
-	// Test, usar la MVP
-	m_rootnode->traverse(MVP);
+	// m_rootnode->traverse(glm::mat4{1.0f});
+	m_modelrootnode->traverse(projectionview);
 }
 
 void 
@@ -141,14 +144,18 @@ int
 HyperEngine::registerCamera(Node* const camera) 
 {
 	m_cameras.push_back(camera);
-	return ++nextCameraID;
+
+	if(m_active_camera == engine_invalid_id)
+		m_active_camera = nextCameraID;
+
+	return nextCameraID++;
 }
 
 int 
 HyperEngine::registerLight(Node* const light) 
 {
 	m_lights.push_back(light);
-	return ++nextLightID;
+	return nextLightID++;
 }
 
 int 
@@ -158,7 +165,7 @@ HyperEngine::registerViewport(int x, int y, int height, int width)
 	viewport.x = x; viewport.y = y;
 	viewport.height = height; viewport.width = width;
 	m_viewports.push_back(std::move(viewport));
-	return ++nextViewportID;
+	return nextViewportID++;
 }
 
 void 
@@ -177,4 +184,28 @@ void
 HyperEngine::setActiveViewport(int const viewportID) 
 {
 	m_active_viewport = viewportID;
+}
+
+bool const 
+HyperEngine::isWindowActive(void) const noexcept
+{ 
+	if(!m_window || glfwWindowShouldClose(m_window))
+		return false;
+
+	return true;
+}
+
+GLFWwindow* 
+HyperEngine::getWindow(void) const noexcept
+{ 
+	return m_window; 
+}
+
+bool const 
+HyperEngine::isKeyPressed(int const keycode) const noexcept
+{ 
+	if(!isWindowActive())
+		return false;
+
+	return glfwGetKey(m_window, keycode) == GLFW_PRESS; 
 }

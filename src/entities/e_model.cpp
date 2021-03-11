@@ -20,14 +20,24 @@ EModel::draw(glm::mat4 const& transform)
     // Use our shader
     glUseProgram(m_programID);
 
-    // Send our transformation to the currently bound shader, 
-    // in the "MVP" uniform
+    // Send our transformation to the currently bound shader, in the "MVP" uniform
     glUniformMatrix4fv(
-        glGetUniformLocation(m_programID, "MVP")
-        , 1
-        , GL_FALSE
-        , &transform[0][0]
+            glGetUniformLocation(m_programID, "MVP")
+        ,   1
+        ,   GL_FALSE
+        ,   &transform[0][0]
     );
+
+
+    INFOLOG("Se encuentra la propiedad model: " << VAR(glGetUniformLocation(m_programID, "model")));
+
+    // glm::mat4 identity{1.0f};
+    // glUniformMatrix4fv(
+    //     glGetUniformLocation(m_programID, "model")
+    //     , 1
+    //     , GL_FALSE
+    //     , &transform[0][0]
+    // );
 
     // Draw the mesh now that everything is setup
     m_rmesh->draw(m_programID);

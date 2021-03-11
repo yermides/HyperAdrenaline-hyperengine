@@ -14,6 +14,8 @@
 #define default_trans                       {0.0f,0.0f,0.0f}
 #define default_rot                         {0.0f,0.0f,0.0f}
 #define default_scale                       {1.0f,1.0f,1.0f}
+#define default_trans_and_rot               default_trans, default_rot
+#define default_rot_and_scale               default_rot, default_scale
 #define default_matrix_params               default_trans, default_rot, default_scale
 #define default_createnode_params           nullptr, default_matrix_params
 #define engine_invalid_id                   -1
@@ -67,11 +69,11 @@ struct HyperEngine
         ,   Args... args
         )
         {
-            // auto node       = createNode(parent, trans, rot, scale);
-            // auto camera     = new ECamera(args...);
-            // node->setEntity(camera);
-            // return node;
-            return create<ECamera>(parent, trans, rot, scale, args...);
+            auto node       = createNode(parent, trans, rot, scale);
+            auto camera     = new ECamera(args...);
+            node->setEntity(camera);
+            registerCamera(node);
+            return node;
         }
     
     template <typename... Args>
@@ -83,11 +85,10 @@ struct HyperEngine
         ,   Args... args
         )
         {
-            // auto node   = createNode(parent, trans, rot, scale);
-            // auto light  = new ELight(args...);
-            // node->setEntity(light);
-            // return node;
-            return create<ELight>(parent, trans, rot, scale, args...);
+            auto node   = createNode(parent, trans, rot, scale);
+            auto light  = new ELight(args...);
+            node->setEntity(light);
+            return node;
         }
 
     template <typename... Args>
@@ -99,25 +100,9 @@ struct HyperEngine
         ,   Args... args
         )
         {
-            // auto node   = createNode(parent, trans, rot, scale);
-            // auto model  = new EModel(args...);
-            // node->setEntity(model);
-            // return node;
-            return create<EModel>(parent, trans, rot, scale, args...);
-        }
-    
-    template <typename Entity_t, typename... Args>
-    Node* create(
-            Node* const parent      = nullptr
-        ,   glm::vec3 const& trans  = {0.0f,0.0f,0.0f}
-        ,   glm::vec3 const& rot    = {0.0f,0.0f,0.0f}
-        ,   glm::vec3 const& scale  = {1.0f,1.0f,1.0f} 
-        ,   Args... args
-        )
-        {
-            auto node       = createNode(parent, trans, rot, scale);
-            auto entity     = new Entity_t(args...);
-            node->setEntity(entity);
+            auto node   = createNode(m_modelrootnode, trans, rot, scale);
+            auto model  = new EModel(args...);
+            node->setEntity(model);
             return node;
         }
 
@@ -141,35 +126,23 @@ struct HyperEngine
 
     void setActiveViewport(int const viewportID);
 
-    constexpr bool const isWindowActive(void) const noexcept
-        { 
-            if(!m_window || glfwWindowShouldClose(m_window))
-                return false;
+    bool const isWindowActive(void) const noexcept;
 
-            return true;
-        }
+    GLFWwindow* getWindow(void) const noexcept;
 
-    constexpr GLFWwindow* getWindow(void) const noexcept
-        { return m_window; }
-
-    constexpr bool const isKeyPressed(int const keycode) const noexcept
-        { 
-            if(!isWindowActive())
-                return false;
-
-            return glfwGetKey(m_window, keycode) == GLFW_PRESS; 
-        }
+    bool const isKeyPressed(int const keycode) const noexcept;
 
 private:
-    inline static int nextCameraID {0};
-    inline static int nextLightID {0};
-    inline static int nextViewportID {0};
+    inline static int nextCameraID      {0};
+    inline static int nextLightID       {0};
+    inline static int nextViewportID    {0};
 
     struct Viewport {
         int x, y, height, width;
     };
 
     Node* const     m_rootnode      { new Node   };
+    Node* const     m_modelrootnode      { createNode()   };
     // No se necesita el resource manager por su naturaleza singleton
 
     // Atributos para mantenimiento de las cámaras, luces y viewports
@@ -181,20 +154,3 @@ private:
     ,   m_active_viewport{engine_invalid_id};
     std::vector<bool> m_active_lights;
 };
-
-// Él propone que se creen los nodos cámara y luz antes de los modelos, pero eso supone que 
-// no se puedan meter más de una (porque se añadirían a la derecha de los hijos del rootnode)
-// , por lo que una solucion sería que el rootnode tenga tres hijos
-// y que cada uno administre las luces, cámara y modelos
-// y las inserciones de nuevos nodos se hagan en estos que actúan de manejadores
-// 
-// Declarados en orden, el esquema sería:
-// 
-//               ---------- lightmanagernode (hijos...)
-//               ^
-// rootnode ----- > ------- cameramanagernode (hijos...)
-//               v
-//               ---------- modelmanagernode (hijos...)
-
-// Atención, solución descartada. Otra opción es tener una variable activo, para no duplicar la transformación
-// al recorrer un hijo de un modelo que resulte ser una cámara

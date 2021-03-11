@@ -281,49 +281,79 @@ void printMat4(glm::mat4 const& m)
 }
 
 void test_view_matrix_inverse(void) {
+    // auto engine = new HyperEngine(true);
+	// auto window = engine->getWindow();
+
+    // auto root = new Node;
+
+    // Node* cameranode = new Node;
+    // cameranode->setTranslation({0, 1.f, 3.f});
+    // cameranode->setRotation({-20,0,0});
+    // cameranode->setScale({1,1,1});
+    // auto viewmatrix = cameranode->getUpdatedMatrixTransform();
+    // auto newMVP =  Projection * glm::inverse(viewmatrix) * Model;
+
+    // auto programID = ResourceManager::getResource_t<RShader>("src/shaders/1.model_loading")->getProgramID();
+
+    // Node* node = engine->createModel(root, default_matrix_params, "assets/missile-launcher.obj");
+    // node->getEntity()->setProgramID(programID);
+
+    // INFOLOG("Matriz vista original:: ");
+    // printMat4(View);
+    // INFOLOG("Matriz vista nueva:: ");
+    // printMat4(glm::inverse(viewmatrix));
+
+	// do{
+	// 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    //     node->traverse(newMVP);
+
+	// 	glfwSwapBuffers(window);
+	// 	glfwPollEvents();
+	// } 
+	// while( glfwGetKey(window, GLFW_KEY_ESCAPE ) != GLFW_PRESS &&
+	// 	   glfwWindowShouldClose(window) == 0 );
+
+	// glfwDestroyWindow(window);
+	// glfwTerminate();
+
+    // if(engine) delete engine;
+}
+
+void test_full_tree_traverse() {
     auto engine = new HyperEngine(true);
-	auto window = engine->getWindow();
+	auto shaderID = ResourceManager::getResource_t<RShader>("src/shaders/model-loading-m-v-p")->getProgramID();
 
-    auto root = new Node;
+    auto camnode = engine->createCamera(nullptr, default_matrix_params); // tendrá la proyección por defecto
+    camnode->getEntity()->setProgramID(shaderID);
+    camnode->translate({0,0,300});
 
-    Node* cameranode = new Node;
-    cameranode->setTranslation({0, 1.f, 3.f});
-    cameranode->setRotation({-20,0,0});
-    cameranode->setScale({1,1,1});
-    auto viewmatrix = cameranode->getUpdatedMatrixTransform();
-    auto newMVP =  Projection * glm::inverse(viewmatrix) * Model;
+    Node* missile_launcher = engine->createModel(default_createnode_params, "assets/missile-launcher.obj");
+    Node* funador_pesado = engine->createModel(nullptr, {2.0f, 0.0f, 0.0f}, default_rot, default_scale, "assets/HA_funador_pesado.obj");
+    missile_launcher->getEntity()->setProgramID(shaderID);
+    funador_pesado->getEntity()->setProgramID(shaderID);
 
-    auto programID = ResourceManager::getResource_t<RShader>("src/shaders/1.model_loading")->getProgramID();
+    missile_launcher->translate({0.0f,0.0f,-3.0f});
 
-    Node* node = engine->createModel(root, default_matrix_params, "assets/missile-launcher.obj");
-    node->getEntity()->setProgramID(programID);
 
-    INFOLOG("Matriz vista original:: ");
-    printMat4(View);
-    INFOLOG("Matriz vista nueva:: ");
-    printMat4(glm::inverse(viewmatrix));
+    while(engine->isWindowActive() && !engine->isKeyPressed(GLFW_KEY_ESCAPE))
+    {
+        engine->beginRender();
+        engine->drawScene();
+        engine->endRender();
 
-	do{
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        // missile_launcher->rotate({0.0f,1.0f,0.0f});
+    }
 
-        node->traverse(newMVP);
-
-		glfwSwapBuffers(window);
-		glfwPollEvents();
-	} 
-	while( glfwGetKey(window, GLFW_KEY_ESCAPE ) != GLFW_PRESS &&
-		   glfwWindowShouldClose(window) == 0 );
-
-	glfwDestroyWindow(window);
-	glfwTerminate();
-
-    if(engine) delete engine;
+    delete engine;
 }
 
 int main(void) {
 	// test_models_and_imgui();
 	// test_basic_lights();
-    test_hyperengine_traverse();
-
     // test_view_matrix_inverse();
+
+    // test_hyperengine_traverse();
+
+    test_full_tree_traverse();
 }

@@ -1,7 +1,8 @@
 #include "node.hpp"
 #include <util/macros.hpp>
 
-Node::Node()
+Node::Node(bool const ignoreDrawInTraverse)
+: m_ignoreDraw(ignoreDrawInTraverse)
 {
     INFOLOG("I am the node "<<VAR(this));
 }
@@ -102,7 +103,7 @@ Node::traverse(glm::mat4 const& accumulatedTrans)
         m_wantsUpdate = false;
     }
     
-    if(m_entity)
+    if(m_entity && !m_ignoreDraw)
         m_entity->draw(m_transform);
 
     for(auto* child : m_childs) { 

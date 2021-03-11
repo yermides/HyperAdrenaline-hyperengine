@@ -9,7 +9,7 @@ struct Node
 {
     using NodeList = std::vector<Node*>;
     
-    explicit Node();
+    explicit Node(bool const ignoreDrawInTraverse = false);
     ~Node();
 
     void                addChild(Node* node);
@@ -64,14 +64,18 @@ struct Node
 
 private:
     glm::mat4 m_transform {1.0f};
-    Entity* m_entity { nullptr };
     NodeList m_childs;
     Node* m_parent { nullptr };
+    Entity* m_entity { nullptr };
 
     glm::vec3 m_translation {0.0f};
     glm::vec3 m_rotation {0.0f};
     glm::vec3 m_scale {1.0f};
 
     bool m_wantsUpdate { true };
-    bool m_ignoreDraw  { false };
+
+    // Variable usada para arreglar el recorrido del árbol 
+    // no se renderizan las cámaras y luces durante el traverse
+    // sino antes por control del engine
+    bool const m_ignoreDraw { false };
 };
