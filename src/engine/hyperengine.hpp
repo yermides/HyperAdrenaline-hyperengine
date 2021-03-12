@@ -20,31 +20,31 @@
 #define default_createnode_params           nullptr, default_matrix_params
 #define engine_invalid_id                   -1
 
-// Projection matrix
-static glm::mat4 Projection 
-	= glm::perspective(
-		glm::radians(45.0f) // 45° Field of View
-		, 16.0f / 9.0f      // 16:9 ratio
-		, 0.1f              // display range : 0.1 unit <--
-		, 100.0f            // --> 100 units
-);
+// // Projection matrix
+// static glm::mat4 Projection 
+// 	= glm::perspective(
+// 		glm::radians(45.0f) // 45° Field of View
+// 		, 16.0f / 9.0f      // 16:9 ratio
+// 		, 0.1f              // display range : 0.1 unit <--
+// 		, 100.0f            // --> 100 units
+// );
 
-// View matrix
-static glm::mat4 View  
-	= glm::lookAt(
-		glm::vec3(4,3,-3), // Camera is at (4,3,-3), in World Space
-		glm::vec3(0,0,0), // and looks at the origin
-		glm::vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
-);
+// // View matrix
+// static glm::mat4 View  
+// 	= glm::lookAt(
+// 		glm::vec3(4,3,-3), // Camera is at (4,3,-3), in World Space
+// 		glm::vec3(0,0,0), // and looks at the origin
+// 		glm::vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
+// );
 
-// Model matrix, default model at 0,0,0
-static glm::mat4 Model      = glm::mat4(1.0f);
+// // Model matrix, default model at 0,0,0
+// static glm::mat4 Model      = glm::mat4(1.0f);
 
-// Our ModelViewProjection : multiplication of our 3 matrices
-static glm::mat4 MVP        = Projection * View * Model; // Remember, matrix multiplication is the other way around
+// // Our ModelViewProjection : multiplication of our 3 matrices
+// static glm::mat4 MVP        = Projection * View * Model; // Remember, matrix multiplication is the other way around
 
-static glm::mat4 const test_projection = glm::lookAt(glm::vec3(4,3,-3), glm::vec3(0,0,0), glm::vec3(0,1,0));
-static glm::mat4 test_view = glm::mat4(1.0f);
+// static glm::mat4 const test_projection = glm::lookAt(glm::vec3(4,3,-3), glm::vec3(0,0,0), glm::vec3(0,1,0));
+// static glm::mat4 test_view = glm::mat4(1.0f);
 
 struct HyperEngine
 {
@@ -100,7 +100,7 @@ struct HyperEngine
         ,   Args... args
         )
         {
-            auto node   = createNode(m_modelrootnode, trans, rot, scale);
+            auto node   = createNode(parent, trans, rot, scale);
             auto model  = new EModel(args...);
             node->setEntity(model);
             return node;
@@ -142,7 +142,6 @@ private:
     };
 
     Node* const     m_rootnode      { new Node   };
-    Node* const     m_modelrootnode      { createNode()   };
     // No se necesita el resource manager por su naturaleza singleton
 
     // Atributos para mantenimiento de las cámaras, luces y viewports

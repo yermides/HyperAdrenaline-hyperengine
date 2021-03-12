@@ -105,15 +105,11 @@ HyperEngine::beginRender(void) const
 void 
 HyperEngine::drawScene(void) const
 {
-	// TODO:: Temporal, empezar con la matriz identidad y recoger las matrices vista, proyección y modelos
-	// m_rootnode->traverse(glm::mat4{1.0f});
-	
-	// TODO:: seguir por https://youtu.be/5CVUSiYGOgk?t=507
-
 	// Si no hay cámara activa, no renderizar la escena
 	if(m_active_camera == engine_invalid_id)
 		return;
 
+	// TODO:: luces
 	// for(auto light : m_lights) {
 	// 	auto lightmatrix = light->getMatrixTransform();
 	// 	auto shaderID = light->getEntity()->getProgramID();
@@ -122,15 +118,37 @@ HyperEngine::drawScene(void) const
 	// }
 
 	auto activeCamNode = this->m_cameras[m_active_camera];
-	// auto cameraMatrix = activeCamera->getMatrixTransform();
-	// auto viewmatrix = glm::inverse(cameraMatrix);
 	auto camentity = static_cast<ECamera*>(activeCamNode->getEntity());
-	camentity->draw(glm::mat4{1.0f});
+	auto shaderID = camentity->getProgramID();
 
-	auto projectionview = camentity->getProjectionMatrix() * camentity->getViewMatrix();
+	// Pasar matrices a opengl 
+	glUseProgram(shaderID);
 
-	// m_rootnode->traverse(glm::mat4{1.0f});
-	m_modelrootnode->traverse(projectionview);
+	auto projection = camentity->getProjectionMatrix();
+
+    INFOLOG("Se encuentra la propiedad projection: " << VAR(glGetUniformLocation(shaderID, "projection")));
+    glUniformMatrix4fv(
+        glGetUniformLocation(shaderID, "projection")
+        , 1
+        , GL_FALSE
+        , &projection[0][0]
+    );
+
+	auto cameraMatrix = activeCamNode->getMatrixTransform();
+	auto view = glm::inverse(cameraMatrix);
+
+    INFOLOG("Se encuentra la propiedad view: " << VAR(glGetUniformLocation(shaderID, "view")));
+
+	glUniformMatrix4fv(
+        glGetUniformLocation(shaderID, "view")
+        , 1
+        , GL_FALSE
+        , &view[0][0]
+    );
+
+	glUseProgram(0);
+
+	m_rootnode->traverse(glm::mat4{1.0f});
 }
 
 void 

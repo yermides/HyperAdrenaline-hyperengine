@@ -5,97 +5,97 @@
 */
 #include <main.hpp>
 
-void test_models_and_imgui(void) {
-    auto engine = new HyperEngine;
-    engine->initialize();
-	auto window = engine->getWindow();
+// void test_models_and_imgui(void) {
+//     auto engine = new HyperEngine;
+//     engine->initialize();
+// 	auto window = engine->getWindow();
 
-	// Imgui setup
-	IMGUI_CHECKVERSION();
-    ImGui::CreateContext();
-    ImGuiIO& io = ImGui::GetIO(); (void)io;
-    ImGui::StyleColorsDark();
-    ImGui_ImplGlfw_InitForOpenGL(window, true);
-    ImGui_ImplOpenGL3_Init("#version 130");
-	bool show_another_window { true };
-	glm::vec3 rspeed {0,0,0};
-	// end (Imgui setup)
+// 	// Imgui setup
+// 	IMGUI_CHECKVERSION();
+//     ImGui::CreateContext();
+//     ImGuiIO& io = ImGui::GetIO(); (void)io;
+//     ImGui::StyleColorsDark();
+//     ImGui_ImplGlfw_InitForOpenGL(window, true);
+//     ImGui_ImplOpenGL3_Init("#version 130");
+// 	bool show_another_window { true };
+// 	glm::vec3 rspeed {0,0,0};
+// 	// end (Imgui setup)
 
-	auto rootnode = new Node();
-	auto programID = ResourceManager::getResource_t<RShader>("src/shaders/1.model_loading")->getProgramID();
+// 	auto rootnode = new Node();
+// 	auto programID = ResourceManager::getResource_t<RShader>("src/shaders/1.model_loading")->getProgramID();
 
-    // Node* node = engine->create<EModel>(rootnode, default_matrix_params, "assets/missile-launcher.obj");
-    Node* node = engine->createModel(rootnode, default_matrix_params, "assets/missile-launcher.obj");
-    node->getEntity()->setProgramID(programID);
-    Node* node2 = engine->createModel(rootnode, {1.0f, 0.0f, 0.0f}, default_rot, default_scale, "assets/HA_funador_pesado.obj");
-    node2->getEntity()->setProgramID(programID);
+//     // Node* node = engine->create<EModel>(rootnode, default_matrix_params, "assets/missile-launcher.obj");
+//     Node* node = engine->createModel(rootnode, default_matrix_params, "assets/missile-launcher.obj");
+//     node->getEntity()->setProgramID(programID);
+//     Node* node2 = engine->createModel(rootnode, {1.0f, 0.0f, 0.0f}, default_rot, default_scale, "assets/HA_funador_pesado.obj");
+//     node2->getEntity()->setProgramID(programID);
 
-	// Node* node = new Node();
-	// EModel* modelEntity = new EModel("assets/missile-launcher.obj");
+// 	// Node* node = new Node();
+// 	// EModel* modelEntity = new EModel("assets/missile-launcher.obj");
     
-	// // "assets/pruebastexturas/cube_hardbytes.obj"
-	// // "assets/pruebastexturas/cubo_substance.obj"
-	// modelEntity->setProgramID(programID);
-	// node->setEntity(modelEntity);
-	// rootnode->addChild(node);
+// 	// // "assets/pruebastexturas/cube_hardbytes.obj"
+// 	// // "assets/pruebastexturas/cubo_substance.obj"
+// 	// modelEntity->setProgramID(programID);
+// 	// node->setEntity(modelEntity);
+// 	// rootnode->addChild(node);
 
-	// Node* node2 = new Node();
-	// EModel* modelEntity2 = new EModel("assets/HA_funador_pesado.obj");
-	// modelEntity2->setProgramID(programID);
-	// node2->setEntity(modelEntity2);
-	// node2->setTranslation({-2,0,0});
-	// rootnode->addChild(node2);
+// 	// Node* node2 = new Node();
+// 	// EModel* modelEntity2 = new EModel("assets/HA_funador_pesado.obj");
+// 	// modelEntity2->setProgramID(programID);
+// 	// node2->setEntity(modelEntity2);
+// 	// node2->setTranslation({-2,0,0});
+// 	// rootnode->addChild(node2);
 
-    // Node* node2 = engine->createModel(rootnode, {0,0,0}, {0,0,0}, {1,1,1}, "assets/HA_funador_pesado.obj");
+//     // Node* node2 = engine->createModel(rootnode, {0,0,0}, {0,0,0}, {1,1,1}, "assets/HA_funador_pesado.obj");
 
-	do{
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+// 	do{
+// 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		rootnode->traverse(MVP);
+// 		rootnode->traverse(MVP);
 
-		ImGui_ImplOpenGL3_NewFrame();
-        ImGui_ImplGlfw_NewFrame();
-        ImGui::NewFrame();
+// 		ImGui_ImplOpenGL3_NewFrame();
+//         ImGui_ImplGlfw_NewFrame();
+//         ImGui::NewFrame();
 
-		if(show_another_window) {
-			ImGui::Begin("Another Window", &show_another_window);   // Pass a pointer to our bool variable (the window will have a closing button that will clear the bool when clicked)
-			ImGui::Text("Hello from another window!");
-			// Drags
-			ImGui::Text("Velocidad de rotación en X: %f", rspeed.x);
-			ImGui::DragFloat("rspeed.x (-0.1 -> +0.1)", &rspeed.x, 0.003f, -2.0f, 2.0f, "%.3f", 0);
-			ImGui::Text("Velocidad de rotación en Y: %f", rspeed.y);
-			ImGui::DragFloat("rspeed.y (-0.1 -> +0.1)", &rspeed.y, 0.003f, -2.0f, 2.0f, "%.3f", 0);
-			ImGui::Text("Velocidad de rotación en Z: %f", rspeed.z);
-			ImGui::DragFloat("rspeed.z (-0.1 -> +0.1)", &rspeed.z, 0.003f, -2.0f, 2.0f, "%.3f", 0);
-			if (ImGui::Button("Ciérrame"))
-				show_another_window = false;
-			ImGui::End();
-		}
+// 		if(show_another_window) {
+// 			ImGui::Begin("Another Window", &show_another_window);   // Pass a pointer to our bool variable (the window will have a closing button that will clear the bool when clicked)
+// 			ImGui::Text("Hello from another window!");
+// 			// Drags
+// 			ImGui::Text("Velocidad de rotación en X: %f", rspeed.x);
+// 			ImGui::DragFloat("rspeed.x (-0.1 -> +0.1)", &rspeed.x, 0.003f, -2.0f, 2.0f, "%.3f", 0);
+// 			ImGui::Text("Velocidad de rotación en Y: %f", rspeed.y);
+// 			ImGui::DragFloat("rspeed.y (-0.1 -> +0.1)", &rspeed.y, 0.003f, -2.0f, 2.0f, "%.3f", 0);
+// 			ImGui::Text("Velocidad de rotación en Z: %f", rspeed.z);
+// 			ImGui::DragFloat("rspeed.z (-0.1 -> +0.1)", &rspeed.z, 0.003f, -2.0f, 2.0f, "%.3f", 0);
+// 			if (ImGui::Button("Ciérrame"))
+// 				show_another_window = false;
+// 			ImGui::End();
+// 		}
 
-		ImGui::Render();
-		int display_w, display_h;
-        glfwGetFramebufferSize(window, &display_w, &display_h);
-        glViewport(0, 0, display_w, display_h);
-		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+// 		ImGui::Render();
+// 		int display_w, display_h;
+//         glfwGetFramebufferSize(window, &display_w, &display_h);
+//         glViewport(0, 0, display_w, display_h);
+// 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
-		glfwSwapBuffers(window);
-		glfwPollEvents();
+// 		glfwSwapBuffers(window);
+// 		glfwPollEvents();
 
-		rootnode->rotate(rspeed);
-	} 
-	while( glfwGetKey(window, GLFW_KEY_ESCAPE ) != GLFW_PRESS &&
-		   glfwWindowShouldClose(window) == 0 );
+// 		rootnode->rotate(rspeed);
+// 	} 
+// 	while( glfwGetKey(window, GLFW_KEY_ESCAPE ) != GLFW_PRESS &&
+// 		   glfwWindowShouldClose(window) == 0 );
 
-    // Cleanup
-    ImGui_ImplOpenGL3_Shutdown();
-    ImGui_ImplGlfw_Shutdown();
-    ImGui::DestroyContext();
-	glfwDestroyWindow(window);
-	glfwTerminate();
+//     // Cleanup
+//     ImGui_ImplOpenGL3_Shutdown();
+//     ImGui_ImplGlfw_Shutdown();
+//     ImGui::DestroyContext();
+// 	glfwDestroyWindow(window);
+// 	glfwTerminate();
 
-	if(rootnode) delete rootnode;
-    if(engine) delete engine;
-}
+// 	if(rootnode) delete rootnode;
+//     if(engine) delete engine;
+// }
 
 void test_basic_lights() {
     auto engine = new HyperEngine;
@@ -326,7 +326,7 @@ void test_full_tree_traverse() {
 
     auto camnode = engine->createCamera(nullptr, default_matrix_params); // tendrá la proyección por defecto
     camnode->getEntity()->setProgramID(shaderID);
-    camnode->translate({0,0,300});
+    camnode->translate({0,0,4});
 
     Node* missile_launcher = engine->createModel(default_createnode_params, "assets/missile-launcher.obj");
     Node* funador_pesado = engine->createModel(nullptr, {2.0f, 0.0f, 0.0f}, default_rot, default_scale, "assets/HA_funador_pesado.obj");
@@ -335,14 +335,20 @@ void test_full_tree_traverse() {
 
     missile_launcher->translate({0.0f,0.0f,-3.0f});
 
-
     while(engine->isWindowActive() && !engine->isKeyPressed(GLFW_KEY_ESCAPE))
     {
         engine->beginRender();
         engine->drawScene();
         engine->endRender();
 
-        // missile_launcher->rotate({0.0f,1.0f,0.0f});
+        if(engine->isKeyPressed(GLFW_KEY_A))
+            camnode->rotate({0,3,0});
+        if(engine->isKeyPressed(GLFW_KEY_D))
+            camnode->rotate({0,-3,0});
+        if(engine->isKeyPressed(GLFW_KEY_W))
+            camnode->rotate({3,0,0});
+        if(engine->isKeyPressed(GLFW_KEY_S))
+            camnode->rotate({-3,0,0});
     }
 
     delete engine;
