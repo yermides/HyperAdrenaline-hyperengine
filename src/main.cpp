@@ -321,7 +321,7 @@ void test_view_matrix_inverse(void) {
 }
 
 void test_full_tree_traverse() {
-    auto engine = new HyperEngine(true);
+    auto engine = std::make_unique<HyperEngine>(true);
 	auto shaderID = ResourceManager::getResource_t<RShader>("src/shaders/model-loading-m-v-p")->getProgramID();
 
     auto camnode = engine->createCamera(nullptr, default_matrix_params); // tendrá la proyección por defecto
@@ -349,9 +349,17 @@ void test_full_tree_traverse() {
             camnode->rotate({3,0,0});
         if(engine->isKeyPressed(GLFW_KEY_S))
             camnode->rotate({-3,0,0});
+
+        if(engine->isKeyPressed(GLFW_KEY_UP))
+            camnode->translate({0,0.1f,0});
+        if(engine->isKeyPressed(GLFW_KEY_DOWN))
+            camnode->translate({0,-0.1f,0});
+        if(engine->isKeyPressed(GLFW_KEY_LEFT))
+            camnode->translate({-0.1f,0,0});
+        if(engine->isKeyPressed(GLFW_KEY_RIGHT))
+            camnode->translate({0.1f,0,0});
     }
 
-    delete engine;
 }
 
 int main(void) {

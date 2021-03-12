@@ -20,21 +20,11 @@ Node::~Node()
 
     INFOLOG("Removing parent from node "<< VAR(this));
 
-    if(m_parent)
-        m_parent->removeChild(this);
-
-    INFOLOG("Starting to delete all childs from node "<< VAR(this));
-
-    for(auto n : m_childs) {
-        if(n) 
-        {
-            delete n;
-            n = nullptr;
-            INFOLOG("Deleted node "<< VAR(n));
-        }
+    if(m_parent) {
+        // necesario en algún momento llamar al removechild o hacer algo similar, pero de momento sirve
+        // para deletear el rootnode
+        m_parent = nullptr;
     }
-
-    m_childs.clear();
 }
 
 void                
@@ -112,4 +102,15 @@ Node::traverse(glm::mat4 const& accumulatedTrans)
 
         child->traverse(m_transform);
     }
+}
+
+void 
+Node::deleteBranch(Node* node) 
+{
+    if(!node) return;
+
+    for(auto child : node->m_childs)
+        deleteBranch(child);
+
+    delete node;
 }

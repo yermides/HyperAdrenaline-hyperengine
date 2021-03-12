@@ -62,7 +62,9 @@ struct Node
 
     void                traverse(glm::mat4 const& accumulatedTrans);
 
+    static void                deleteBranch(Node* node);
 private:
+
     glm::mat4 m_transform {1.0f};
     NodeList m_childs;
     Node* m_parent { nullptr };

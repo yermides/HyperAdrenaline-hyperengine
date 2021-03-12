@@ -8,10 +8,7 @@ HyperEngine::HyperEngine(bool const init)
 
 HyperEngine::~HyperEngine()
 {
-	// if(m_camrootnode) delete m_camrootnode;
-	// if(m_lightrootnode) delete m_lightrootnode;
-	// if(m_modelrootnode) delete m_modelrootnode;
-	if(m_rootnode) delete m_rootnode;
+	Node::deleteBranch(m_rootnode);
 	glfwDestroyWindow(m_window);
 	glfwTerminate();
 }

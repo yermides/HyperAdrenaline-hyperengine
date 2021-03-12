@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include <memory>
 #include <util/macros.hpp>
 #include <engine/hyperengine.hpp>
 #include <entities/e_light.hpp>
