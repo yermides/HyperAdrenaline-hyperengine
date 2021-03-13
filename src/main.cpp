@@ -341,6 +341,15 @@ void test_full_tree_traverse() {
     {
         engine->beginRender();
         engine->drawScene();
+
+        // Renderizar lo que sea de la gui entre beginRender y endRender
+        // HyperEngine::drawExampleWindowGUI() solo hace una ventana de ejemplo, lo suyo es hacer begin, text, end, las cosas de imgui
+        engine->drawExampleWindowGUI();
+
+        hyper::gui::Begin("Ventana temporal2 - HyperEngine::drawExampleWindowGUI()");
+	    hyper::gui::Button("Hola mundo2!");
+	    hyper::gui::End();
+
         engine->endRender();
 
         if(engine->isKeyPressed(GLFW_KEY_A))

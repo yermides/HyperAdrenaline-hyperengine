@@ -1,11 +1,18 @@
 #pragma once
+// C++
 #include <stdio.h>
 #include <stdlib.h>
+// OpenGL
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <managers/resource_manager.hpp>
+// ImGUI
+#include <imgui/imgui.h>
+#include <imgui/imgui_impl_opengl3.h>
+#include <imgui/imgui_impl_glfw.h>
+// HyperEngine
 #include <tree/node.hpp>
 #include <entities/e_camera.hpp>
 #include <entities/e_light.hpp>
@@ -47,6 +54,8 @@
 // static glm::mat4 test_view = glm::mat4(1.0f);
 
 namespace hyper {
+
+namespace gui = ImGui;
 
 struct HyperEngine
 {
@@ -114,6 +123,8 @@ struct HyperEngine
 
     void drawScene(void) const;
 
+    void drawExampleWindowGUI(void);    // TODO:: borrar, es solo un ejemplo
+
     void endRender(void) const;
 
     int registerCamera(Node* const camera);
@@ -154,6 +165,9 @@ private:
     int m_active_camera  {engine_invalid_id} 
     ,   m_active_viewport{engine_invalid_id};
     std::vector<bool> m_active_lights;
+
+    // imgui
+    ImGuiIO* m_io;
 };
 
 }

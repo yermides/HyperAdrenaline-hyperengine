@@ -11,6 +11,9 @@ HyperEngine::HyperEngine(bool const init)
 HyperEngine::~HyperEngine()
 {
 	Node::deleteBranch(m_rootnode);
+	ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplGlfw_Shutdown();
+    gui::DestroyContext();
 	glfwDestroyWindow(m_window);
 	glfwTerminate();
 }
@@ -66,6 +69,15 @@ HyperEngine::initialize(void)
 	glDepthFunc(GL_LESS); 
 
 	glfwSwapInterval(1);	// VSync
+
+	// Initialize ImGUI
+	IMGUI_CHECKVERSION();
+    gui::CreateContext();
+    // ImGuiIO& io = gui::GetIO(); (void)io;
+    m_io = &gui::GetIO(); (void)m_io;
+    gui::StyleColorsDark();
+    ImGui_ImplGlfw_InitForOpenGL(m_window, true);
+    ImGui_ImplOpenGL3_Init("#version 130");
 }
 
 Node* 
@@ -99,6 +111,12 @@ void
 HyperEngine::beginRender(void) const
 { 
 	this->clearScreen();
+
+	// Imgui
+
+	ImGui_ImplOpenGL3_NewFrame();
+	ImGui_ImplGlfw_NewFrame();
+	gui::NewFrame();
 }
 
 void 
@@ -151,8 +169,23 @@ HyperEngine::drawScene(void) const
 }
 
 void 
+HyperEngine::drawExampleWindowGUI(void)
+{
+	// TODO:: temporal, solo es un pequeño ejemplo de ventana
+	gui::Begin("Ventana temporal - HyperEngine::drawExampleWindowGUI()");
+	gui::Button("Hola mundo!");
+	gui::End();
+}
+
+void 
 HyperEngine::endRender(void) const
 { 
+	// Render gui
+
+	gui::Render();
+	ImGui_ImplOpenGL3_RenderDrawData(gui::GetDrawData());
+	
+	// End render
 	glfwSwapBuffers(m_window);
 	glfwPollEvents();
 }
