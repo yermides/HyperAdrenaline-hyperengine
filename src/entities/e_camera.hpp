@@ -4,6 +4,8 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
+namespace hyper {
+
 struct ECamera : public Entity
 {
 	// explicit ECamera();
@@ -37,3 +39,5 @@ private:
 	glm::mat4 m_projection;
 	glm::mat4 m_view;
 };
+
+}

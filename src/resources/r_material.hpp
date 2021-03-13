@@ -6,6 +6,8 @@
 #include <assimp/material.h>
 #include <util/macros.hpp>
 
+namespace hyper {
+
 struct RMaterial : public Resource
 {
     explicit RMaterial();
@@ -32,6 +34,8 @@ private:
     float m_Ns, m_d;                            // exponente especular y transparencia
     RTexture *m_mapKa, *m_mapKd, *m_mapKs;      // Imagen mapaKa, mapaKd, mapaKs
 };
+
+}
 
 // Image m_mapKa, m_mapKd, m_mapKs;    // Imagen mapaKa, mapaKd, mapaKs
 // Más propiedades...

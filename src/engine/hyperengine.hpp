@@ -46,6 +46,8 @@
 // static glm::mat4 const test_projection = glm::lookAt(glm::vec3(4,3,-3), glm::vec3(0,0,0), glm::vec3(0,1,0));
 // static glm::mat4 test_view = glm::mat4(1.0f);
 
+namespace hyper {
+
 struct HyperEngine
 {
     explicit HyperEngine(bool const init = false);
@@ -153,3 +155,5 @@ private:
     ,   m_active_viewport{engine_invalid_id};
     std::vector<bool> m_active_lights;
 };
+
+}

@@ -3,6 +3,8 @@
 #include <util/typealiases.hpp>
 #include <util/macros.hpp>
 
+namespace hyper {
+
 struct Entity
 {
     explicit Entity() = default;
@@ -17,3 +19,5 @@ struct Entity
 protected:
     ProgramIdentifier m_programID {0};
 };
+
+}

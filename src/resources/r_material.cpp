@@ -1,5 +1,7 @@
 #include "r_material.hpp"
 
+namespace hyper {
+
 RMaterial::RMaterial()
 : Resource{}
 {
@@ -55,4 +57,6 @@ RMaterial::loadFromFile(std::string const& path)
 {
     this->setName(path);
     this->loadMaterial( path.c_str() );
+}
+
 }

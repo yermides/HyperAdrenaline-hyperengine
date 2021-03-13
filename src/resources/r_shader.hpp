@@ -13,6 +13,8 @@
 
 #include "resource.hpp"
 
+namespace hyper {
+
 struct RShader : public Resource
 {
     explicit RShader();
@@ -73,3 +75,5 @@ private:
     ProgramIdentifier m_programID { 0 };
     std::string m_vertexPath, m_fragmentPath;
 };
+
+}

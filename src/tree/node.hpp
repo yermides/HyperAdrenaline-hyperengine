@@ -5,6 +5,8 @@
 #include <glm/gtx/transform.hpp>
 #include "entities/entity.hpp"
 
+namespace hyper {
+
 struct Node
 {
     using NodeList = std::vector<Node*>;
@@ -81,3 +83,5 @@ private:
     // sino antes por control del engine
     bool const m_ignoreDraw { false };
 };
+
+}

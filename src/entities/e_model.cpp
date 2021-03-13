@@ -1,5 +1,7 @@
 #include "e_model.hpp"
 
+namespace hyper {
+
 EModel::EModel() 
 : Entity{}
 {
@@ -49,4 +51,6 @@ void
 EModel::loadFromFile(std::string const& path)
 {
     m_rmesh = ResourceManager::getResource_t<RMesh>(path);
+}
+
 }

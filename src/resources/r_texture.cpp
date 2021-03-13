@@ -1,5 +1,7 @@
 #include "r_texture.hpp"
 
+namespace hyper {
+
 RTexture::RTexture()
 : Resource{}
 {
@@ -76,4 +78,6 @@ RTexture::loadFromFile(std::string const& path)
 {
     this->setName(path);
     this->loadTexture(path);
+}
+
 }

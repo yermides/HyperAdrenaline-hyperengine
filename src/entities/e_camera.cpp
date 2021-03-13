@@ -1,5 +1,7 @@
 #include "e_camera.hpp"
 
+namespace hyper {
+
 // ECamera::ECamera()
 // : Entity{}
 // {
@@ -44,4 +46,6 @@ ECamera::draw(glm::mat4 const& transform)
     //     ,   GL_FALSE
     //     ,   &m_view[0][0]
     // );
+}
+
 }

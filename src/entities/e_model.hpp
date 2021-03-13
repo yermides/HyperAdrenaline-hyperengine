@@ -3,6 +3,9 @@
 #include <resources/r_mesh.hpp>
 #include <entities/entity.hpp>
 
+namespace hyper {
+
+
 struct EModel : public Entity
 {
     explicit EModel();
@@ -14,3 +17,5 @@ struct EModel : public Entity
 private:
     RMesh* m_rmesh { nullptr };
 };
+
+}

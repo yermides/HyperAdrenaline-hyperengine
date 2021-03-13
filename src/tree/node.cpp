@@ -1,6 +1,8 @@
 #include "node.hpp"
 #include <util/macros.hpp>
 
+namespace hyper {
+
 Node::Node(bool const ignoreDrawInTraverse)
 : m_ignoreDraw(ignoreDrawInTraverse)
 {
@@ -113,4 +115,6 @@ Node::deleteBranch(Node* node)
         deleteBranch(child);
 
     delete node;
+}
+
 }

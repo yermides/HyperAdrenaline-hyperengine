@@ -1,5 +1,7 @@
 #include "hyperengine.hpp"
 
+namespace hyper {
+
 HyperEngine::HyperEngine(bool const init)
 {
 	if(init)
@@ -223,4 +225,6 @@ HyperEngine::isKeyPressed(int const keycode) const noexcept
 		return false;
 
 	return glfwGetKey(m_window, keycode) == GLFW_PRESS; 
+}
+
 }

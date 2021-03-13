@@ -1,5 +1,7 @@
 #include "e_light.hpp"
 
+namespace hyper {
+
 ELight::ELight()
 :	Entity{}
 {
@@ -14,4 +16,6 @@ ELight::~ELight()
 void 
 ELight::draw(glm::mat4 const& tranform)
 {
+}
+
 }

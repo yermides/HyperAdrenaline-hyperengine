@@ -1,6 +1,8 @@
 #pragma once
 #include "entity.hpp"
 
+namespace hyper {
+
 enum class LightType {
 	Directional,
 	Point,
@@ -62,3 +64,5 @@ private:
 	float m_aperture, m_aten_angular;
 	float m_aten_const, m_aten_linear, m_aten_quadratic;
 };
+
+}

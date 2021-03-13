@@ -6,6 +6,8 @@
 #include <util/macros.hpp>
 #include <util/functions.hpp>
 
+namespace hyper {
+
 struct RMesh : public Resource
 {
     explicit RMesh();    
@@ -24,3 +26,5 @@ private:
     std::vector<Mesh*> m_meshes;
     // uint32_t m_nVertex {0};
 };
+
+}

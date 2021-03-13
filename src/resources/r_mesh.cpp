@@ -1,5 +1,7 @@
 #include "r_mesh.hpp"
 
+namespace hyper {
+
 RMesh::RMesh()
 : Resource{}
 {
@@ -179,7 +181,7 @@ RMesh::loadMesh(std::string const& filepath)
         +   (mesh->m_normals.size()*sizeof(GLfloat) )
         +   (mesh->m_texture_coords.size()*sizeof(GLfloat) )
         +   (mesh->m_indices.size()*sizeof(GLuint) )
-        +   (mesh->m_textures.size()*sizeof(Texture) )
+        +   (mesh->m_textures.size()*sizeof(RTexture) )
         );
 
         // ----------------------------------------------------------------------------------------------
@@ -201,4 +203,6 @@ RMesh::loadFromFile(std::string const& path)
 {
     this->setName(path);
     this->loadMesh(path);
+}
+
 }

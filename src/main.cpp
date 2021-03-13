@@ -98,6 +98,7 @@
 // }
 
 void test_basic_lights() {
+    using namespace hyper;
     auto engine = new HyperEngine;
     engine->initialize();
 	auto window = engine->getWindow();
@@ -254,6 +255,7 @@ void test_basic_lights() {
 }
 
 void test_hyperengine_traverse(void) {
+    using namespace hyper;
     auto engine = new HyperEngine(true);
 
 	auto shaderID = ResourceManager::getResource_t<RShader>("src/shaders/1.model_loading")->getProgramID();
@@ -321,15 +323,15 @@ void test_view_matrix_inverse(void) {
 }
 
 void test_full_tree_traverse() {
-    auto engine = std::make_unique<HyperEngine>(true);
-	auto shaderID = ResourceManager::getResource_t<RShader>("src/shaders/model-loading-m-v-p")->getProgramID();
+    std::unique_ptr<hyper::HyperEngine> engine = std::make_unique<hyper::HyperEngine>(true);
+	auto shaderID = hyper::ResourceManager::getResource_t<hyper::RShader>("src/shaders/model-loading-m-v-p")->getProgramID();
 
     auto camnode = engine->createCamera(nullptr, default_matrix_params); // tendrá la proyección por defecto
     camnode->getEntity()->setProgramID(shaderID);
     camnode->translate({0,0,4});
 
-    Node* missile_launcher = engine->createModel(default_createnode_params, "assets/missile-launcher.obj");
-    Node* funador_pesado = engine->createModel(nullptr, {2.0f, 0.0f, 0.0f}, default_rot, default_scale, "assets/HA_funador_pesado.obj");
+    hyper::Node* missile_launcher = engine->createModel(default_createnode_params, "assets/missile-launcher.obj");
+    hyper::Node* funador_pesado = engine->createModel(nullptr, {2.0f, 0.0f, 0.0f}, default_rot, default_scale, "assets/HA_funador_pesado.obj");
     missile_launcher->getEntity()->setProgramID(shaderID);
     funador_pesado->getEntity()->setProgramID(shaderID);
 

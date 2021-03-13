@@ -1,6 +1,8 @@
 #pragma once
 #include <string>
 
+namespace hyper {
+
 namespace util {
 
 inline static void replaceCharacters(std::string& toformat, std::string const& oldcharacters, std::string const& newcharacters)
@@ -11,6 +13,8 @@ inline static void replaceCharacters(std::string& toformat, std::string const& o
         toformat.replace(pos, newcharacters.size()+1, newcharacters);
         pos = toformat.find(oldcharacters, pos);
     }
+}
+
 }
 
 }
