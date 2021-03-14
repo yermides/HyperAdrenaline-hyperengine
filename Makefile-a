@@ -73,15 +73,18 @@ SRC			:= src
 LIB			:= lib
 OBJ			:= build-a
 ## Found files
-ALLCPPS		:= $(shell find $(SRC)/ -type f -iname *.cpp)
+ALLCPPS		:= $(shell find $(SRC)/ -type f -iname *.cpp | grep -v $(SRC)/main.cpp)
 ALLCS		:= $(shell find $(SRC)/ -type f -iname *.c)
 ALLOBJS		:= $(foreach F,$(ALLCPPS) $(ALLCS),$(call C20,$(F)))
 ## Found directories
 SUBDIRS		:= $(shell find $(SRC) -type d)
 OBJSUBDIRS	:= $(patsubst $(SRC)%,$(OBJ)%,$(SUBDIRS))
 
+IMGUIOBJSUBDIR := $(LIB)/imgui/build
+ALLIMGUIOBJ := $(shell find $(LIB)/imgui/build/ -type f -iname *.o)
+
 ## Libraries and include paths
-OPENLG_LINK	:= -lglut -lGLU -lGL -lGLEW -lglfw -lX11
+OPENLG_LINK		:= -lglut -lGLU -lGL -lGLEW -lglfw -lX11
 IMPORTERS_LINK 	:= -lSOIL -lassimp	# assimp is a file importer, SOIL is an image loader (missing freetype, a text importer)
 MATH_LINK		:= -lm
 IMGUI_LINK 		:= $(LIB)/imgui/libimgui.a
@@ -91,15 +94,15 @@ SHARED			:=
 INCDIRS			:= -I$(LIB) -I$(LIB)/imgui -I$(SRC) -I/usr/include/GL/ -I/usr/include/GLFW/ -I/usr/local/include -L/usr/local/lib 
 
 ## Tools
-MKDIR		:= mkdir -p
+MKDIR			:= mkdir -p
 
 #---------------------------------#
 # DEPENDECIES AND GENERATED RULES #
 #---------------------------------#
 .PHONY: info
 
-$(APP) : $(OBJSUBDIRS) $(ALLOBJS)
-	$(AR) $(ARFLAGS) $(APP) $(ALLOBJS)
+$(APP) : $(OBJSUBDIRS) $(ALLOBJS) $(IMGUIOBJSUBDIR) $(ALLIMGUIOBJ)
+	$(AR) $(ARFLAGS) $(APP) $(ALLOBJS) $(ALLIMGUIOBJ)
 	$(RANLIB) $(APP)
 
 # Compile all .cpp and .c files into .o files
@@ -116,6 +119,9 @@ info:
 
 $(OBJSUBDIRS):
 	$(MKDIR) $(OBJSUBDIRS)
+
+$(IMGUIOBJSUBDIR):
+	$(MAKE) -C $(LIB)/imgui
 
 clean:
 	$(RM) -r "./$(OBJ)"
