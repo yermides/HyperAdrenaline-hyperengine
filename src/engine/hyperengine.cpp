@@ -10,6 +10,7 @@ HyperEngine::HyperEngine(bool const init)
 
 HyperEngine::~HyperEngine()
 {
+	m_shaders.clear();
 	Node::deleteBranch(m_rootnode);
 	ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
@@ -78,6 +79,9 @@ HyperEngine::initialize(void)
     gui::StyleColorsDark();
     ImGui_ImplGlfw_InitForOpenGL(m_window, true);
     ImGui_ImplOpenGL3_Init("#version 130");
+
+	// Load shaders here
+	m_shaders[OpenGLShader::SHADER_DEFAULT] = ResourceManager::getResource_t<RShader>(SHADER_DEFAULT_PATH);
 }
 
 Node* 

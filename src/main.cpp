@@ -323,20 +323,27 @@ void test_view_matrix_inverse(void) {
 }
 
 void test_full_tree_traverse() {
-    std::unique_ptr<hyper::HyperEngine> engine = std::make_unique<hyper::HyperEngine>(true);
-	auto shaderID = hyper::ResourceManager::getResource_t<hyper::RShader>("src/shaders/model-loading-m-v-p")->getProgramID();
+    // No son necesarios los parámetros de shader, lo que hacen es sobreescribir el shader con el que se dibujan
+    // pero la engine les pone un shader por defecto
 
-    auto camnode = engine->createCamera(nullptr, default_matrix_params); // tendrá la proyección por defecto
-    camnode->getEntity()->setProgramID(shaderID);
-    camnode->translate({0,0,4});
+	// auto shaderID = hyper::ResourceManager::getResource_t<hyper::RShader>("src/shaders/model-loading-m-v-p")->getProgramID();
+    // camnode->getEntity()->setProgramID(shaderID);
+    // missile_launcher->getEntity()->setProgramID(shaderID);
+    // funador_pesado->getEntity()->setProgramID(shaderID);
+
+    std::unique_ptr<hyper::HyperEngine> engine = std::make_unique<hyper::HyperEngine>(true);
+
+    auto camnode = engine->createCamera(default_createnode_params); // tendrá la proyección por defecto
 
     hyper::Node* missile_launcher = engine->createModel(default_createnode_params, "assets/missile-launcher.obj");
     hyper::Node* funador_pesado = engine->createModel(nullptr, {2.0f, 0.0f, 0.0f}, default_rot, default_scale, "assets/HA_funador_pesado.obj");
-    missile_launcher->getEntity()->setProgramID(shaderID);
-    funador_pesado->getEntity()->setProgramID(shaderID);
 
+    camnode->translate({0,0,4});
     missile_launcher->translate({0.0f,0.0f,-3.0f});
 
+    glm::vec3* camtrans = { new glm::vec3( camnode->getTranslation() )};
+    glm::vec3* camrot = { new glm::vec3( camnode->getRotation() )};
+    
     while(engine->isWindowActive() && !engine->isKeyPressed(GLFW_KEY_ESCAPE))
     {
         engine->beginRender();
@@ -344,10 +351,13 @@ void test_full_tree_traverse() {
 
         // Renderizar lo que sea de la gui entre beginRender y endRender
         // HyperEngine::drawExampleWindowGUI() solo hace una ventana de ejemplo, lo suyo es hacer begin, text, end, las cosas de imgui
-        engine->drawExampleWindowGUI();
+        // engine->drawExampleWindowGUI();
 
-        hyper::gui::Begin("Ventana temporal2 - HyperEngine::drawExampleWindowGUI()");
+        hyper::gui::Begin("Ventana temporal2 - HyperEngine::drawExampleWindowGUI()", 0, 
+            ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove);
 	    hyper::gui::Button("Hola mundo2!");
+        ImGui::SliderFloat3("Translación de la cámara", (float*)camtrans, -10.0f, 10.0f);
+        ImGui::SliderFloat3("Rotación de la cámara", (float*)camrot, -180.0f, 180.0f);
 	    hyper::gui::End();
 
         engine->endRender();
@@ -369,6 +379,9 @@ void test_full_tree_traverse() {
             camnode->translate({-0.1f,0,0});
         if(engine->isKeyPressed(GLFW_KEY_RIGHT))
             camnode->translate({0.1f,0,0});
+
+        camnode->setTranslation( *(glm::vec3*)camtrans );
+        camnode->setRotation( *(glm::vec3*)camrot );
     }
 
 }
