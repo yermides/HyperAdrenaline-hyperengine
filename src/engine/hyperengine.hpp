@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unordered_map>
+#include <map>
 // OpenGL
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
@@ -116,7 +117,7 @@ struct HyperEngine
 
     void clearScreen(void) const;
 
-    void beginRender(void) const;
+    void beginRender(void);
 
     void drawScene(void) const;
 
@@ -140,23 +141,32 @@ struct HyperEngine
 
     GLFWwindow* getWindow(void) const noexcept;
 
-    bool const isKeyPressed(int const keycode) const noexcept;
+    void setKeyState(int const key, int const action);
+
+    bool const getKeySinglePress(int const key) noexcept;
+    bool const getKeyContinuousPress(int const key) noexcept;
+    bool const getKeyKeyboardPress(int const key) noexcept;
+    bool const getKeyRelease(int const key) noexcept;
 
 private:
-    inline static int nextCameraID      {0};
-    inline static int nextLightID       {0};
-    inline static int nextViewportID    {0};
+    void resetKeyStates(void);
 
     struct Viewport {
         int x, y, height, width;
     };
+
+    inline static int nextCameraID      {0};
+    inline static int nextLightID       {0};
+    inline static int nextViewportID    {0};
+
 
     Node* const     m_rootnode      { new Node   };
     // No se necesita el resource manager por su naturaleza singleton
 
     // Administrador de shaders
     std::unordered_map<OpenGLShader, RShader*> m_shaders;
-
+    // Administración del input de teclado
+    std::map<int, int> m_keystates;
     // Atributos para mantenimiento de las cámaras, luces y viewports
     GLFWwindow*     m_window   { nullptr    };
     std::vector<Node*> m_cameras;
