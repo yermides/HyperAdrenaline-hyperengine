@@ -20,11 +20,14 @@ RMesh::~RMesh()
 }
 
 void 
-RMesh::draw(ProgramIdentifier const shaderID)
+RMesh::draw(RShader* const shader)
 {
+    if(!shader) return;
+
     for(auto m : m_meshes) 
-        m->draw(shaderID);
+        m->draw(shader);
 }
+
 
 void 
 RMesh::loadMesh(std::string const& filepath)

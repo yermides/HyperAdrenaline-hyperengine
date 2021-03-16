@@ -71,7 +71,7 @@ struct HyperEngine
             auto camera     = new ECamera(args...);
 
             // Test, poner directamente el shader a usar
-            camera->setProgramID(m_shaders[OpenGLShader::SHADER_DEFAULT]->getProgramID());
+            camera->setShader(m_shaders[OpenGLShader::SHADER_DEFAULT]);
 
             node->setEntity(camera);
             registerCamera(node);
@@ -91,7 +91,7 @@ struct HyperEngine
             auto light  = new ELight(args...);
 
             // Test, poner directamente el shader a usar
-            light->setProgramID(m_shaders[OpenGLShader::SHADER_DEFAULT]->getProgramID());
+            light->setShader(m_shaders[OpenGLShader::SHADER_DEFAULT]);
 
             node->setEntity(light);
             return node;
@@ -110,7 +110,7 @@ struct HyperEngine
             auto model  = new EModel(args...);
 
             // Test, poner directamente el shader a usar
-            model->setProgramID(m_shaders[OpenGLShader::SHADER_DEFAULT]->getProgramID());
+            model->setShader(m_shaders[OpenGLShader::SHADER_DEFAULT]);
 
             node->setEntity(model);
             return node;

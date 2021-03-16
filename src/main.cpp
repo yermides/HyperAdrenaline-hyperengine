@@ -258,12 +258,13 @@ void test_hyperengine_traverse(void) {
     using namespace hyper;
     auto engine = new HyperEngine(true);
 
-	auto shaderID = ResourceManager::getResource_t<RShader>("src/shaders/1.model_loading")->getProgramID();
+    auto shader = ResourceManager::getResource_t<RShader>("src/shaders/1.model_loading");
+	auto shaderID = shader->getProgramID();
 
     Node* node = engine->createModel(default_createnode_params, "assets/missile-launcher.obj");
     Node* node2 = engine->createModel(nullptr, {2.0f, 0.0f, 0.0f}, default_rot, default_scale, "assets/HA_funador_pesado.obj");
-    node->getEntity()->setProgramID(shaderID);
-    node2->getEntity()->setProgramID(shaderID);
+    node->getEntity()->setShader(shader);
+    node2->getEntity()->setShader(shader);
 
     while(engine->isWindowActive() && !engine->getKeyContinuousPress(GLFW_KEY_ESCAPE))
     {
@@ -398,6 +399,8 @@ void test_input_callbacks() {
         engine->beginRender();
         engine->drawScene();
         engine->endRender();
+
+        missile_launcher->rotate({0,5.5f,0});
 
         if(engine->getKeyContinuousPress(GLFW_KEY_A))
             camnode->rotate({0,3,0});

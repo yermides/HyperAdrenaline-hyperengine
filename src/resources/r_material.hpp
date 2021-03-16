@@ -1,8 +1,8 @@
 #pragma once
 #include <glm/glm.hpp>
-#include <resources/resource.hpp>
-#include <resources/r_texture.hpp>
 #include <managers/resource_manager.hpp>
+#include <resources/r_texture.hpp>
+#include <resources/r_shader.hpp>
 #include <assimp/material.h>
 #include <util/macros.hpp>
 #include <util/functions.hpp>
@@ -23,7 +23,7 @@ struct RMaterial : public Resource
     ~RMaterial();
 
     void initialize(void);
-    void draw(ProgramIdentifier const shaderID);
+    void draw(RShader* const shader);
 
     void loadMaterial(std::string const& path);
     void loadMaterial(aiMaterial* amaterial, std::string const& search_directory = "assets");

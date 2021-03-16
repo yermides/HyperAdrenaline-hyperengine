@@ -19,32 +19,19 @@ EModel::~EModel()
 void 
 EModel::draw(glm::mat4 const& transform)
 {
+    if(!m_shader) return;
+    
     // Use our shader
-    glUseProgram(m_programID);
+    m_shader->bind();
 
-    // Send our transformation to the currently bound shader, in the "MVP" uniform
-    // glUniformMatrix4fv(
-    //         glGetUniformLocation(m_programID, "MVP")
-    //     ,   1
-    //     ,   GL_FALSE
-    //     ,   &transform[0][0]
-    // );
-
-
-    // INFOLOG("Se encuentra la propiedad model: " << VAR(glGetUniformLocation(m_programID, "model")));
-
-    glUniformMatrix4fv(
-        glGetUniformLocation(m_programID, "model")
-        , 1
-        , GL_FALSE
-        , &transform[0][0]
-    );
+    // Pass the model matrix
+    m_shader->setMat4("model", transform);
 
     // Draw the mesh now that everything is setup
-    m_rmesh->draw(m_programID);
+    m_rmesh->draw(m_shader);
 
     // Unbind shader, if other shader is being used for other models
-    glUseProgram(0);
+    m_shader->unbind();
 }
 
 void 

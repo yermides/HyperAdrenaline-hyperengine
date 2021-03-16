@@ -70,10 +70,6 @@ Mesh::initialize(void)
 
     glBindVertexArray(0);
 
-    // Initialize textures
-    // for(auto texture : m_textures)
-    //     texture->initialize();
-
     // Initialize materials
     for(auto material : m_materials)
         material->initialize();
@@ -89,14 +85,12 @@ Mesh::initialize(void)
 // Dibujar                                      (glDrawElements)
 
 void 
-Mesh::draw(ProgramIdentifier const shaderID) 
+Mesh::draw(RShader* const shader)
 {
-    // this->oldDraw(shaderID);
+    if(!shader) return;
 
     for(auto m : m_materials)
-    {
-        m->draw(shaderID);
-    }
+        m->draw(shader);
 
     // draw mesh
     glBindVertexArray(vao);

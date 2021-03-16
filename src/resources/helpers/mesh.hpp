@@ -12,6 +12,7 @@
 #include <assimp/postprocess.h>
 #include <resources/r_texture.hpp>
 #include <resources/r_material.hpp>
+#include <resources/r_shader.hpp>
 
 namespace hyper {
 
@@ -21,7 +22,7 @@ struct Mesh
     ~Mesh();
 
     void initialize(void);
-    void draw(ProgramIdentifier const shaderID = 0);
+    void draw(RShader* const shader);
 
     void oldDraw(ProgramIdentifier const shaderID = 0);
 

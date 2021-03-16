@@ -69,7 +69,7 @@ HyperEngine::initialize(void)
 	// Accept fragment if it closer to the camera than the former one
 	glDepthFunc(GL_LESS); 
 
-	glfwSwapInterval(1);	// VSync
+	// glfwSwapInterval(1);	// VSync
 
 	// Callbacks, guardar el puntero a window porque es necesario modificar dónde apunta
 	// GLFWwindow* currentwindow = m_window;
@@ -153,35 +153,21 @@ HyperEngine::drawScene(void) const
 
 	auto activeCamNode = this->m_cameras[m_active_camera];
 	auto camentity = static_cast<ECamera*>(activeCamNode->getEntity());
-	auto shaderID = camentity->getProgramID();
+	auto camerashader = camentity->getShader();
 
 	// Pasar matrices a opengl 
-	glUseProgram(shaderID);
+	camerashader->bind();
 
 	auto projection = camentity->getProjectionMatrix();
-
-    // INFOLOG("Se encuentra la propiedad projection: " << VAR(glGetUniformLocation(shaderID, "projection")));
-    glUniformMatrix4fv(
-        glGetUniformLocation(shaderID, "projection")
-        , 1
-        , GL_FALSE
-        , &projection[0][0]
-    );
+	camerashader->setMat4("projection", projection);
 
 	auto cameraMatrix = activeCamNode->getMatrixTransform();
 	auto view = glm::inverse(cameraMatrix);
+	camerashader->setMat4("view", view);
 
-    // INFOLOG("Se encuentra la propiedad view: " << VAR(glGetUniformLocation(shaderID, "view")));
+	camerashader->unbind();
 
-	glUniformMatrix4fv(
-        glGetUniformLocation(shaderID, "view")
-        , 1
-        , GL_FALSE
-        , &view[0][0]
-    );
-
-	glUseProgram(0);
-
+	// Recorrer los nodos y actualizar sus matrices
 	m_rootnode->traverse(glm::mat4{1.0f});
 }
 
