@@ -3,7 +3,9 @@
 #include <util/typealiases.hpp>
 #include <util/macros.hpp>
 
-constexpr Cstring define_default_resource_name { "" };
+#define define_default_resource_name ""
+
+namespace hyper {
 
 struct Resource
 {
@@ -42,3 +44,5 @@ struct Resource
 protected:
     std::string m_name { define_default_resource_name };
 };
+
+}

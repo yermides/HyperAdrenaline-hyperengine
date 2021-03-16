@@ -5,15 +5,22 @@
 #include <glm/gtx/transform.hpp>
 #include "entities/entity.hpp"
 
+namespace hyper {
+
 struct Node
 {
     using NodeList = std::vector<Node*>;
     
-    explicit Node();
+    explicit Node(bool const ignoreDrawInTraverse = false);
     ~Node();
 
     void                addChild(Node* node);
     void                removeChild(Node* node);
+
+    inline glm::mat4 const    getUpdatedMatrixTransform()
+    { 
+        return m_transform * glm::translate(m_translation)*glm::rotate(glm::radians( m_rotation.x ), glm::vec3(1.0f,0.0f,0.0f))*glm::rotate(glm::radians( m_rotation.y ), glm::vec3(0.0f,1.0f,0.0f))*glm::rotate(glm::radians( m_rotation.z ), glm::vec3(0.0f,0.0f,1.0f))*glm::scale(m_scale); 
+    }
     
     constexpr void                setMatrixTransform(glm::mat4 const& newTransform)		noexcept 
         { m_transform = newTransform; m_wantsUpdate = true;	}
@@ -57,15 +64,24 @@ struct Node
 
     void                traverse(glm::mat4 const& accumulatedTrans);
 
+    static void                deleteBranch(Node* node);
 private:
+
     glm::mat4 m_transform {1.0f};
-    Entity* m_entity { nullptr };
     NodeList m_childs;
     Node* m_parent { nullptr };
+    Entity* m_entity { nullptr };
 
     glm::vec3 m_translation {0.0f};
     glm::vec3 m_rotation {0.0f};
     glm::vec3 m_scale {1.0f};
 
     bool m_wantsUpdate { true };
+
+    // Variable usada para arreglar el recorrido del árbol 
+    // no se renderizan las cámaras y luces durante el traverse
+    // sino antes por control del engine
+    bool const m_ignoreDraw { false };
 };
+
+}

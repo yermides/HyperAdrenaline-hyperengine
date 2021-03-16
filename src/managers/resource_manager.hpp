@@ -4,6 +4,8 @@
 #include <util/macros.hpp>
 #include <resources/resource.hpp>
 
+namespace hyper {
+
 struct ResourceManager
 {
     template<typename TResource>
@@ -79,3 +81,5 @@ protected:
 private:
     std::vector<Resource*> m_resources;
 };
+
+}

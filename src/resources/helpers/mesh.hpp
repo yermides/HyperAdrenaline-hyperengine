@@ -1,12 +1,19 @@
 #pragma once
 #include <string>
 #include <vector>
+#include <util/typealiases.hpp>
+#include <util/macros.hpp>
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
+#include <SOIL/SOIL.h>
 #include <glm/glm.hpp>
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
-#include <resources/helpers/texture.hpp>
+// #include <resources/helpers/texture.hpp>
 #include <resources/r_texture.hpp>
+
+namespace hyper {
 
 struct Mesh 
 {
@@ -33,3 +40,5 @@ private:
     // Handlers
     GLuint vao, *vbo, ebo;      
 };
+
+}

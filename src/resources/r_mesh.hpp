@@ -4,6 +4,9 @@
 #include <resources/r_texture.hpp>
 #include <resources/helpers/mesh.hpp>
 #include <util/macros.hpp>
+#include <util/functions.hpp>
+
+namespace hyper {
 
 struct RMesh : public Resource
 {
@@ -23,3 +26,5 @@ private:
     std::vector<Mesh*> m_meshes;
     // uint32_t m_nVertex {0};
 };
+
+}

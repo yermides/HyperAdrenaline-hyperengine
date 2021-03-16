@@ -1,5 +1,7 @@
 #include <resources/helpers/mesh.hpp>
 
+namespace hyper {
+
 Mesh::Mesh()
 {
 }
@@ -153,4 +155,6 @@ Mesh::draw(ProgramIdentifier const shaderID)
 
     // always good practice to set everything back to defaults once configured.
     glActiveTexture(GL_TEXTURE0);
+}
+
 }

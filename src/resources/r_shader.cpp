@@ -1,5 +1,7 @@
 #include "r_shader.hpp"
 
+namespace hyper {
+
 RShader::RShader() 
 : Resource{}
 {
@@ -131,4 +133,6 @@ RShader::loadFromFile( std::string const& path )
 	// TODO:: incluir el geometry opcional
 
 	this->loadShaders(m_vertexPath.c_str(), m_fragmentPath.c_str());
+}
+
 }

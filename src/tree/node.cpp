@@ -1,17 +1,40 @@
 #include "node.hpp"
 #include <util/macros.hpp>
 
-Node::Node()
+namespace hyper {
+
+Node::Node(bool const ignoreDrawInTraverse)
+: m_ignoreDraw(ignoreDrawInTraverse)
 {
+    INFOLOG("I am the node "<<VAR(this));
 }
 
 Node::~Node()
 {
+    // Borrado recursivo, TODO:: revisar, pues ha habido double frees
+    INFOLOG("Deleting entity from node "<< VAR(this));
+
+    if(m_entity)
+    {
+        delete m_entity;
+        m_entity = nullptr;
+    }
+
+    INFOLOG("Removing parent from node "<< VAR(this));
+
+    if(m_parent) {
+        // necesario en algún momento llamar al removechild o hacer algo similar, pero de momento sirve
+        // para deletear el rootnode
+        m_parent = nullptr;
+    }
 }
 
 void                
 Node::addChild(Node* node) 
 {
+    if(node->m_parent)
+        node->m_parent->removeChild(node);
+
     node->m_parent = this;
     m_childs.push_back(node);
 }
@@ -19,9 +42,9 @@ Node::addChild(Node* node)
 void                
 Node::removeChild(Node* node) 
 {
-    // TODO:: revisar implementación, no lo borra, solo lo remueve del arbol
-    if( m_childs.empty() ) 
-        return;
+    // No lo borra, solo lo remueve del arbol
+    if(!node->m_parent) return;
+    if(m_childs.empty()) return;
 
     auto it = std::find_if(m_childs.begin(), m_childs.end(), [&](Node* n) {
         return n == node;
@@ -72,7 +95,7 @@ Node::traverse(glm::mat4 const& accumulatedTrans)
         m_wantsUpdate = false;
     }
     
-    if(m_entity)
+    if(m_entity && !m_ignoreDraw)
         m_entity->draw(m_transform);
 
     for(auto* child : m_childs) { 
@@ -81,4 +104,17 @@ Node::traverse(glm::mat4 const& accumulatedTrans)
 
         child->traverse(m_transform);
     }
+}
+
+void 
+Node::deleteBranch(Node* node) 
+{
+    if(!node) return;
+
+    for(auto child : node->m_childs)
+        deleteBranch(child);
+
+    delete node;
+}
+
 }

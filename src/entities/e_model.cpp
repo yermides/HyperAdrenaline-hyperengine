@@ -1,5 +1,7 @@
 #include "e_model.hpp"
 
+namespace hyper {
+
 EModel::EModel() 
 : Entity{}
 {
@@ -20,10 +22,19 @@ EModel::draw(glm::mat4 const& transform)
     // Use our shader
     glUseProgram(m_programID);
 
-    // Send our transformation to the currently bound shader, 
-    // in the "MVP" uniform
+    // Send our transformation to the currently bound shader, in the "MVP" uniform
+    // glUniformMatrix4fv(
+    //         glGetUniformLocation(m_programID, "MVP")
+    //     ,   1
+    //     ,   GL_FALSE
+    //     ,   &transform[0][0]
+    // );
+
+
+    INFOLOG("Se encuentra la propiedad model: " << VAR(glGetUniformLocation(m_programID, "model")));
+
     glUniformMatrix4fv(
-        glGetUniformLocation(m_programID, "MVP")
+        glGetUniformLocation(m_programID, "model")
         , 1
         , GL_FALSE
         , &transform[0][0]
@@ -40,4 +51,6 @@ void
 EModel::loadFromFile(std::string const& path)
 {
     m_rmesh = ResourceManager::getResource_t<RMesh>(path);
+}
+
 }

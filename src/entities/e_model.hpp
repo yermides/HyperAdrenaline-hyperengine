@@ -1,8 +1,10 @@
 #pragma once
-#include <string>
 #include <managers/resource_manager.hpp>
 #include <resources/r_mesh.hpp>
-#include "entity.hpp"
+#include <entities/entity.hpp>
+
+namespace hyper {
+
 
 struct EModel : public Entity
 {
@@ -15,3 +17,5 @@ struct EModel : public Entity
 private:
     RMesh* m_rmesh { nullptr };
 };
+
+}
