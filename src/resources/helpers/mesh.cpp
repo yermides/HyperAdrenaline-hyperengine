@@ -14,6 +14,11 @@ Mesh::~Mesh()
     m_indices.clear();
     m_textures.clear();
 
+    for(auto m : m_materials)
+        delete m;
+
+    m_materials.clear();
+
     // free buffers
     glDeleteBuffers(3, vbo);
     glDeleteBuffers(1, &ebo);
@@ -66,28 +71,49 @@ Mesh::initialize(void)
     glBindVertexArray(0);
 
     // Initialize textures
-    for(auto texture : m_textures)
-        texture->initialize();
+    // for(auto texture : m_textures)
+    //     texture->initialize();
 
     // Initialize materials
     for(auto material : m_materials)
         material->initialize();
 }
 
+// Para cada buffer 
+// {
+//      Asociar los datos en memoria al buffer   (glBufferData)
+//      Enlazar el buffer con su attribute       (glBindBuffer)
+//      indicar estructura del buffer            (glVertexAttribPointer)
+//      Habilitar el buffer                      (glEnableVertexAttribArray)
+// }
+// Dibujar                                      (glDrawElements)
 
 void 
 Mesh::draw(ProgramIdentifier const shaderID) 
 {
-    // Para cada buffer 
-    // {
-    //      Asociar los datos en memoria al buffer   (glBufferData)
-    //      Enlazar el buffer con su attribute       (glBindBuffer)
-    //      indicar estructura del buffer            (glVertexAttribPointer)
-    //      Habilitar el buffer                      (glEnableVertexAttribArray)
-    // }
-    // Dibujar                                      (glDrawElements)
+    // this->oldDraw(shaderID);
 
+    for(auto m : m_materials)
+    {
+        m->draw(shaderID);
+    }
+
+    // draw mesh
+    glBindVertexArray(vao);
+    glDrawElements(GL_TRIANGLES, m_indices.size(), GL_UNSIGNED_INT, 0);
+    glBindVertexArray(0);
+
+    // always good practice to set everything back to defaults once configured.
+    glActiveTexture(GL_TEXTURE0);
+}
+
+void 
+Mesh::oldDraw(ProgramIdentifier const shaderID) 
+{
     using namespace std;
+    // INFOLOG("Mesh::draw longitud del array de texturas: " << VAR(m_textures.size()))
+
+
     // bind appropriate textures
     
     // unsigned int diffuseNr  = 1;
@@ -144,6 +170,9 @@ Mesh::draw(ProgramIdentifier const shaderID)
         // retrieve texture number (the N in diffuse_textureN)
         string number = "1";
         string name = "texture_diffuse";
+
+        // Indicar si se usan texturas
+        glUniform1i(glGetUniformLocation(shaderID, "usesTextures"), 1);
 
         // now set the sampler to the correct texture unit
         glUniform1i(glGetUniformLocation(shaderID, (name + number).c_str()), i);

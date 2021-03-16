@@ -42,6 +42,37 @@ RMaterial::initialize(void)
 }
 
 void 
+RMaterial::draw(ProgramIdentifier const shaderID)
+{
+    // Solo le pasa su textura difusa, aumentar el indice de textura para cada una que se le pase al shader
+    // TODO:: mejorar MUCHO el uso de la struct del shader material.vs/fs
+    int i = 0;
+
+    if(m_mapKd)
+    {
+        glActiveTexture(GL_TEXTURE0 + i); // active proper texture unit before binding
+        // retrieve texture number (the N in diffuse_textureN)
+        std::string name = "texture_diffuse";
+        std::string number = "1";
+
+        // Indicar si se usan texturas (sí)
+        glUniform1i(glGetUniformLocation(shaderID, "usesTextures"), 1);
+
+        // now set the sampler to the correct texture unit
+        glUniform1i(glGetUniformLocation(shaderID, (name + number).c_str()), i);
+        // and finally bind the texture
+        glBindTexture(GL_TEXTURE_2D, m_mapKd->getProgramID());
+    }
+    else
+    {
+        // Indicar si se usan texturas (no)
+        glUniform1i(glGetUniformLocation(shaderID, "usesTextures"), 0);
+        glUniform3fv(glGetUniformLocation(shaderID, "material.diffuse"), 1, &m_Kd[0]);
+    }
+
+}
+
+void 
 RMaterial::loadMaterial(std::string const& path)
 {
     INFOLOG("He intentado crear un material.")

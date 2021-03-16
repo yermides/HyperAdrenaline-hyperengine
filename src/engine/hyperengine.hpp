@@ -32,7 +32,8 @@
 // Cameras, lights, etc
 #define engine_invalid_id                   -1
 // Shader paths
-#define SHADER_DEFAULT_PATH                 "src/shaders/model-loading-m-v-p" 
+// #define SHADER_DEFAULT_PATH                 "src/shaders/model-loading-m-v-p" 
+#define SHADER_DEFAULT_PATH                 "src/shaders/materials" 
 
 namespace hyper {
 

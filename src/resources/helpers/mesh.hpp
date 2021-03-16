@@ -10,7 +10,6 @@
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
-// #include <resources/helpers/texture.hpp>
 #include <resources/r_texture.hpp>
 #include <resources/r_material.hpp>
 
@@ -24,6 +23,8 @@ struct Mesh
     void initialize(void);
     void draw(ProgramIdentifier const shaderID = 0);
 
+    void oldDraw(ProgramIdentifier const shaderID = 0);
+
     // Size = vertex count * 3
     std::vector<GLfloat>    m_vertices          ;
     std::vector<GLfloat>    m_normals           ;
@@ -35,6 +36,7 @@ struct Mesh
     std::vector<GLuint>     m_indices           ;
 
     // Size = undetermined
+    // TODO:: comentarlo, ya no se usa realmente
     std::vector<RTexture*>  m_textures          ;
 
     // Size = undetermined

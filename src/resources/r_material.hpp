@@ -23,6 +23,7 @@ struct RMaterial : public Resource
     ~RMaterial();
 
     void initialize(void);
+    void draw(ProgramIdentifier const shaderID);
 
     void loadMaterial(std::string const& path);
     void loadMaterial(aiMaterial* amaterial, std::string const& search_directory = "assets");
@@ -42,7 +43,7 @@ struct RMaterial : public Resource
 private:
     glm::vec3 m_Ka, m_Kd, m_Ks;                 // coeficientes de reflexión ambiental, difusa, especular
     float m_Ns, m_d;                            // exponente especular y transparencia
-    RTexture *m_mapKa, *m_mapKd, *m_mapKs;      // Imagen mapaKa, mapaKd, mapaKs
+    RTexture *m_mapKa { nullptr }, *m_mapKd { nullptr }, *m_mapKs { nullptr };      // Imagen mapaKa, mapaKd, mapaKs
 };
 
 }
