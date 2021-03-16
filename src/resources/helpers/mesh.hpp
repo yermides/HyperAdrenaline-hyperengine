@@ -12,6 +12,7 @@
 #include <assimp/postprocess.h>
 // #include <resources/helpers/texture.hpp>
 #include <resources/r_texture.hpp>
+#include <resources/r_material.hpp>
 
 namespace hyper {
 
@@ -35,6 +36,9 @@ struct Mesh
 
     // Size = undetermined
     std::vector<RTexture*>  m_textures          ;
+
+    // Size = undetermined
+    std::vector<RMaterial*>  m_materials        ;
     
 private:
     // Handlers

@@ -68,6 +68,10 @@ Mesh::initialize(void)
     // Initialize textures
     for(auto texture : m_textures)
         texture->initialize();
+
+    // Initialize materials
+    for(auto material : m_materials)
+        material->initialize();
 }
 
 

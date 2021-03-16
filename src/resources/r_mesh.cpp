@@ -109,6 +109,10 @@ RMesh::loadMesh(std::string const& filepath)
         // TODO:: materiales
         auto* amaterial = scene->mMaterials[amesh->mMaterialIndex];
 
+        RMaterial* rmaterial = new RMaterial(amaterial, this->getDirectory());
+        // rmaterial->loadMaterial(amaterial, this->getDirectory());
+        delete rmaterial;
+
         // glm::vec3 diffuse_color;
         // auto res = amaterial->Get(AI_MATKEY_COLOR_DIFFUSE, &diffuse_color.x, NULL);
 
@@ -147,9 +151,7 @@ RMesh::loadMesh(std::string const& filepath)
             {
                 for (size_t k = 0; k < count; k++)
                 {
-                    RMaterial* rmaterial = new RMaterial();
-                    rmaterial->loadMaterial(amaterial);
-                    delete rmaterial;
+
                     // Crear y guardar una textura en el array
                     aiString str;
                     amaterial->GetTexture(type, k, &str);

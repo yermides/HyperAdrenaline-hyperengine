@@ -389,9 +389,9 @@ void test_full_tree_traverse() {
 void test_input_callbacks() {
     std::unique_ptr<hyper::HyperEngine> engine = std::make_unique<hyper::HyperEngine>(true);
 
-    hyper::Node* camnode = engine->createCamera(nullptr,{0.0f,0.0f,4.0f}, default_rot_and_scale); // tendrá la proyección por defecto
-    hyper::Node* missile_launcher = engine->createModel(nullptr,{0.0f,0.0f,-3.0f}, default_rot_and_scale, "assets/missile-launcher.obj");
-    hyper::Node* funador_pesado = engine->createModel(nullptr, {2.0f, 0.0f, 0.0f}, default_rot, default_scale, "assets/HA_funador_pesado.obj");
+    hyper::Node* camnode = engine->createCamera(nullptr,{1.0f,0.0f,4.0f},{0,15,0} , default_scale); // tendrá la proyección por defecto
+    hyper::Node* missile_launcher = engine->createModel(default_createnode_params, "assets/missile-launcher.obj");
+    // hyper::Node* funador_pesado = engine->createModel(nullptr, {2.0f, 0.0f, 0.0f}, default_rot_and_scale, "assets/HA_funador_pesado.obj");
 
     while(engine->isWindowActive() && !engine->getKeyContinuousPress(GLFW_KEY_ESCAPE))
     {
@@ -410,15 +410,6 @@ void test_input_callbacks() {
 
         if(engine->getKeyRelease(GLFW_KEY_S))
             camnode->rotate({-3,0,0});
-
-        // if(engine->isKeyPressed(GLFW_KEY_A))
-        //     camnode->rotate({0,3,0});
-        // if(engine->isKeyPressed(GLFW_KEY_D))
-        //     camnode->rotate({0,-3,0});
-        // if(engine->isKeyPressed(GLFW_KEY_W))
-        //     camnode->rotate({3,0,0});
-        // if(engine->isKeyPressed(GLFW_KEY_S))
-        //     camnode->rotate({-3,0,0});
 
         // if(engine->isKeyPressed(GLFW_KEY_UP))
         //     camnode->translate({0,0.1f,0});

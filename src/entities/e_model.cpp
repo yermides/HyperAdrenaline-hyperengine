@@ -31,7 +31,7 @@ EModel::draw(glm::mat4 const& transform)
     // );
 
 
-    INFOLOG("Se encuentra la propiedad model: " << VAR(glGetUniformLocation(m_programID, "model")));
+    // INFOLOG("Se encuentra la propiedad model: " << VAR(glGetUniformLocation(m_programID, "model")));
 
     glUniformMatrix4fv(
         glGetUniformLocation(m_programID, "model")

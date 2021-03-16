@@ -5,6 +5,13 @@
 #include <managers/resource_manager.hpp>
 #include <assimp/material.h>
 #include <util/macros.hpp>
+#include <util/functions.hpp>
+
+#define default_material_ambient_color      {1.0f,1.0f,1.0f}
+#define default_material_diffuse_color      {0.8f,0.8f,0.8f}
+#define default_material_specular_color     {0.5f,0.5f,0.5f}
+#define default_material_specular_exponent  1.45f
+#define default_material_opacity            1.0f
 
 namespace hyper {
 
@@ -12,10 +19,13 @@ struct RMaterial : public Resource
 {
     explicit RMaterial();
     explicit RMaterial(std::string const& path);
+    explicit RMaterial(aiMaterial* amaterial, std::string const& search_directory = "assets");
     ~RMaterial();
 
+    void initialize(void);
+
     void loadMaterial(std::string const& path);
-    void loadMaterial(const aiMaterial* const amaterial);
+    void loadMaterial(aiMaterial* amaterial, std::string const& search_directory = "assets");
     void loadFromFile(std::string const& path) final;
 
     constexpr glm::vec3 const& getColorAmbient(void)        const noexcept

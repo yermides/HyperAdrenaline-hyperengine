@@ -160,7 +160,7 @@ HyperEngine::drawScene(void) const
 
 	auto projection = camentity->getProjectionMatrix();
 
-    INFOLOG("Se encuentra la propiedad projection: " << VAR(glGetUniformLocation(shaderID, "projection")));
+    // INFOLOG("Se encuentra la propiedad projection: " << VAR(glGetUniformLocation(shaderID, "projection")));
     glUniformMatrix4fv(
         glGetUniformLocation(shaderID, "projection")
         , 1
@@ -171,7 +171,7 @@ HyperEngine::drawScene(void) const
 	auto cameraMatrix = activeCamNode->getMatrixTransform();
 	auto view = glm::inverse(cameraMatrix);
 
-    INFOLOG("Se encuentra la propiedad view: " << VAR(glGetUniformLocation(shaderID, "view")));
+    // INFOLOG("Se encuentra la propiedad view: " << VAR(glGetUniformLocation(shaderID, "view")));
 
 	glUniformMatrix4fv(
         glGetUniformLocation(shaderID, "view")
@@ -268,7 +268,8 @@ HyperEngine::getWindow(void) const noexcept
 	return m_window; 
 }
 
-void HyperEngine::setKeyState(int const key, int const action)
+void 
+HyperEngine::setKeyState(int const key, int const action)
 {
 	m_keystates[key] = action;
 }
