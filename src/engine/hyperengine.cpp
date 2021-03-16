@@ -71,6 +71,18 @@ HyperEngine::initialize(void)
 
 	glfwSwapInterval(1);	// VSync
 
+	// Callbacks, guardar el puntero a window porque es necesario modificar dónde apunta
+	// GLFWwindow* currentwindow = m_window;
+
+	glfwSetWindowUserPointer( m_window, this );
+	glfwSetKeyCallback(m_window, [](GLFWwindow* window, int key, int scancode, int action, int mods){
+		HyperEngine* engine = static_cast<HyperEngine*>( glfwGetWindowUserPointer( window ) );
+		engine->setKeyState(key, action);
+	});
+
+	// glfwSetWindowUserPointer( m_window, currentwindow );
+
+
 	// Initialize ImGUI
 	IMGUI_CHECKVERSION();
     gui::CreateContext();
@@ -112,9 +124,10 @@ HyperEngine::clearScreen(void) const
 }
 
 void 
-HyperEngine::beginRender(void) const
+HyperEngine::beginRender(void)
 { 
 	this->clearScreen();
+	this->resetKeyStates();
 
 	// Imgui
 
@@ -255,13 +268,42 @@ HyperEngine::getWindow(void) const noexcept
 	return m_window; 
 }
 
-bool const 
-HyperEngine::isKeyPressed(int const keycode) const noexcept
-{ 
-	if(!isWindowActive())
-		return false;
+void HyperEngine::setKeyState(int const key, int const action)
+{
+	m_keystates[key] = action;
+}
 
-	return glfwGetKey(m_window, keycode) == GLFW_PRESS; 
+bool const 
+HyperEngine::getKeySinglePress(int const key) noexcept
+{
+	return isWindowActive() && m_keystates[key] == GLFW_PRESS;
+}
+
+bool const 
+HyperEngine::getKeyContinuousPress(int const key) noexcept
+{
+	return isWindowActive() && glfwGetKey(m_window, key) == GLFW_PRESS; 
+}
+
+bool const 
+HyperEngine::getKeyKeyboardPress(int const key) noexcept
+{
+	return isWindowActive() && (m_keystates[key] == GLFW_REPEAT || m_keystates[key] == GLFW_PRESS); 
+}
+
+bool const 
+HyperEngine::getKeyRelease(int const key) noexcept
+{
+	return isWindowActive() && m_keystates[key] == GLFW_RELEASE;
+}
+
+void 
+HyperEngine::resetKeyStates(void)
+{
+	for(int i{0}; i < GLFW_KEY_LAST; ++i)
+	{
+		m_keystates[i] = -1; // Estado por defecto
+	}
 }
 
 }

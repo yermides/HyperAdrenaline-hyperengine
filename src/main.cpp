@@ -265,7 +265,7 @@ void test_hyperengine_traverse(void) {
     node->getEntity()->setProgramID(shaderID);
     node2->getEntity()->setProgramID(shaderID);
 
-    while(engine->isWindowActive() && !engine->isKeyPressed(GLFW_KEY_ESCAPE))
+    while(engine->isWindowActive() && !engine->getKeyContinuousPress(GLFW_KEY_ESCAPE))
     {
         engine->beginRender();
         engine->drawScene();
@@ -344,7 +344,7 @@ void test_full_tree_traverse() {
     glm::vec3* camtrans = { new glm::vec3( camnode->getTranslation() )};
     glm::vec3* camrot = { new glm::vec3( camnode->getRotation() )};
     
-    while(engine->isWindowActive() && !engine->isKeyPressed(GLFW_KEY_ESCAPE))
+    while(engine->isWindowActive() && !engine->getKeyContinuousPress(GLFW_KEY_ESCAPE))
     {
         engine->beginRender();
         engine->drawScene();
@@ -362,22 +362,22 @@ void test_full_tree_traverse() {
 
         engine->endRender();
 
-        if(engine->isKeyPressed(GLFW_KEY_A))
+        if(engine->getKeyContinuousPress(GLFW_KEY_A))
             camnode->rotate({0,3,0});
-        if(engine->isKeyPressed(GLFW_KEY_D))
+        if(engine->getKeyContinuousPress(GLFW_KEY_D))
             camnode->rotate({0,-3,0});
-        if(engine->isKeyPressed(GLFW_KEY_W))
+        if(engine->getKeyContinuousPress(GLFW_KEY_W))
             camnode->rotate({3,0,0});
-        if(engine->isKeyPressed(GLFW_KEY_S))
+        if(engine->getKeyContinuousPress(GLFW_KEY_S))
             camnode->rotate({-3,0,0});
 
-        if(engine->isKeyPressed(GLFW_KEY_UP))
+        if(engine->getKeyContinuousPress(GLFW_KEY_UP))
             camnode->translate({0,0.1f,0});
-        if(engine->isKeyPressed(GLFW_KEY_DOWN))
+        if(engine->getKeyContinuousPress(GLFW_KEY_DOWN))
             camnode->translate({0,-0.1f,0});
-        if(engine->isKeyPressed(GLFW_KEY_LEFT))
+        if(engine->getKeyContinuousPress(GLFW_KEY_LEFT))
             camnode->translate({-0.1f,0,0});
-        if(engine->isKeyPressed(GLFW_KEY_RIGHT))
+        if(engine->getKeyContinuousPress(GLFW_KEY_RIGHT))
             camnode->translate({0.1f,0,0});
 
         camnode->setTranslation( *(glm::vec3*)camtrans );
@@ -386,6 +386,54 @@ void test_full_tree_traverse() {
 
 }
 
+void test_input_callbacks() {
+    std::unique_ptr<hyper::HyperEngine> engine = std::make_unique<hyper::HyperEngine>(true);
+
+    hyper::Node* camnode = engine->createCamera(nullptr,{0.0f,0.0f,4.0f}, default_rot_and_scale); // tendrá la proyección por defecto
+    hyper::Node* missile_launcher = engine->createModel(nullptr,{0.0f,0.0f,-3.0f}, default_rot_and_scale, "assets/missile-launcher.obj");
+    hyper::Node* funador_pesado = engine->createModel(nullptr, {2.0f, 0.0f, 0.0f}, default_rot, default_scale, "assets/HA_funador_pesado.obj");
+
+    while(engine->isWindowActive() && !engine->getKeyContinuousPress(GLFW_KEY_ESCAPE))
+    {
+        engine->beginRender();
+        engine->drawScene();
+        engine->endRender();
+
+        if(engine->getKeyContinuousPress(GLFW_KEY_A))
+            camnode->rotate({0,3,0});
+
+        if(engine->getKeyKeyboardPress(GLFW_KEY_D))
+            camnode->rotate({0,-3,0});
+
+        if(engine->getKeySinglePress(GLFW_KEY_W))
+            camnode->rotate({3,0,0});
+
+        if(engine->getKeyRelease(GLFW_KEY_S))
+            camnode->rotate({-3,0,0});
+
+        // if(engine->isKeyPressed(GLFW_KEY_A))
+        //     camnode->rotate({0,3,0});
+        // if(engine->isKeyPressed(GLFW_KEY_D))
+        //     camnode->rotate({0,-3,0});
+        // if(engine->isKeyPressed(GLFW_KEY_W))
+        //     camnode->rotate({3,0,0});
+        // if(engine->isKeyPressed(GLFW_KEY_S))
+        //     camnode->rotate({-3,0,0});
+
+        // if(engine->isKeyPressed(GLFW_KEY_UP))
+        //     camnode->translate({0,0.1f,0});
+        // if(engine->isKeyPressed(GLFW_KEY_DOWN))
+        //     camnode->translate({0,-0.1f,0});
+        // if(engine->isKeyPressed(GLFW_KEY_LEFT))
+        //     camnode->translate({-0.1f,0,0});
+        // if(engine->isKeyPressed(GLFW_KEY_RIGHT))
+        //     camnode->translate({0.1f,0,0});
+
+    }
+
+}
+
+
 int main(void) {
 	// test_models_and_imgui();
 	// test_basic_lights();
@@ -393,5 +441,7 @@ int main(void) {
 
     // test_hyperengine_traverse();
 
-    test_full_tree_traverse();
+    // test_full_tree_traverse();
+
+    test_input_callbacks();
 }
