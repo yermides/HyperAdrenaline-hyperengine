@@ -10,8 +10,9 @@
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
-// #include <resources/helpers/texture.hpp>
 #include <resources/r_texture.hpp>
+#include <resources/r_material.hpp>
+#include <resources/r_shader.hpp>
 
 namespace hyper {
 
@@ -21,7 +22,9 @@ struct Mesh
     ~Mesh();
 
     void initialize(void);
-    void draw(ProgramIdentifier const shaderID = 0);
+    void draw(RShader* const shader);
+
+    void oldDraw(ProgramIdentifier const shaderID = 0);
 
     // Size = vertex count * 3
     std::vector<GLfloat>    m_vertices          ;
@@ -34,7 +37,11 @@ struct Mesh
     std::vector<GLuint>     m_indices           ;
 
     // Size = undetermined
+    // TODO:: comentarlo, ya no se usa realmente
     std::vector<RTexture*>  m_textures          ;
+
+    // Size = undetermined
+    std::vector<RMaterial*>  m_materials        ;
     
 private:
     // Handlers

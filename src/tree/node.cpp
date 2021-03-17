@@ -117,4 +117,19 @@ Node::deleteBranch(Node* node)
     delete node;
 }
 
+void
+Node::deleteBranchChilds(Node* node)
+{
+    // TODO:: revisar, pero parece ir bien
+    if(!node) return;
+
+    for(auto node : node->m_childs)
+    {
+        if(node)
+            deleteBranch(node);
+    }
+
+    node->m_childs.clear();
+}
+
 }
