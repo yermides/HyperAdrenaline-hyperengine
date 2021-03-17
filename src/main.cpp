@@ -420,6 +420,15 @@ void test_input_callbacks() {
         if(engine->getKeyRelease(GLFW_KEY_S))
             camnode->rotate({-3,0,0});
 
+        if(engine->getKeySinglePress(GLFW_KEY_1))
+            engine->clearTree();
+
+        if(engine->getKeySinglePress(GLFW_KEY_2) && engine->isTreeEmpty())
+        {
+            camnode = engine->createCamera(nullptr,{1.0f,0.0f,4.0f},{0,15,0} , default_scale); // tendrá la proyección por defecto
+            missile_launcher = engine->createModel(default_createnode_params, "assets/missile-launcher.obj");
+        }
+
         // if(engine->isKeyPressed(GLFW_KEY_UP))
         //     camnode->translate({0,0.1f,0});
         // if(engine->isKeyPressed(GLFW_KEY_DOWN))

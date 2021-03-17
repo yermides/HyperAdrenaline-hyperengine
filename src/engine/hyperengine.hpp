@@ -116,6 +116,8 @@ struct HyperEngine
             return node;
         }
 
+    void clearTree(void);
+
     void clearScreen(void) const;
 
     void beginRender(void);
@@ -148,6 +150,8 @@ struct HyperEngine
     bool const getKeyContinuousPress(int const key) noexcept;
     bool const getKeyKeyboardPress(int const key) noexcept;
     bool const getKeyRelease(int const key) noexcept;
+
+    bool const isTreeEmpty(void);
 
 private:
     void resetKeyStates(void);

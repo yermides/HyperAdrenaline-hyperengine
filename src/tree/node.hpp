@@ -58,6 +58,9 @@ struct Node
     constexpr glm::vec3 const&    getScale(void)										const noexcept 
         { return m_scale;					}
 
+    inline bool const             getChildNumber(void)									const noexcept 
+        { return m_childs.size();					}
+
     void                translate(glm::vec3 const& accumulation);
     void                rotate(glm::vec3 const& accumulation);
     void                scale(glm::vec3 const& accumulation);
@@ -65,6 +68,7 @@ struct Node
     void                traverse(glm::mat4 const& accumulatedTrans);
 
     static void                deleteBranch(Node* node);
+    static void                deleteBranchChilds(Node* node);
 private:
 
     glm::mat4 m_transform {1.0f};

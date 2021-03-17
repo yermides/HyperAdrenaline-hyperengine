@@ -118,6 +118,24 @@ HyperEngine::createNode(Node* const parent, glm::vec3 const& trans, glm::vec3 co
 }
 
 void 
+HyperEngine::clearTree(void)
+{
+	// Todo:: revisar implementación
+	Node::deleteBranchChilds(m_rootnode);
+	m_cameras.clear();
+	m_active_camera = engine_invalid_id;
+	m_lights.clear();
+	m_active_lights.clear();
+	m_viewports.clear();
+	m_active_viewport = engine_invalid_id;
+
+	nextCameraID      = 0;
+    nextLightID       = 0;
+    nextViewportID    = 0;
+}
+
+
+void 
 HyperEngine::clearScreen(void) const
 { 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); 
@@ -283,6 +301,15 @@ HyperEngine::getKeyRelease(int const key) noexcept
 {
 	return isWindowActive() && m_keystates[key] == GLFW_RELEASE;
 }
+
+bool const 
+HyperEngine::isTreeEmpty(void)
+{
+	if(!m_rootnode) return true;
+
+	return m_rootnode->getChildNumber() == 0;
+}
+
 
 void 
 HyperEngine::resetKeyStates(void)
