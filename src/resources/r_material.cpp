@@ -50,26 +50,79 @@ RMaterial::draw(RShader* const shader)
     // TODO:: mejorar MUCHO el uso de la struct del shader material.vs/fs
     int i = 0;
 
+    shader->setVec3("material.ambient", m_Ka);
+    shader->setVec3("material.diffuse", m_Kd);
+    shader->setVec3("material.specular", m_Ks);
+    shader->setFloat("material.shininess", m_Ns);
+    shader->setFloat("material.opacity", m_d);
+
+    // Si hay ambient texture, de momento sin usar en el shader
+    if(m_mapKa)
+    {
+        glActiveTexture(GL_TEXTURE0 + i); // active proper texture unit before binding
+        // retrieve texture number (the N in diffuse_textureN)
+        std::string name = "material.texture_ambient";
+        std::string number = "1";
+
+        // Indicar si se usan texturas (sí)
+        shader->setInt("material.usesAmbientTexture", 1);
+
+        // now set the sampler to the correct texture unit
+        shader->setInt((name + number).c_str(),i);
+        // and finally bind the texture
+        glBindTexture(GL_TEXTURE_2D, m_mapKa->getProgramID());
+        ++i;
+    }
+    else
+    {
+        // Indicar si se usan texturas (no)
+        shader->setInt("material.usesAmbientTexture", 0);
+    }
+
+    // Si hay textura difusa, de momento sólo usa esta
     if(m_mapKd)
     {
         glActiveTexture(GL_TEXTURE0 + i); // active proper texture unit before binding
         // retrieve texture number (the N in diffuse_textureN)
-        std::string name = "texture_diffuse";
+        std::string name = "material.texture_diffuse";
         std::string number = "1";
 
         // Indicar si se usan texturas (sí)
-        shader->setInt("usesTextures", 1);
+        shader->setInt("material.usesDiffuseTexture", 1);
 
         // now set the sampler to the correct texture unit
         shader->setInt((name + number).c_str(),i);
         // and finally bind the texture
         glBindTexture(GL_TEXTURE_2D, m_mapKd->getProgramID());
+        ++i;
     }
     else
     {
         // Indicar si se usan texturas (no)
-        shader->setInt("usesTextures", 0);
-        shader->setVec3("material.diffuse", m_Kd);
+        shader->setInt("material.usesDiffuseTexture", 0);
+    }
+
+    // Si hay specular texture, de momento sin usar en el shader
+    if(m_mapKa)
+    {
+        glActiveTexture(GL_TEXTURE0 + i); // active proper texture unit before binding
+        // retrieve texture number (the N in diffuse_textureN)
+        std::string name = "material.texture_specular";
+        std::string number = "1";
+
+        // Indicar si se usan texturas (sí)
+        shader->setInt("material.usesSpecularTexture", 1);
+
+        // now set the sampler to the correct texture unit
+        shader->setInt((name + number).c_str(),i);
+        // and finally bind the texture
+        glBindTexture(GL_TEXTURE_2D, m_mapKs->getProgramID());
+        ++i;
+    }
+    else
+    {
+        // Indicar si se usan texturas (no)
+        shader->setInt("material.usesSpecularTexture", 0);
     }
 }
 

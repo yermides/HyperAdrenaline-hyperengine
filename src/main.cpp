@@ -394,6 +394,12 @@ void test_input_callbacks() {
     hyper::Node* missile_launcher = engine->createModel(default_createnode_params, "assets/missile-launcher.obj");
     // hyper::Node* funador_pesado = engine->createModel(nullptr, {2.0f, 0.0f, 0.0f}, default_rot_and_scale, "assets/HA_funador_pesado.obj");
 
+    hyper::Node* cubito_rosa = engine->createModel(default_createnode_params, "assets/cubito_rosa.obj");
+    hyper::Node* icosphere = engine->createModel(default_createnode_params, "assets/icosphere.obj");
+    cubito_rosa->setTranslation({-2.0f,0.0f,0.0f});
+    cubito_rosa->setScale({0.3f,0.3f,0.3f});
+    icosphere->setTranslation({2,0,0});
+
     while(engine->isWindowActive() && !engine->getKeyContinuousPress(GLFW_KEY_ESCAPE))
     {
         engine->beginRender();
