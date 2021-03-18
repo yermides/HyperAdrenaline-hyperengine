@@ -427,7 +427,19 @@ void test_input_callbacks() {
         {
             camnode = engine->createCamera(nullptr,{1.0f,0.0f,4.0f},{0,15,0} , default_scale); // tendrá la proyección por defecto
             missile_launcher = engine->createModel(default_createnode_params, "assets/missile-launcher.obj");
+            cubito_rosa = engine->createModel(default_createnode_params, "assets/cubito_rosa.obj");
+            icosphere = engine->createModel(default_createnode_params, "assets/icosphere.obj");
         }
+
+        if(engine->getKeySinglePress(GLFW_KEY_3))
+        {
+            INFOLOG("ID del nodo camnode "<<VAR(camnode->getNameID()));
+            INFOLOG("ID del nodo camnode "<<VAR(camnode->getNameID()));
+            INFOLOG("ID del nodo missile_launcher "<<VAR(missile_launcher->getNameID()));
+            INFOLOG("ID del nodo cubito_rosa "<<VAR(cubito_rosa->getNameID()));
+            INFOLOG("ID del nodo icosphere "<<VAR(icosphere->getNameID()));
+        }
+
 
         // if(engine->isKeyPressed(GLFW_KEY_UP))
         //     camnode->translate({0,0.1f,0});
