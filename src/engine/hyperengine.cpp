@@ -125,7 +125,7 @@ HyperEngine::clearTree(void)
 	m_cameras.clear();
 	m_active_camera = engine_invalid_id;
 	m_lights.clear();
-	m_active_lights.clear();
+	// m_active_lights.clear();
 	m_viewports.clear();
 	m_active_viewport = engine_invalid_id;
 
@@ -162,12 +162,22 @@ HyperEngine::drawScene(void) const
 		return;
 
 	// TODO:: luces
-	// for(auto light : m_lights) {
-	// 	auto lightmatrix = light->getMatrixTransform();
-	// 	auto shaderID = light->getEntity()->getProgramID();
-	// 	// pasarle el dato a opengl, puede ser en la función draw() de la entidad light
-	// 	// glUniform3f(glGetUniformLocation(shaderID, "propiedad", x, y, z);
-	// }
+	for(auto light : m_lights) {
+		INFOLOG("TENGO LUSES!!!")
+		auto lightmatrix = light->getMatrixTransform();
+		auto lightshader = light->getEntity()->getShader();
+
+		// auto lightmatrix = light.m_node->getMatrixTransform();
+		// auto lightshader = light.m_node->getEntity()->getShader();
+
+		// esto debería de pasarse en Emodel
+		// para saber por cada modelo si debe usar la luz o la textura difusa
+		lightshader->bind();
+		lightshader->setInt("usesLightning", 1);	
+		// esto ni se llama así, TODO:: implementar bien el pasar el dato a opengl
+		// lightshader->setMat4("lightmatrix", lightmatrix);
+		lightshader->unbind();
+	}
 
 	auto activeCamNode = this->m_cameras[m_active_camera];
 	auto camentity = static_cast<ECamera*>(activeCamNode->getEntity());
@@ -225,7 +235,14 @@ HyperEngine::registerCamera(Node* const camera)
 int 
 HyperEngine::registerLight(Node* const light) 
 {
+	// CUIDADO, esto es un emplace al final, mientras que el setActive literalmente busca posición exacta
+	// TODO:: retocar comportamiento conjunto
+	// auto lightdata = new LightData(light, true);
+	// m_lights.push_back(light, true);
+
 	m_lights.push_back(light);
+	m_active_lights.push_back(true);
+
 	return nextLightID++;
 }
 
@@ -249,6 +266,7 @@ void
 HyperEngine::setActiveLight(int const lightID, bool const isActive) 
 {
 	m_active_lights[lightID] = isActive;
+	// m_lights[lightID].m_active = isActive;
 }
 
 void 

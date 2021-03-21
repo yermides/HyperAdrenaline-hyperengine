@@ -33,7 +33,8 @@
 #define engine_invalid_id                   -1
 // Shader paths
 // #define SHADER_DEFAULT_PATH                 "src/shaders/model-loading-m-v-p" 
-#define SHADER_DEFAULT_PATH                 "src/shaders/materials" 
+// #define SHADER_DEFAULT_PATH                 "src/shaders/materials" 
+#define SHADER_DEFAULT_PATH                 "src/shaders/materials-and-lights" 
 
 namespace hyper {
 
@@ -94,6 +95,7 @@ struct HyperEngine
             light->setShader(m_shaders[OpenGLShader::SHADER_DEFAULT]);
 
             node->setEntity(light);
+            registerLight(node);
             return node;
         }
 
@@ -160,6 +162,12 @@ private:
         int x, y, height, width;
     };
 
+    // Aún en duda de si usar esta estructura
+    // struct LightData {
+    //     Node* m_node;
+    //     bool m_active;
+    // };
+
     inline static int nextCameraID      {0};
     inline static int nextLightID       {0};
     inline static int nextViewportID    {0};
@@ -175,10 +183,12 @@ private:
     // Atributos para mantenimiento de las cámaras, luces y viewports
     GLFWwindow*     m_window   { nullptr    };
     std::vector<Node*> m_cameras;
-    std::vector<Node*> m_lights;
     std::vector<Viewport> m_viewports;
     int m_active_camera  {engine_invalid_id} 
     ,   m_active_viewport{engine_invalid_id};
+
+    // std::vector<LightData> m_lights;
+    std::vector<Node*> m_lights;
     std::vector<bool> m_active_lights;
 
     // imgui
