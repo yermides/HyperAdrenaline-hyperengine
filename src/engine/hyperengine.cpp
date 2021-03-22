@@ -37,6 +37,7 @@ HyperEngine::initialize(void)
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // To make MacOS happy; should not be needed
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
+
 	// Open a window and create its OpenGL context
 	m_window = glfwCreateWindow( 1366, 768, "HyperEngine Test 1", NULL, NULL);
 	if( !m_window ) {
@@ -290,11 +291,6 @@ HyperEngine::getWindow(void) const noexcept
 	return m_window; 
 }
 
-void 
-HyperEngine::setKeyState(int const key, int const action)
-{
-	m_keystates[key] = action;
-}
 
 bool const 
 HyperEngine::getKeySinglePress(int const key) noexcept
@@ -328,6 +324,66 @@ HyperEngine::isTreeEmpty(void)
 	return m_rootnode->getChildNumber() == 0;
 }
 
+void 
+HyperEngine::setWindowTitle(std::string const& name)
+{
+	if(!isWindowActive()) return;
+
+	glfwSetWindowTitle(m_window, name.c_str());
+}
+
+void 
+HyperEngine::setWindowIcon(std::string const& path, int const width, int const height)
+{
+	// Por defecto son 32x32, pero podría aceptar 16x16 o 48x48
+	if(!isWindowActive()) return;
+
+	auto texture 	= ResourceManager::getResource_t<RTexture>(path);
+	auto data 		= texture->getRawData();
+	auto* icon 		= new GLFWimage{width, height, data};
+	glfwSetWindowIcon(m_window, 1, icon);
+}
+
+void 
+HyperEngine::setWindowClearColor(float const r, float const g, float const b, float const a)
+{
+	glClearColor(r,g,b,a);
+}
+
+void 
+HyperEngine::setWindowActive(bool const value)
+{
+	if(!isWindowActive()) return;
+
+	glfwSetWindowShouldClose(m_window, !value);
+}
+
+void 
+HyperEngine::setCursorVisibility(bool const value)
+{
+	// glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN );
+
+	// Mal planteado, ahora lo deshabilita
+	glfwSetInputMode(m_window, GLFW_CURSOR, value ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_DISABLED );
+}
+
+void 
+HyperEngine::setCursorPosition(double const x, double const y)
+{
+	// Por defecto va al centro, valores a pasar entre 0 y 1 (normalizados)
+	// No funciona con el cursor diabled, usar callback
+	int w, h;
+	glfwGetWindowSize(m_window, &w, &h);
+	glfwSetCursorPos(m_window, x * w , y * h);
+}
+
+// Funciones privadas
+
+void 
+HyperEngine::setKeyState(int const key, int const action)
+{
+	m_keystates[key] = action;
+}
 
 void 
 HyperEngine::resetKeyStates(void)
