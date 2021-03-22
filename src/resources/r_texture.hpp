@@ -20,7 +20,10 @@ struct RTexture : public Resource
     void loadFromFile(std::string const& path) final;
 
     constexpr ProgramIdentifier getProgramID(void)
-        { return m_textureID; }
+        { return m_textureID;       }
+
+    constexpr Image getRawData(void) const noexcept
+        { return m_textureImage;    }
 private:
     Image m_textureImage { nullptr };
     int m_width, m_height, m_numComponents;

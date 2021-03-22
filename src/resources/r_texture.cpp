@@ -35,13 +35,13 @@ RTexture::initialize()
 
     glGenTextures(1, &m_textureID);
 
-    GLenum format { GL_RGB };
-    if (m_numComponents == 1)
-        format = GL_RED;
-    else if (m_numComponents == 3)
-        format = GL_RGB;
-    else if (m_numComponents == 4)
-        format = GL_RGBA;
+    GLenum format { GL_RGBA }; // antes era GL_RGB por defecto
+    // if (m_numComponents == 1)
+    //     format = GL_RED;
+    // else if (m_numComponents == 3)
+    //     format = GL_RGB;
+    // else if (m_numComponents == 4)
+        // format = GL_RGBA;
 
     glBindTexture(GL_TEXTURE_2D, m_textureID);
     glTexImage2D(GL_TEXTURE_2D, 0, format, m_width, m_height, 0, format, GL_UNSIGNED_BYTE, m_textureImage);
@@ -58,12 +58,14 @@ RTexture::initialize()
 void 
 RTexture::loadTexture(std::string const& path) 
 {
+    // Forzado a tratarla como 4 canales para el byte array
     m_textureImage = SOIL_load_image(
             path.c_str()
         , 	&m_width
         , 	&m_height
         , 	&m_numComponents
-        , 	SOIL_LOAD_RGB
+        ,   SOIL_LOAD_RGBA
+        // , 	SOIL_LOAD_RGB
     );
 
     if(m_textureImage) {

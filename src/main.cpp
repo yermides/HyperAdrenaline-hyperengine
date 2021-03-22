@@ -391,8 +391,11 @@ void test_input_callbacks() {
     std::unique_ptr<hyper::HyperEngine> engine = std::make_unique<hyper::HyperEngine>(true);
 
     hyper::Node* camnode = engine->createCamera(nullptr,{1.0f,0.0f,4.0f},{0,15,0} , default_scale); // tendrá la proyección por defecto
+    // hyper::Node* lightnode = engine->createLight(default_createnode_params);
     hyper::Node* missile_launcher = engine->createModel(default_createnode_params, "assets/missile-launcher.obj");
-    // hyper::Node* funador_pesado = engine->createModel(nullptr, {2.0f, 0.0f, 0.0f}, default_rot_and_scale, "assets/HA_funador_pesado.obj");
+    // hyper::Node* funador_pesado = engine->createModel(nullptr, {1.0f, 0.0f, 0.0f}, default_rot_and_scale, "assets/HA_funador_pesado.obj");
+    hyper::Node* funador_pesado2 = engine->createModel(nullptr, {-1.0f, 0.0f, 1.0f}, default_rot_and_scale, "assets/newmachinegun/HA_funador_pesado.obj");
+    missile_launcher = funador_pesado2;
 
     hyper::Node* cubito_rosa = engine->createModel(default_createnode_params, "assets/cubito_rosa.obj");
     hyper::Node* icosphere = engine->createModel(default_createnode_params, "assets/icosphere.obj");
@@ -427,7 +430,36 @@ void test_input_callbacks() {
         {
             camnode = engine->createCamera(nullptr,{1.0f,0.0f,4.0f},{0,15,0} , default_scale); // tendrá la proyección por defecto
             missile_launcher = engine->createModel(default_createnode_params, "assets/missile-launcher.obj");
+            cubito_rosa = engine->createModel(default_createnode_params, "assets/cubito_rosa.obj");
+            icosphere = engine->createModel(default_createnode_params, "assets/icosphere.obj");
         }
+
+        if(engine->getKeySinglePress(GLFW_KEY_3))
+        {
+            INFOLOG("ID del nodo camnode "<<VAR(camnode->getNameID()));
+            INFOLOG("ID del nodo camnode "<<VAR(camnode->getNameID()));
+            INFOLOG("ID del nodo missile_launcher "<<VAR(missile_launcher->getNameID()));
+            INFOLOG("ID del nodo cubito_rosa "<<VAR(cubito_rosa->getNameID()));
+            INFOLOG("ID del nodo icosphere "<<VAR(icosphere->getNameID()));
+        }
+
+        if(engine->getKeySinglePress(GLFW_KEY_4))
+            engine->setWindowClearColor(0,0,0,0); // Negro
+
+        if(engine->getKeySinglePress(GLFW_KEY_5))
+            engine->setWindowTitle("Looooooooooooooooooooooooool");
+        if(engine->getKeySinglePress(GLFW_KEY_6))
+            engine->setWindowIcon("assets/logo.jpg");
+
+        // Testing cursor, still in progress (try using cursor callback and disabling cursor input)
+        if(engine->getKeySinglePress(GLFW_KEY_7))
+            engine->setCursorVisibility(true);
+        if(engine->getKeySinglePress(GLFW_KEY_8))
+            engine->setCursorVisibility(false);
+
+        if(engine->getKeySinglePress(GLFW_KEY_9))
+            engine->setCursorPosition();
+
 
         // if(engine->isKeyPressed(GLFW_KEY_UP))
         //     camnode->translate({0,0.1f,0});

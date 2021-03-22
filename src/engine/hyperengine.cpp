@@ -37,6 +37,7 @@ HyperEngine::initialize(void)
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // To make MacOS happy; should not be needed
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
+
 	// Open a window and create its OpenGL context
 	m_window = glfwCreateWindow( 1366, 768, "HyperEngine Test 1", NULL, NULL);
 	if( !m_window ) {
@@ -125,7 +126,7 @@ HyperEngine::clearTree(void)
 	m_cameras.clear();
 	m_active_camera = engine_invalid_id;
 	m_lights.clear();
-	m_active_lights.clear();
+	// m_active_lights.clear();
 	m_viewports.clear();
 	m_active_viewport = engine_invalid_id;
 
@@ -162,12 +163,22 @@ HyperEngine::drawScene(void) const
 		return;
 
 	// TODO:: luces
-	// for(auto light : m_lights) {
-	// 	auto lightmatrix = light->getMatrixTransform();
-	// 	auto shaderID = light->getEntity()->getProgramID();
-	// 	// pasarle el dato a opengl, puede ser en la función draw() de la entidad light
-	// 	// glUniform3f(glGetUniformLocation(shaderID, "propiedad", x, y, z);
-	// }
+	for(auto light : m_lights) {
+		INFOLOG("TENGO LUSES!!!")
+		auto lightmatrix = light->getMatrixTransform();
+		auto lightshader = light->getEntity()->getShader();
+
+		// auto lightmatrix = light.m_node->getMatrixTransform();
+		// auto lightshader = light.m_node->getEntity()->getShader();
+
+		// esto debería de pasarse en Emodel
+		// para saber por cada modelo si debe usar la luz o la textura difusa
+		lightshader->bind();
+		lightshader->setInt("usesLightning", 1);	
+		// esto ni se llama así, TODO:: implementar bien el pasar el dato a opengl
+		// lightshader->setMat4("lightmatrix", lightmatrix);
+		lightshader->unbind();
+	}
 
 	auto activeCamNode = this->m_cameras[m_active_camera];
 	auto camentity = static_cast<ECamera*>(activeCamNode->getEntity());
@@ -225,7 +236,14 @@ HyperEngine::registerCamera(Node* const camera)
 int 
 HyperEngine::registerLight(Node* const light) 
 {
+	// CUIDADO, esto es un emplace al final, mientras que el setActive literalmente busca posición exacta
+	// TODO:: retocar comportamiento conjunto
+	// auto lightdata = new LightData(light, true);
+	// m_lights.push_back(light, true);
+
 	m_lights.push_back(light);
+	m_active_lights.push_back(true);
+
 	return nextLightID++;
 }
 
@@ -249,6 +267,7 @@ void
 HyperEngine::setActiveLight(int const lightID, bool const isActive) 
 {
 	m_active_lights[lightID] = isActive;
+	// m_lights[lightID].m_active = isActive;
 }
 
 void 
@@ -272,11 +291,6 @@ HyperEngine::getWindow(void) const noexcept
 	return m_window; 
 }
 
-void 
-HyperEngine::setKeyState(int const key, int const action)
-{
-	m_keystates[key] = action;
-}
 
 bool const 
 HyperEngine::getKeySinglePress(int const key) noexcept
@@ -310,6 +324,66 @@ HyperEngine::isTreeEmpty(void)
 	return m_rootnode->getChildNumber() == 0;
 }
 
+void 
+HyperEngine::setWindowTitle(std::string const& name)
+{
+	if(!isWindowActive()) return;
+
+	glfwSetWindowTitle(m_window, name.c_str());
+}
+
+void 
+HyperEngine::setWindowIcon(std::string const& path, int const width, int const height)
+{
+	// Por defecto son 32x32, pero podría aceptar 16x16 o 48x48
+	if(!isWindowActive()) return;
+
+	auto texture 	= ResourceManager::getResource_t<RTexture>(path);
+	auto data 		= texture->getRawData();
+	auto* icon 		= new GLFWimage{width, height, data};
+	glfwSetWindowIcon(m_window, 1, icon);
+}
+
+void 
+HyperEngine::setWindowClearColor(float const r, float const g, float const b, float const a)
+{
+	glClearColor(r,g,b,a);
+}
+
+void 
+HyperEngine::setWindowActive(bool const value)
+{
+	if(!isWindowActive()) return;
+
+	glfwSetWindowShouldClose(m_window, !value);
+}
+
+void 
+HyperEngine::setCursorVisibility(bool const value)
+{
+	// glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN );
+
+	// Mal planteado, ahora lo deshabilita
+	glfwSetInputMode(m_window, GLFW_CURSOR, value ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_DISABLED );
+}
+
+void 
+HyperEngine::setCursorPosition(double const x, double const y)
+{
+	// Por defecto va al centro, valores a pasar entre 0 y 1 (normalizados)
+	// No funciona con el cursor diabled, usar callback
+	int w, h;
+	glfwGetWindowSize(m_window, &w, &h);
+	glfwSetCursorPos(m_window, x * w , y * h);
+}
+
+// Funciones privadas
+
+void 
+HyperEngine::setKeyState(int const key, int const action)
+{
+	m_keystates[key] = action;
+}
 
 void 
 HyperEngine::resetKeyStates(void)
