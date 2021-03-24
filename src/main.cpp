@@ -474,6 +474,62 @@ void test_input_callbacks() {
 
 }
 
+void test_matrices_data_lights(void) {
+    std::unique_ptr<hyper::HyperEngine> engine = std::make_unique<hyper::HyperEngine>(true);
+    engine->setWindowTitle("test_matrices_data_lights");
+    engine->setWindowIcon("assets/logo.jpg");
+
+    // hyper::Node* lightnode = engine->createLight(default_createnode_params);
+    hyper::Node* camnode = engine->createCamera(nullptr,{1.0f,0.0f,4.0f},{0,15,0} , default_scale); // tendrá la proyección por defecto
+    hyper::Node* missile_launcher = engine->createModel(default_createnode_params, "assets/missile-launcher.obj");
+    hyper::Node* funador_pesado2 = engine->createModel(nullptr, {-1.0f, 0.0f, 1.0f}, default_rot_and_scale, "assets/newmachinegun/HA_funador_pesado.obj");
+    hyper::Node* cubito_rosa = engine->createModel(default_createnode_params, "assets/cubito_rosa.obj");
+    hyper::Node* icosphere = engine->createModel(default_createnode_params, "assets/icosphere.obj");
+
+    cubito_rosa->setTranslation({-2.0f,0.0f,0.0f});
+    cubito_rosa->setScale({0.3f,0.3f,0.3f});
+    icosphere->setTranslation({2,0,0});
+
+    while(engine->isWindowActive() && !engine->getKeyContinuousPress(GLFW_KEY_ESCAPE))
+    {
+        auto trans = camnode->getMatrixTransform();
+        glm::vec4 result = trans * glm::vec4(0,0,0,1); // saca la última fila de datos, que son los de translación (posición)
+        INFOLOG(glm::to_string(result))
+        INFOLOG(glm::to_string(camnode->getTranslation()))
+
+        engine->beginRender();
+        engine->drawScene();
+        engine->endRender();
+
+        missile_launcher->rotate({0,5.5f,0});
+
+        if(engine->getKeyContinuousPress(GLFW_KEY_A))
+            camnode->rotate({0,3,0});
+
+        if(engine->getKeyContinuousPress(GLFW_KEY_D))
+            camnode->rotate({0,-3,0});
+
+        if(engine->getKeyContinuousPress(GLFW_KEY_W))
+            camnode->rotate({3,0,0});
+
+        if(engine->getKeyContinuousPress(GLFW_KEY_S))
+            camnode->rotate({-.3,0,0});
+
+        if(engine->getKeyContinuousPress(GLFW_KEY_LEFT))
+            camnode->translate({0,.3,0});
+
+        if(engine->getKeyContinuousPress(GLFW_KEY_RIGHT))
+            camnode->translate({0,-.3,0});
+
+        if(engine->getKeyContinuousPress(GLFW_KEY_UP))
+            camnode->translate({.3,0,0});
+
+        if(engine->getKeyContinuousPress(GLFW_KEY_DOWN))
+            camnode->translate({-.3,0,0});
+
+    }
+}
+
 
 int main(void) {
 	// test_models_and_imgui();
@@ -484,5 +540,7 @@ int main(void) {
 
     // test_full_tree_traverse();
 
-    test_input_callbacks();
+    // test_input_callbacks();
+
+    test_matrices_data_lights();
 }
