@@ -530,6 +530,50 @@ void test_matrices_data_lights(void) {
     }
 }
 
+void test_collisions_bullet(void) {
+    std::unique_ptr<hyper::HyperEngine> engine = std::make_unique<hyper::HyperEngine>(true);
+    engine->setWindowTitle("test_collisions_bullet");
+    engine->setWindowIcon("assets/logo.jpg");
+
+    hyper::Node* camnode = engine->createCamera(nullptr, {0.0f,0.0f,5.0f}, default_rot_and_scale); // tendrá la proyección por defecto
+    hyper::Node* missile_launcher = engine->createModel(default_createnode_params, "assets/missile-launcher.obj");
+    hyper::Node* floor = engine->createModel(nullptr, {0, -1, 0}, default_rot_and_scale, "assets/planes/plano1.obj");
+    
+    while(engine->isWindowActive() && !engine->getKeyContinuousPress(GLFW_KEY_ESCAPE))
+    {
+        engine->beginRender();
+        engine->drawScene();
+        engine->endRender();
+
+        missile_launcher->rotate({0,2,0});
+
+        if(engine->getKeyContinuousPress(GLFW_KEY_A))
+            camnode->rotate({0,3,0});
+
+        if(engine->getKeyContinuousPress(GLFW_KEY_D))
+            camnode->rotate({0,-3,0});
+
+        if(engine->getKeyContinuousPress(GLFW_KEY_W))
+            camnode->rotate({3,0,0});
+
+        if(engine->getKeyContinuousPress(GLFW_KEY_S))
+            camnode->rotate({-3,0,0});
+
+        if(engine->getKeyContinuousPress(GLFW_KEY_LEFT))
+            camnode->translate({-.3,0,0});
+
+        if(engine->getKeyContinuousPress(GLFW_KEY_RIGHT))
+            camnode->translate({.3,0,0});
+
+        if(engine->getKeyContinuousPress(GLFW_KEY_UP))
+            camnode->translate({0,0,-.3f});
+
+        if(engine->getKeyContinuousPress(GLFW_KEY_DOWN))
+            camnode->translate({0,0,.3f});
+
+    }
+}
+
 
 int main(void) {
 	// test_models_and_imgui();
@@ -542,5 +586,7 @@ int main(void) {
 
     // test_input_callbacks();
 
-    test_matrices_data_lights();
+    // test_matrices_data_lights();
+
+    test_collisions_bullet();
 }

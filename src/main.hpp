@@ -25,6 +25,10 @@ using namespace glm;
 // Esto es para una prueba, print matrix
 #include <glm/gtx/string_cast.hpp>
 
+
+// Esto es para una prueba, test_collisions_bullet
+#include <managers/collision_manager.hpp>
+
 // #pragma once
 // #include <iostream>
 // #include <memory>

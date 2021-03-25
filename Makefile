@@ -89,11 +89,12 @@ OBJSUBDIRS	:= $(patsubst $(SRC)%,$(OBJ)%,$(SUBDIRS))
 OPENLG_LINK		:= -lglut -lGLU -lGL -lGLEW -lglfw -lX11 
 IMPORTERS_LINK 	:= -lSOIL -lassimp	# assimp is a file importer, SOIL is an image loader (missing freetype, a text importer)
 MATH_LINK		:= -lm
+BULLET_LINK		:= -lBulletSoftBody -lBulletDynamics -lBulletCollision -lLinearMath -lBulletWorldImporter # Physics library
 IMGUI_LINK 		:= $(LIB)/imgui/libimgui.a
-LINK_FLAGS		:= -L$(LIB) $(OPENLG_LINK) $(IMPORTERS_LINK) $(MATH_LINK) $(IMGUI_LINK)
+LINK_FLAGS		:= -L$(LIB) $(OPENLG_LINK) $(IMPORTERS_LINK) $(MATH_LINK) $(IMGUI_LINK) $(BULLET_LINK)
 LIBS			:= $(LINK_FLAGS)
 SHARED			:= 
-INCDIRS			:= -I$(LIB) -I$(LIB)/imgui -I$(SRC) -I/usr/include/GL/ -I/usr/include/GLFW/ -I/usr/local/include -L/usr/local/lib 
+INCDIRS			:= -I$(LIB) -I$(LIB)/imgui -I$(SRC) -I/usr/include/GL/ -I/usr/include/GLFW/ -I/usr/local/include -L/usr/local/lib -I/usr/include/bullet/
 
 ## Tools
 MKDIR		:= mkdir -p
