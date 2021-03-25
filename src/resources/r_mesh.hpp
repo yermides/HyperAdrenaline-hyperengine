@@ -2,6 +2,7 @@
 #include <managers/resource_manager.hpp>
 #include <resources/r_material.hpp>
 #include <resources/r_texture.hpp>
+#include <resources/r_shader.hpp>
 #include <resources/helpers/mesh.hpp>
 #include <util/macros.hpp>
 #include <util/functions.hpp>
@@ -14,7 +15,7 @@ struct RMesh : public Resource
     explicit RMesh(std::string const& path);
     ~RMesh();
 
-    void draw(ProgramIdentifier const shaderID = 0);
+    void draw(RShader* const shader);
 
     void loadMesh(std::string const& filepath);
 

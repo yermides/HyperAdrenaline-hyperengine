@@ -5,12 +5,23 @@ namespace hyper {
 RMaterial::RMaterial()
 : Resource{}
 {
+    // Default material
+    m_Ka = default_material_ambient_color;
+    m_Kd = default_material_diffuse_color;
+    m_Ks = default_material_specular_color;
+    m_Ns = default_material_specular_exponent;
+    m_d = default_material_opacity;
 }
 
 RMaterial::RMaterial(std::string const& path)
 : Resource{}
 {
     this->loadFromFile(path);
+}
+
+RMaterial::RMaterial(aiMaterial* amaterial, std::string const& search_directory)
+{
+    this->loadMaterial(amaterial, search_directory);
 }
 
 RMaterial::~RMaterial()
@@ -23,25 +34,156 @@ RMaterial::~RMaterial()
 }
 
 void 
+RMaterial::initialize(void)
+{
+    if(m_mapKa) m_mapKa->initialize();
+    if(m_mapKd) m_mapKd->initialize();
+    if(m_mapKs) m_mapKs->initialize();
+}
+
+void 
+RMaterial::draw(RShader* const shader)
+{
+    if(!shader) return;
+    
+    // Solo le pasa su textura difusa, aumentar el indice de textura para cada una que se le pase al shader
+    // TODO:: mejorar MUCHO el uso de la struct del shader material.vs/fs
+    int i = 0;
+
+    shader->setVec3("material.ambient", m_Ka);
+    shader->setVec3("material.diffuse", m_Kd);
+    shader->setVec3("material.specular", m_Ks);
+    shader->setFloat("material.shininess", m_Ns);
+    shader->setFloat("material.opacity", m_d);
+
+    // Si hay ambient texture, de momento sin usar en el shader
+    if(m_mapKa)
+    {
+        glActiveTexture(GL_TEXTURE0 + i); // active proper texture unit before binding
+        // retrieve texture number (the N in diffuse_textureN)
+        std::string name = "material.texture_ambient";
+        std::string number = "1";
+
+        // Indicar si se usan texturas (sí)
+        shader->setInt("material.usesAmbientTexture", 1);
+
+        // now set the sampler to the correct texture unit
+        shader->setInt((name + number).c_str(),i);
+        // and finally bind the texture
+        glBindTexture(GL_TEXTURE_2D, m_mapKa->getProgramID());
+        ++i;
+    }
+    else
+    {
+        // Indicar si se usan texturas (no)
+        shader->setInt("material.usesAmbientTexture", 0);
+    }
+
+    // Si hay textura difusa, de momento sólo usa esta
+    if(m_mapKd)
+    {
+        glActiveTexture(GL_TEXTURE0 + i); // active proper texture unit before binding
+        // retrieve texture number (the N in diffuse_textureN)
+        std::string name = "material.texture_diffuse";
+        std::string number = "1";
+
+        // Indicar si se usan texturas (sí)
+        shader->setInt("material.usesDiffuseTexture", 1);
+
+        // now set the sampler to the correct texture unit
+        shader->setInt((name + number).c_str(),i);
+        // and finally bind the texture
+        glBindTexture(GL_TEXTURE_2D, m_mapKd->getProgramID());
+        ++i;
+    }
+    else
+    {
+        // Indicar si se usan texturas (no)
+        shader->setInt("material.usesDiffuseTexture", 0);
+    }
+
+    // Si hay specular texture, de momento sin usar en el shader
+    if(m_mapKa)
+    {
+        glActiveTexture(GL_TEXTURE0 + i); // active proper texture unit before binding
+        // retrieve texture number (the N in diffuse_textureN)
+        std::string name = "material.texture_specular";
+        std::string number = "1";
+
+        // Indicar si se usan texturas (sí)
+        shader->setInt("material.usesSpecularTexture", 1);
+
+        // now set the sampler to the correct texture unit
+        shader->setInt((name + number).c_str(),i);
+        // and finally bind the texture
+        glBindTexture(GL_TEXTURE_2D, m_mapKs->getProgramID());
+        ++i;
+    }
+    else
+    {
+        // Indicar si se usan texturas (no)
+        shader->setInt("material.usesSpecularTexture", 0);
+    }
+}
+
+void 
 RMaterial::loadMaterial(std::string const& path)
 {
     INFOLOG("He intentado crear un material.")
 }
 
 void 
-RMaterial::loadMaterial(const aiMaterial* const amaterial)
+RMaterial::loadMaterial(aiMaterial* amaterial, std::string const& search_directory)
 {
+    INFOLOG("RMaterial::loadMaterial search_directory " << VAR(search_directory) );
+
     aiReturn res;
     res = amaterial->Get(AI_MATKEY_COLOR_AMBIENT, &m_Ka.r, NULL);   // .x por ser el principio de los datos del array
-    if(res != aiReturn_SUCCESS) m_Ka = {0.0f, 0.0f, 0.0f};
+    if(res != aiReturn_SUCCESS) m_Ka = default_material_ambient_color;
     res = amaterial->Get(AI_MATKEY_COLOR_DIFFUSE, &m_Kd.r, NULL);
-    if(res != aiReturn_SUCCESS) m_Kd = {0.0f, 0.0f, 0.0f};
+    if(res != aiReturn_SUCCESS) m_Kd = default_material_diffuse_color;
     res = amaterial->Get(AI_MATKEY_COLOR_SPECULAR, &m_Ks.r, NULL);
-    if(res != aiReturn_SUCCESS) m_Ks = {0.0f, 0.0f, 0.0f};
+    if(res != aiReturn_SUCCESS) m_Ks = default_material_specular_color;
     res = amaterial->Get(AI_MATKEY_SHININESS, &m_Ns, NULL);
-    if(res != aiReturn_SUCCESS) m_Ns = 0.0f;
+    if(res != aiReturn_SUCCESS) m_Ns = default_material_specular_exponent;
     res = amaterial->Get(AI_MATKEY_OPACITY, &m_d, NULL);
-    if(res != aiReturn_SUCCESS) m_d = 0.0f;
+    if(res != aiReturn_SUCCESS) m_d = default_material_opacity;
+
+
+    // Conseguir texturas
+    aiString str;
+    
+    // Ambiente
+    res = amaterial->GetTexture(aiTextureType_AMBIENT, 0, &str);
+
+    if(res == aiReturn_SUCCESS)
+    {
+        std::string formattedpath = str.C_Str();
+        util::replaceCharacters(formattedpath, "\\\\", "/");
+        m_mapKa = ResourceManager::getResource_t<RTexture>(search_directory +"/"+ formattedpath);
+    }
+
+    // Difusa
+    res = amaterial->GetTexture(aiTextureType_DIFFUSE, 0, &str);
+
+    if(res == aiReturn_SUCCESS)
+    {
+        std::string formattedpath = str.C_Str();
+        util::replaceCharacters(formattedpath, "\\\\", "/");
+        m_mapKd = ResourceManager::getResource_t<RTexture>(search_directory +"/"+ formattedpath);
+    }
+
+    // Especular
+    res = amaterial->GetTexture(aiTextureType_SPECULAR, 0, &str);
+
+    if(res == aiReturn_SUCCESS)
+    {
+        std::string formattedpath = str.C_Str();
+        util::replaceCharacters(formattedpath, "\\\\", "/");
+        m_mapKs = ResourceManager::getResource_t<RTexture>(search_directory +"/"+ formattedpath);
+    }
+
+    INFOLOG("RMaterial name " << VAR(amaterial->GetName().C_Str()) );
 
     INFOLOG("\n" << "Propiedades del material: " << "\n"
         << VAR(m_Ka.r) << ":" << VAR(m_Ka.g) << ":" << VAR(m_Ka.b) << "\n"

@@ -6,6 +6,7 @@ namespace hyper {
 Node::Node(bool const ignoreDrawInTraverse)
 : m_ignoreDraw(ignoreDrawInTraverse)
 {
+    m_name = nextNameID++;
     INFOLOG("I am the node "<<VAR(this));
 }
 
@@ -115,6 +116,24 @@ Node::deleteBranch(Node* node)
         deleteBranch(child);
 
     delete node;
+    node = nullptr;
+}
+
+void
+Node::deleteBranchChilds(Node* node)
+{
+    // TODO:: revisar, pero parece ir bien
+    if(!node) return;
+
+    for(auto n : node->m_childs)
+    {
+        if(n)
+        {
+            deleteBranch(n);
+        }
+    }
+
+    node->m_childs.clear();
 }
 
 }

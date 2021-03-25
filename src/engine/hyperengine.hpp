@@ -32,7 +32,9 @@
 // Cameras, lights, etc
 #define engine_invalid_id                   -1
 // Shader paths
-#define SHADER_DEFAULT_PATH                 "src/shaders/model-loading-m-v-p" 
+// #define SHADER_DEFAULT_PATH                 "src/shaders/model-loading-m-v-p" 
+// #define SHADER_DEFAULT_PATH                 "src/shaders/materials" 
+#define SHADER_DEFAULT_PATH                 "src/shaders/materials-and-lights" 
 
 namespace hyper {
 
@@ -70,7 +72,7 @@ struct HyperEngine
             auto camera     = new ECamera(args...);
 
             // Test, poner directamente el shader a usar
-            camera->setProgramID(m_shaders[OpenGLShader::SHADER_DEFAULT]->getProgramID());
+            camera->setShader(m_shaders[OpenGLShader::SHADER_DEFAULT]);
 
             node->setEntity(camera);
             registerCamera(node);
@@ -90,9 +92,10 @@ struct HyperEngine
             auto light  = new ELight(args...);
 
             // Test, poner directamente el shader a usar
-            light->setProgramID(m_shaders[OpenGLShader::SHADER_DEFAULT]->getProgramID());
+            light->setShader(m_shaders[OpenGLShader::SHADER_DEFAULT]);
 
             node->setEntity(light);
+            registerLight(node);
             return node;
         }
 
@@ -109,11 +112,14 @@ struct HyperEngine
             auto model  = new EModel(args...);
 
             // Test, poner directamente el shader a usar
-            model->setProgramID(m_shaders[OpenGLShader::SHADER_DEFAULT]->getProgramID());
+            model->setShader(m_shaders[OpenGLShader::SHADER_DEFAULT]);
 
             node->setEntity(model);
             return node;
         }
+
+    // Related to the structure
+    void clearTree(void);
 
     void clearScreen(void) const;
 
@@ -137,74 +143,72 @@ struct HyperEngine
 
     void setActiveViewport(int const viewportID);
 
+    // Utils
     bool const isWindowActive(void) const noexcept;
 
     GLFWwindow* getWindow(void) const noexcept;
 
-    void setKeyState(int const key, int const action);
-
     bool const getKeySinglePress(int const key) noexcept;
+
     bool const getKeyContinuousPress(int const key) noexcept;
+
     bool const getKeyKeyboardPress(int const key) noexcept;
+
     bool const getKeyRelease(int const key) noexcept;
 
+    bool const isTreeEmpty(void);
+
+    void setWindowTitle(std::string const& name);
+
+    void setWindowIcon(std::string const& path, int const width = 32, int const height = 32);
+
+    void setWindowClearColor(float const r, float const g, float const b, float const a);
+
+    void setWindowActive(bool const value); 
+
+    void setCursorVisibility(bool const value);
+
+    void setCursorPosition(double const x = 0.5, double const y = 0.5);
+
 private:
+    void setKeyState(int const key, int const action);
     void resetKeyStates(void);
 
-    struct Viewport {
-        int x, y, height, width;
-    };
+    // Aún en duda de si usar esta estructura
+    // struct LightData {
+    //     Node* m_node;
+    //     bool m_active;
+    // };
 
-    inline static int nextCameraID      {0};
-    inline static int nextLightID       {0};
-    inline static int nextViewportID    {0};
-
+    struct Viewport { int x, y, height, width; };
 
     Node* const     m_rootnode      { new Node   };
     // No se necesita el resource manager por su naturaleza singleton
 
     // Administrador de shaders
     std::unordered_map<OpenGLShader, RShader*> m_shaders;
+
     // Administración del input de teclado
     std::map<int, int> m_keystates;
+
     // Atributos para mantenimiento de las cámaras, luces y viewports
     GLFWwindow*     m_window   { nullptr    };
     std::vector<Node*> m_cameras;
-    std::vector<Node*> m_lights;
     std::vector<Viewport> m_viewports;
     int m_active_camera  {engine_invalid_id} 
     ,   m_active_viewport{engine_invalid_id};
+
+    // std::vector<LightData> m_lights;
+    std::vector<Node*> m_lights;
     std::vector<bool> m_active_lights;
 
     // imgui
     ImGuiIO* m_io;
+
+    // ID's para los elementos
+    inline static int nextCameraID      {0};
+    inline static int nextLightID       {0};
+    inline static int nextViewportID    {0};
 };
 
 }
-
-
-// // Projection matrix
-// static glm::mat4 Projection 
-// 	= glm::perspective(
-// 		glm::radians(45.0f) // 45° Field of View
-// 		, 16.0f / 9.0f      // 16:9 ratio
-// 		, 0.1f              // display range : 0.1 unit <--
-// 		, 100.0f            // --> 100 units
-// );
-
-// // View matrix
-// static glm::mat4 View  
-// 	= glm::lookAt(
-// 		glm::vec3(4,3,-3), // Camera is at (4,3,-3), in World Space
-// 		glm::vec3(0,0,0), // and looks at the origin
-// 		glm::vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
-// );
-
-// // Model matrix, default model at 0,0,0
-// static glm::mat4 Model      = glm::mat4(1.0f);
-
-// // Our ModelViewProjection : multiplication of our 3 matrices
-// static glm::mat4 MVP        = Projection * View * Model; // Remember, matrix multiplication is the other way around
-
-// static glm::mat4 const test_projection = glm::lookAt(glm::vec3(4,3,-3), glm::vec3(0,0,0), glm::vec3(0,1,0));
-// static glm::mat4 test_view = glm::mat4(1.0f);

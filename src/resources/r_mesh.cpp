@@ -20,11 +20,14 @@ RMesh::~RMesh()
 }
 
 void 
-RMesh::draw(ProgramIdentifier const shaderID)
+RMesh::draw(RShader* const shader)
 {
+    if(!shader) return;
+
     for(auto m : m_meshes) 
-        m->draw(shaderID);
+        m->draw(shader);
 }
+
 
 void 
 RMesh::loadMesh(std::string const& filepath)
@@ -65,7 +68,6 @@ RMesh::loadMesh(std::string const& filepath)
 
         // Guardar vértices, normales y coordenadas de textura
         // Guardar índices
-        // TODO:: guardar texturas y materiales
         auto* vertexarray       = amesh->mVertices;
         auto* normalsarray      = amesh->mNormals;
         auto* texcoordsarray    = amesh->mTextureCoords[0];
@@ -103,90 +105,11 @@ RMesh::loadMesh(std::string const& filepath)
         // Resize to the size to skip possible 4th vertex
         mesh->m_indices.resize(mesh->m_indices.size());
 
-        // ----------------------------------------------------------------------------------------------
-        // --------------------------Danger zone: materiales in progress---------------------------------
-        // ----------------------------------------------------------------------------------------------
-        // TODO:: materiales
+        // Guardar texturas y materiales
+        // TODO:: mejorar los materiales (irse al RMaterial::draw() y considerar más texturas aparte de la difusa)
         auto* amaterial = scene->mMaterials[amesh->mMaterialIndex];
-
-        // glm::vec3 diffuse_color;
-        // auto res = amaterial->Get(AI_MATKEY_COLOR_DIFFUSE, &diffuse_color.x, NULL);
-
-        // aiString str1;
-        // amaterial->GetTexture((aiTextureType)11, 0, &str1);
-        // INFOLOG("xxxxxxxx: "<<VAR(str1.C_Str()))
-
-        // if(res == aiReturn_SUCCESS)
-        //     INFOLOG("Diffuse color: "<<VAR(diffuse_color.x) << VAR(diffuse_color.y) <<VAR(diffuse_color.z) );
-            
-        // INFOLOG("Número de propiedades: "<< VAR(amaterial->mNumProperties));
-
-        for(uint32_t j {0}; j<amaterial->mNumProperties; ++j)
-        {
-            auto property = amaterial->mProperties[j];
-            // INFOLOG("Propiedad " << VAR(property->mKey.C_Str()) <<":"<< VAR(property->mData) <<":"<< VAR( property->mType ) );
-        }
-
-        for (int j {0}; j <= AI_TEXTURE_TYPE_MAX; j++)
-        {
-            // LOG("Numero de propiedades del material: {" << amaterial->mNumProperties << "}")
-            // auto properties = amaterial->mProperties[1];
-            // LOG(properties->mKey.C_Str());
-
-            // for (uint32_t m = 0; m < amaterial->mNumProperties; m++)
-            // {
-            // }
-            
-            auto type = (aiTextureType)j;
-            auto count = amaterial->GetTextureCount(type);
-            // LOG("Texturas de tipo [" << type << "] = " << count );
-
-            // análogo de [loadMaterialTextures] solo que los pongo a lo bruto en el array
-            // TODO:: cargar todo tipo de texturas y ser capaz de interpretarlas (Mesh::draw())
-            if(type == aiTextureType_DIFFUSE)
-            {
-                for (size_t k = 0; k < count; k++)
-                {
-                    RMaterial* rmaterial = new RMaterial();
-                    rmaterial->loadMaterial(amaterial);
-                    delete rmaterial;
-                    // Crear y guardar una textura en el array
-                    aiString str;
-                    amaterial->GetTexture(type, k, &str);
-
-                    std::string formattedpath = str.C_Str();
-                    util::replaceCharacters(formattedpath, "\\\\", "/");
-
-                    auto filepath = getDirectory() +"/"+ formattedpath;
-                    auto texture  = ResourceManager::getResource_t<RTexture>(filepath);
-                    // RTexture* texture = new RTexture(filepath);
-                    // texture->initialize(); // voy a probar a hacer esto en el draw()
-                    mesh->m_textures.push_back(texture);
-                }
-            }
-
-
-        }
-
-        LOG("Nombre del material: " << amaterial->GetName().C_Str());
-        LOG("Nombre de la malla: " << amesh->mName.C_Str());
-        LOG("Posiciones: " << mesh->m_vertices.size());
-        LOG("Normales: " << mesh->m_normals.size());
-        LOG("Coordenadas de textura: " << mesh->m_texture_coords.size());
-        LOG("Indices: " << mesh->m_indices.size());
-        LOG("Texturas: " << mesh->m_textures.size());
-        
-        LOG("sizeof(mesh): " << 
-            (mesh->m_vertices.size()*sizeof(GLfloat) )
-        +   (mesh->m_normals.size()*sizeof(GLfloat) )
-        +   (mesh->m_texture_coords.size()*sizeof(GLfloat) )
-        +   (mesh->m_indices.size()*sizeof(GLuint) )
-        +   (mesh->m_textures.size()*sizeof(RTexture) )
-        );
-
-        // ----------------------------------------------------------------------------------------------
-        // -----------------------(end) Danger zone: materiales in progress------------------------------
-        // ----------------------------------------------------------------------------------------------
+        RMaterial* rmaterial = new RMaterial(amaterial, this->getDirectory());
+        mesh->m_materials.push_back(rmaterial);
 
         // Inicializar valores de la malla en opengl
         mesh->initialize();
