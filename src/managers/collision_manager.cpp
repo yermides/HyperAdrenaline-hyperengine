@@ -2,6 +2,7 @@
 
 CollisionManager::CollisionManager(/* args */)
 {
+	initialize();
 }
 
 CollisionManager::~CollisionManager()
@@ -19,6 +20,11 @@ CollisionManager::~CollisionManager()
 	delete m_dispatcher;
 
 	delete m_collisionConfiguration;
+
+	for(uint32_t i {0}; i < m_collisionShapes.size(); ++i)
+		delete m_collisionShapes[i];
+
+	m_collisionShapes.clear();
 }
 
 // Private functions
@@ -39,4 +45,9 @@ CollisionManager::initialize(void)
 	m_solver = new btSequentialImpulseConstraintSolver;
 
 	m_dynamicsWorld = new btDiscreteDynamicsWorld(m_dispatcher, m_overlappingPairCache, m_solver, m_collisionConfiguration);
+
+	// Poner gravedad y tal
+	m_dynamicsWorld->setGravity({0.0f, -9.81f, 0.0f});
+	m_dynamicsWorld->stepSimulation(1.0f / 60.0f);
+
 }
