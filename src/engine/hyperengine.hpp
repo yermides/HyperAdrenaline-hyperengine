@@ -170,6 +170,10 @@ struct HyperEngine
 
     void setCursorPosition(double const x = 0.5, double const y = 0.5);
 
+    void enableZBuffer(void);
+
+    void disableZBuffer(void);
+
 private:
     void setKeyState(int const key, int const action);
     void resetKeyStates(void);

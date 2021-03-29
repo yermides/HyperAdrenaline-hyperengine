@@ -479,10 +479,10 @@ void test_matrices_data_lights(void) {
     engine->setWindowTitle("test_matrices_data_lights");
     engine->setWindowIcon("assets/logo.jpg");
 
-    // hyper::Node* lightnode = engine->createLight(default_createnode_params);
+    hyper::Node* lightnode = engine->createLight(default_createnode_params);
     hyper::Node* camnode = engine->createCamera(nullptr,{1.0f,0.0f,4.0f},{0,15,0} , default_scale); // tendrá la proyección por defecto
     hyper::Node* missile_launcher = engine->createModel(default_createnode_params, "assets/missile-launcher.obj");
-    hyper::Node* funador_pesado2 = engine->createModel(nullptr, {-1.0f, 0.0f, 1.0f}, default_rot_and_scale, "assets/newmachinegun/HA_funador_pesado.obj");
+    // hyper::Node* funador_pesado2 = engine->createModel(nullptr, {-1.0f, 0.0f, 1.0f}, default_rot_and_scale, "assets/newmachinegun/HA_funador_pesado.obj");
     hyper::Node* cubito_rosa = engine->createModel(default_createnode_params, "assets/cubito_rosa.obj");
     hyper::Node* icosphere = engine->createModel(default_createnode_params, "assets/icosphere.obj");
 
@@ -503,29 +503,14 @@ void test_matrices_data_lights(void) {
 
         missile_launcher->rotate({0,5.5f,0});
 
-        if(engine->getKeyContinuousPress(GLFW_KEY_A))
-            camnode->rotate({0,3,0});
-
-        if(engine->getKeyContinuousPress(GLFW_KEY_D))
-            camnode->rotate({0,-3,0});
-
-        if(engine->getKeyContinuousPress(GLFW_KEY_W))
-            camnode->rotate({3,0,0});
-
-        if(engine->getKeyContinuousPress(GLFW_KEY_S))
-            camnode->rotate({-.3,0,0});
-
-        if(engine->getKeyContinuousPress(GLFW_KEY_LEFT))
-            camnode->translate({0,.3,0});
-
-        if(engine->getKeyContinuousPress(GLFW_KEY_RIGHT))
-            camnode->translate({0,-.3,0});
-
-        if(engine->getKeyContinuousPress(GLFW_KEY_UP))
-            camnode->translate({.3,0,0});
-
-        if(engine->getKeyContinuousPress(GLFW_KEY_DOWN))
-            camnode->translate({-.3,0,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_A))       camnode->rotate({0,3,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_D))       camnode->rotate({0,-3,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_W))       camnode->rotate({3,0,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_S))       camnode->rotate({-3,0,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_LEFT))    camnode->translate({-.3,0,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_RIGHT))   camnode->translate({.3,0,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_UP))      camnode->translate({0,0,-.3f});
+        if(engine->getKeyContinuousPress(GLFW_KEY_DOWN))    camnode->translate({0,0,.3f});
 
     }
 }
@@ -602,7 +587,7 @@ int main(void) {
 
     // test_input_callbacks();
 
-    // test_matrices_data_lights();
+    test_matrices_data_lights();
 
-    test_collisions_bullet();
+    // test_collisions_bullet();
 }
