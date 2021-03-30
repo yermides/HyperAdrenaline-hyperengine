@@ -386,18 +386,36 @@ HyperEngine::setCursorPosition(double const x, double const y)
 }
 
 void 
-HyperEngine::enableZBuffer(void)
+HyperEngine::enableZBuffer(int const method)
 {
-	// Enable depth test
 	glEnable(GL_DEPTH_TEST);
-	// Accept fragment if it closer to the camera than the former one
-	glDepthFunc(GL_LESS); 
+
+	// Methods: GL_ALWAYS, GL_NEVER, GL_LESS, GL_EQUAL, GL_LEQUAL, GL_GREATER, GL_NOTEQUAL, GL_GEQUAL
+	glDepthFunc(method); 
 }
 
 void 
 HyperEngine::disableZBuffer(void)
 {
 	glDisable(GL_DEPTH_TEST);
+}
+
+void 
+HyperEngine::enableCulling(int const method, int const faceselection)
+{
+	glEnable(GL_CULL_FACE);
+
+	// Methods: GL_FRONT, GL_BACK, GL_FRONT_AND_BACK
+	glCullFace(method);
+
+	// Face selection: GL_CW, GL_CCW (clockwise or counter-clockwise)
+	glFrontFace(faceselection);
+}
+
+void 
+HyperEngine::disableCulling(void)
+{
+	glDisable(GL_CULL_FACE);
 }
 
 // Funciones privadas

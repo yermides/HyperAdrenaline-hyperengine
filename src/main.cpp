@@ -512,6 +512,18 @@ void test_matrices_data_lights(void) {
         if(engine->getKeyContinuousPress(GLFW_KEY_UP))      camnode->translate({0,0,-.3f});
         if(engine->getKeyContinuousPress(GLFW_KEY_DOWN))    camnode->translate({0,0,.3f});
 
+        if(engine->getKeySinglePress(GLFW_KEY_1))       engine->enableCulling();
+        if(engine->getKeySinglePress(GLFW_KEY_2))       engine->disableCulling();
+
+        if(engine->getKeySinglePress(GLFW_KEY_3))       glCullFace(GL_FRONT);  
+        if(engine->getKeySinglePress(GLFW_KEY_4))       glCullFace(GL_BACK);
+        if(engine->getKeySinglePress(GLFW_KEY_5))       glCullFace(GL_FRONT_AND_BACK);
+        if(engine->getKeySinglePress(GLFW_KEY_6))       glFrontFace(GL_CW);
+        if(engine->getKeySinglePress(GLFW_KEY_7))       glFrontFace(GL_CCW);
+
+    
+
+
     }
 }
 

@@ -170,9 +170,13 @@ struct HyperEngine
 
     void setCursorPosition(double const x = 0.5, double const y = 0.5);
 
-    void enableZBuffer(void);
+    void enableZBuffer(int const method = GL_LESS);
 
     void disableZBuffer(void);
+
+    void enableCulling(int const method = GL_BACK, int const faceselection = GL_CW);
+
+    void disableCulling(void);
 
 private:
     void setKeyState(int const key, int const action);
