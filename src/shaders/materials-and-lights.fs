@@ -32,6 +32,8 @@ void main()
 {    
     if(material.usesDiffuseTexture == 1)
     {
+        // Implementar combinación luces y texturas
+        // Mirar https://learnopengl.com/Lighting/Lighting-maps
         FragColor = texture(material.texture_diffuse1, TexCoords);
     }
     else
@@ -60,9 +62,9 @@ void main()
             vec3 result = (ambient + diffuse + specular) * material.diffuse;
             
             // Linea comentada de momento porque no se usan los valores anteriores
-            // FragColor = vec4(result, 1.0);
+            FragColor = vec4(result, 1.0);
             
-            FragColor = vec4(1.0);
+            // FragColor = vec4(1.0);
         }
         else
         {

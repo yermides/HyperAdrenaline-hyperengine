@@ -162,11 +162,18 @@ HyperEngine::drawScene(void) const
 	if(m_active_camera == engine_invalid_id)
 		return;
 
+	auto camnode = this->m_cameras[m_active_camera];
+	auto camentity = static_cast<ECamera*>(camnode->getEntity());
+	auto camerashader = camentity->getShader();
+
 	// TODO:: luces
 	for(auto light : m_lights) {
-		INFOLOG("TENGO LUSES!!!")
-		auto lightmatrix = light->getMatrixTransform();
-		auto lightshader = light->getEntity()->getShader();
+		// INFOLOG("TENGO LUSES!!!")
+		auto lightmatrix 	= light->getMatrixTransform();
+		auto lightshader 	= light->getEntity()->getShader();
+		auto lightPos 		= light->getTranslation();
+		auto viewPos		= camnode->getTranslation();
+		auto lightColor 	= glm::vec3(1,1,1); 		// Color blanco
 
 		// auto lightmatrix = light.m_node->getMatrixTransform();
 		// auto lightshader = light.m_node->getEntity()->getShader();
@@ -175,14 +182,15 @@ HyperEngine::drawScene(void) const
 		// para saber por cada modelo si debe usar la luz o la textura difusa
 		lightshader->bind();
 		lightshader->setInt("usesLightning", 1);	
+		lightshader->setVec3("lightPos", lightPos);
+		lightshader->setVec3("viewPos", viewPos);
+		lightshader->setVec3("lightColor", lightColor);
+		
 		// esto ni se llama así, TODO:: implementar bien el pasar el dato a opengl
 		// lightshader->setMat4("lightmatrix", lightmatrix);
 		lightshader->unbind();
 	}
 
-	auto activeCamNode = this->m_cameras[m_active_camera];
-	auto camentity = static_cast<ECamera*>(activeCamNode->getEntity());
-	auto camerashader = camentity->getShader();
 
 	// Pasar matrices a opengl 
 	camerashader->bind();
@@ -190,7 +198,7 @@ HyperEngine::drawScene(void) const
 	auto projection = camentity->getProjectionMatrix();
 	camerashader->setMat4("projection", projection);
 
-	auto cameraMatrix = activeCamNode->getMatrixTransform();
+	auto cameraMatrix = camnode->getMatrixTransform();
 	auto view = glm::inverse(cameraMatrix);
 	camerashader->setMat4("view", view);
 
@@ -377,6 +385,39 @@ HyperEngine::setCursorPosition(double const x, double const y)
 	glfwSetCursorPos(m_window, x * w , y * h);
 }
 
+void 
+HyperEngine::enableZBuffer(int const method)
+{
+	glEnable(GL_DEPTH_TEST);
+
+	// Methods: GL_ALWAYS, GL_NEVER, GL_LESS, GL_EQUAL, GL_LEQUAL, GL_GREATER, GL_NOTEQUAL, GL_GEQUAL
+	glDepthFunc(method); 
+}
+
+void 
+HyperEngine::disableZBuffer(void)
+{
+	glDisable(GL_DEPTH_TEST);
+}
+
+void 
+HyperEngine::enableCulling(int const method, int const faceselection)
+{
+	glEnable(GL_CULL_FACE);
+
+	// Methods: GL_FRONT, GL_BACK, GL_FRONT_AND_BACK
+	glCullFace(method);
+
+	// Face selection: GL_CW, GL_CCW (clockwise or counter-clockwise)
+	glFrontFace(faceselection);
+}
+
+void 
+HyperEngine::disableCulling(void)
+{
+	glDisable(GL_CULL_FACE);
+}
+
 // Funciones privadas
 
 void 
@@ -388,10 +429,9 @@ HyperEngine::setKeyState(int const key, int const action)
 void 
 HyperEngine::resetKeyStates(void)
 {
-	for(int i{0}; i < GLFW_KEY_LAST; ++i)
-	{
-		m_keystates[i] = -1; // Estado por defecto
-	}
+	// Para cada tecla reconocida en el mapa, setea a invalid (Estados: -1 invalid, 0 release, 1 press, 2 hold)
+	for(auto iter = m_keystates.begin(); iter != m_keystates.end(); ++iter )
+		iter->second = -1;
 }
 
 }
