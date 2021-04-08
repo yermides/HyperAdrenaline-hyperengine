@@ -24,9 +24,20 @@ struct RTexture : public Resource
 
     constexpr Image getRawData(void) const noexcept
         { return m_textureImage;    }
+
+    constexpr int getWidth() const noexcept 
+        { return m_width;           }
+
+    constexpr int getHeight() const noexcept 
+        { return m_height;           }
+
 private:
     Image m_textureImage { nullptr };
-    int m_width, m_height, m_numComponents;
+    int 
+        m_width         { 0 }
+    ,   m_height        { 0 }
+    ,   m_numComponents { 0 }
+    ;
     ProgramIdentifier m_textureID { 0 };
 };
 

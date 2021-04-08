@@ -348,7 +348,7 @@ HyperEngine::setWindowIcon(std::string const& path, int const width, int const h
 
 	auto texture 	= ResourceManager::getResource_t<RTexture>(path);
 	auto data 		= texture->getRawData();
-	auto* icon 		= new GLFWimage{width, height, data};
+	auto icon 		= new GLFWimage{width, height, data};
 	glfwSetWindowIcon(m_window, 1, icon);
 }
 
@@ -391,7 +391,7 @@ HyperEngine::enableZBuffer(int const method)
 	glEnable(GL_DEPTH_TEST);
 
 	// Methods: GL_ALWAYS, GL_NEVER, GL_LESS, GL_EQUAL, GL_LEQUAL, GL_GREATER, GL_NOTEQUAL, GL_GEQUAL
-	glDepthFunc(method); 
+	glDepthFunc(method);
 }
 
 void 

@@ -17,6 +17,7 @@
 // HyperEngine
 #include <tree/node.hpp>
 #include <resources/r_shader.hpp>
+#include <resources/r_skybox.hpp>
 #include <entities/e_camera.hpp>
 #include <entities/e_light.hpp>
 #include <entities/e_model.hpp>
