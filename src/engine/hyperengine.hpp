@@ -17,10 +17,10 @@
 // HyperEngine
 #include <tree/node.hpp>
 #include <resources/r_shader.hpp>
-#include <resources/r_skybox.hpp>
 #include <entities/e_camera.hpp>
 #include <entities/e_light.hpp>
 #include <entities/e_model.hpp>
+#include <entities/e_skybox.hpp>
 
 // Create node params
 #define default_trans                       {0.0f,0.0f,0.0f}
@@ -36,6 +36,7 @@
 // #define SHADER_DEFAULT_PATH                 "src/shaders/model-loading-m-v-p" 
 // #define SHADER_DEFAULT_PATH                 "src/shaders/materials" 
 #define SHADER_DEFAULT_PATH                 "src/shaders/materials-and-lights" 
+#define SHADER_SKYBOX_PATH                  "src/shaders/skybox"
 
 namespace hyper {
 
@@ -43,7 +44,8 @@ namespace gui = ImGui;
 
 // Abstracción del nombre de la ruta de los shaders
 enum class OpenGLShader {
-    SHADER_DEFAULT
+        SHADER_DEFAULT
+    ,   SHADER_SKYBOX
 };
 
 struct HyperEngine
@@ -66,7 +68,7 @@ struct HyperEngine
         ,   glm::vec3 const& trans  = {0.0f,0.0f,0.0f}
         ,   glm::vec3 const& rot    = {0.0f,0.0f,0.0f}
         ,   glm::vec3 const& scale  = {1.0f,1.0f,1.0f} 
-        ,   Args... args
+        ,   Args&&... args
         )
         {
             auto node       = createNode(parent, trans, rot, scale);
@@ -86,7 +88,7 @@ struct HyperEngine
         ,   glm::vec3 const& trans  = {0.0f,0.0f,0.0f}
         ,   glm::vec3 const& rot    = {0.0f,0.0f,0.0f}
         ,   glm::vec3 const& scale  = {1.0f,1.0f,1.0f} 
-        ,   Args... args
+        ,   Args&&... args
         )
         {
             auto node   = createNode(parent, trans, rot, scale);
@@ -106,7 +108,7 @@ struct HyperEngine
         ,   glm::vec3 const& trans  = {0.0f,0.0f,0.0f}
         ,   glm::vec3 const& rot    = {0.0f,0.0f,0.0f}
         ,   glm::vec3 const& scale  = {1.0f,1.0f,1.0f} 
-        ,   Args... args
+        ,   Args&&... args
         )
         {
             auto node   = createNode(parent, trans, rot, scale);
@@ -116,6 +118,26 @@ struct HyperEngine
             model->setShader(m_shaders[OpenGLShader::SHADER_DEFAULT]);
 
             node->setEntity(model);
+            return node;
+        }
+
+    template <typename... Args>
+    Node* createSkybox(
+            Node* const parent      = nullptr
+        ,   glm::vec3 const& trans  = {0.0f,0.0f,0.0f}
+        ,   glm::vec3 const& rot    = {0.0f,0.0f,0.0f}
+        ,   glm::vec3 const& scale  = {1.0f,1.0f,1.0f} 
+        ,   Args&&... args
+        )
+        {
+            auto node       = createNode(parent, trans, rot, scale);
+            auto skybox     = new ESkybox(args...);
+
+            // Usando un shader propio, aún en testeo
+            skybox->setShader(m_shaders[OpenGLShader::SHADER_SKYBOX]);
+
+            node->setEntity(skybox);
+            registerSkybox(node);
             return node;
         }
 
@@ -137,6 +159,9 @@ struct HyperEngine
     int registerLight(Node* const light);
 
     int registerViewport(int x, int y, int height, int width);
+
+    // No hay setActiveSkybox porque solo puede haber una
+    int registerSkybox(Node* const skybox);
 
     void setActiveCamera(int const camID);
 
@@ -183,29 +208,27 @@ private:
     void setKeyState(int const key, int const action);
     void resetKeyStates(void);
 
-    // Aún en duda de si usar esta estructura
-    // struct LightData {
-    //     Node* m_node;
-    //     bool m_active;
-    // };
-
+    // Declaración de la estructura
     struct Viewport { int x, y, height, width; };
 
     Node* const     m_rootnode      { new Node   };
+
     // No se necesita el resource manager por su naturaleza singleton
 
     // Administrador de shaders
     std::unordered_map<OpenGLShader, RShader*> m_shaders;
 
     // Administración del input de teclado
-    std::map<int, int> m_keystates;
+    std::unordered_map<int, int> m_keystates;
 
-    // Atributos para mantenimiento de las cámaras, luces y viewports
+    // Atributos para mantenimiento de las cámaras, luces y viewports  (y ahora skybox)
     GLFWwindow*     m_window   { nullptr    };
     std::vector<Node*> m_cameras;
     std::vector<Viewport> m_viewports;
     int m_active_camera  {engine_invalid_id} 
     ,   m_active_viewport{engine_invalid_id};
+
+    Node* m_skybox  { nullptr };
 
     // std::vector<LightData> m_lights;
     std::vector<Node*> m_lights;
@@ -218,6 +241,12 @@ private:
     inline static int nextCameraID      {0};
     inline static int nextLightID       {0};
     inline static int nextViewportID    {0};
+
+    // Aún en duda de si usar esta estructura
+    // struct LightData {
+    //     Node* m_node;
+    //     bool m_active;
+    // };
 };
 
 }

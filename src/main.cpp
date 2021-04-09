@@ -604,16 +604,41 @@ void test_skybox() {
     icosphere->setTranslation({2,0,0});
 
     // a medias de esto, hacer lo de los shaders y acordarse de cambiar la depth function (Z buffer) para que siempre se vea al fondo
-    hyper::RSkybox* skybox { hyper::ResourceManager::getResource_t<hyper::RSkybox>("xd") };
+    // hyper::RSkybox* skybox { hyper::ResourceManager::getResource_t<hyper::RSkybox>("xd") };
+
+    SkyboxNamelist namelist = {
+            std::string("assets/skybox/top.jpg")
+        ,   std::string("assets/skybox/bottom.jpg")
+        ,   std::string("assets/skybox/left.jpg")
+        ,   std::string("assets/skybox/right.jpg")
+        ,   std::string("assets/skybox/front.jpg")
+        ,   std::string("assets/skybox/back.jpg")
+    };
+
+    hyper::Node* skyboxnode = engine->createSkybox(
+            default_createnode_params
+        ,   SkyboxNamelist 
+            { 
+                "assets/skybox/top.jpg"
+            ,   "assets/skybox/bottom.jpg"
+            ,   "assets/skybox/left.jpg"
+            ,   "assets/skybox/right.jpg"
+            ,   "assets/skybox/front.jpg"
+            ,   "assets/skybox/back.jpg" 
+            }
+    );
 
     while(engine->isWindowActive() && !engine->getKeyContinuousPress(GLFW_KEY_ESCAPE))
     {
+        // Render
         engine->beginRender();
         engine->drawScene();
         engine->endRender();
 
+        // Fancy rotation
         missile_launcher->rotate({0,5.5f,0});
 
+        // Input
         if(engine->getKeyContinuousPress(GLFW_KEY_A))       camnode->rotate({0,3,0});
         if(engine->getKeyContinuousPress(GLFW_KEY_D))       camnode->rotate({0,-3,0});
         if(engine->getKeyContinuousPress(GLFW_KEY_W))       camnode->rotate({3,0,0});

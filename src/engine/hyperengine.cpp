@@ -95,6 +95,7 @@ HyperEngine::initialize(void)
 
 	// Load shaders here
 	m_shaders[OpenGLShader::SHADER_DEFAULT] = ResourceManager::getResource_t<RShader>(SHADER_DEFAULT_PATH);
+	m_shaders[OpenGLShader::SHADER_SKYBOX] 	= ResourceManager::getResource_t<RShader>(SHADER_SKYBOX_PATH);
 }
 
 Node* 
@@ -168,20 +169,15 @@ HyperEngine::drawScene(void) const
 
 	// TODO:: luces
 	for(auto light : m_lights) {
-		// INFOLOG("TENGO LUSES!!!")
-		auto lightmatrix 	= light->getMatrixTransform();
 		auto lightshader 	= light->getEntity()->getShader();
 		auto lightPos 		= light->getTranslation();
 		auto viewPos		= camnode->getTranslation();
 		auto lightColor 	= glm::vec3(1,1,1); 		// Color blanco
 
-		// auto lightmatrix = light.m_node->getMatrixTransform();
-		// auto lightshader = light.m_node->getEntity()->getShader();
-
 		// esto debería de pasarse en Emodel
 		// para saber por cada modelo si debe usar la luz o la textura difusa
 		lightshader->bind();
-		lightshader->setInt("usesLightning", 1);	
+		lightshader->setInt("usesLightning", 1);
 		lightshader->setVec3("lightPos", lightPos);
 		lightshader->setVec3("viewPos", viewPos);
 		lightshader->setVec3("lightColor", lightColor);
@@ -206,6 +202,29 @@ HyperEngine::drawScene(void) const
 
 	// Recorrer los nodos y actualizar sus matrices
 	m_rootnode->traverse(glm::mat4{1.0f});
+
+	// Ahora, pintar skybox si hay
+	if(!m_skybox) return;
+
+	auto skyboxEntity = static_cast<ESkybox*>(m_skybox->getEntity());
+	auto skyboxShader = skyboxEntity->getShader();
+
+	if(!skyboxShader) return;
+
+	// draw skybox as last
+	glDepthFunc(GL_LEQUAL);  // change depth function so depth test passes when values are equal to depth buffer's content
+
+	skyboxShader->bind();
+	view = glm::mat4(glm::mat3(view)); // remove translation from the view matrix
+	skyboxShader->setMat4("view", view);
+	skyboxShader->setMat4("projection", projection);
+	// skybox cube
+	glBindVertexArray(skyboxEntity->m_vao);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, skyboxEntity->m_textureID);
+	glDrawArrays(GL_TRIANGLES, 0, 36);
+	glBindVertexArray(0);
+	glDepthFunc(GL_LESS); // set depth function back to default
 }
 
 void 
@@ -263,6 +282,13 @@ HyperEngine::registerViewport(int x, int y, int height, int width)
 	viewport.height = height; viewport.width = width;
 	m_viewports.push_back(std::move(viewport));
 	return nextViewportID++;
+}
+
+int 
+HyperEngine::registerSkybox(Node* const skybox)
+{
+	m_skybox = skybox;
+	return 0;
 }
 
 void 
@@ -430,7 +456,7 @@ void
 HyperEngine::resetKeyStates(void)
 {
 	// Para cada tecla reconocida en el mapa, setea a invalid (Estados: -1 invalid, 0 release, 1 press, 2 hold)
-	for(auto iter = m_keystates.begin(); iter != m_keystates.end(); ++iter )
+	for(auto iter = m_keystates.begin(); iter != m_keystates.end(); ++iter)
 		iter->second = -1;
 }
 

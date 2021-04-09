@@ -1,22 +1,32 @@
-#include "r_skybox.hpp"
+#include "e_skybox.hpp"
 
 namespace hyper {
-
-RSkybox::RSkybox()
+    
+ESkybox::ESkybox() 
+: Entity{}
 {
 }
 
-RSkybox::RSkybox(std::string const& path)
+ESkybox::ESkybox(SkyboxNamelist const& paths)
 {
-    this->loadFromFile(path);
+    loadFromFile(paths);
 }
 
-RSkybox::~RSkybox()
+ESkybox::~ESkybox()
 {
+    if(m_textureID)
+        glDeleteTextures(1, &m_textureID);
+
+    m_top     = nullptr;
+    m_bottom  = nullptr;
+    m_left    = nullptr;
+    m_right   = nullptr;
+    m_front   = nullptr;
+    m_back    = nullptr;
 }
 
-void
-RSkybox::loadSkybox(SkyboxNamelist const& paths)
+void 
+ESkybox::loadFromFile(SkyboxNamelist const& paths)
 {
     // Check de si ya ha sido inicializado
     if(this->m_textureID) return;
@@ -29,7 +39,7 @@ RSkybox::loadSkybox(SkyboxNamelist const& paths)
     m_front   = ResourceManager::getResource_t<RTexture>( paths.at(4) );
     m_back    = ResourceManager::getResource_t<RTexture>( paths.at(5) );
 
-    // Inicialización
+    // Inicialización de la textura de 6 caras
     glGenTextures(1, &m_textureID);
     glBindTexture(GL_TEXTURE_CUBE_MAP, m_textureID);
 
@@ -46,25 +56,29 @@ RSkybox::loadSkybox(SkyboxNamelist const& paths)
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 
-    INFOLOG("RSkybox inicializada.");
+    // Inicialización de los atributos de los vértices
+    glGenVertexArrays(1, &m_vao);
+    glGenBuffers(1, &m_vbo);
+    glBindVertexArray(m_vao);
+    glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(m_positions), &m_positions, GL_STATIC_DRAW);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+
+    INFOLOG("ESkybox inicializada.");
 }
 
 void
-RSkybox::loadFromFile(std::string const& path)
+ESkybox::draw(glm::mat4 const& tranform)
 {
-    INFOLOG("Estoy cargando las texturas de la skybox");
+    if(!m_shader) return;
 
-    // Totalmente hardcoded, TODO:: parametrizar
-    SkyboxNamelist namelist = {
-            std::string("assets/skybox/top.jpg")
-        ,   std::string("assets/skybox/bottom.jpg")
-        ,   std::string("assets/skybox/left.jpg")
-        ,   std::string("assets/skybox/right.jpg")
-        ,   std::string("assets/skybox/front.jpg")
-        ,   std::string("assets/skybox/back.jpg")
-    };
+    // m_shader->bind();
+    // m_shader->setInt("skybox", 0);
 
-    this->loadSkybox(namelist);
+    // INFOLOG("Hola desde ESkybox");
+
+    // Pasarle los valores al shader después de inicializarse
 }
 
 }
