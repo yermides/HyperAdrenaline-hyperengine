@@ -187,7 +187,6 @@ HyperEngine::drawScene(void) const
 		lightshader->unbind();
 	}
 
-
 	// Pasar matrices a opengl 
 	camerashader->bind();
 
@@ -277,10 +276,8 @@ HyperEngine::registerLight(Node* const light)
 int 
 HyperEngine::registerViewport(int x, int y, int height, int width) 
 {
-	Viewport viewport;
-	viewport.x = x; viewport.y = y;
-	viewport.height = height; viewport.width = width;
-	m_viewports.push_back(std::move(viewport));
+	Viewport v{x, y, width, height};
+	m_viewports.push_back(std::move(v));
 	return nextViewportID++;
 }
 
@@ -308,6 +305,12 @@ void
 HyperEngine::setActiveViewport(int const viewportID) 
 {
 	m_active_viewport = viewportID;
+}
+
+void 
+HyperEngine::setActiveSkybox(Node* const node)
+{
+	m_skybox = node;
 }
 
 bool const 
@@ -350,12 +353,110 @@ HyperEngine::getKeyRelease(int const key) noexcept
 	return isWindowActive() && m_keystates[key] == GLFW_RELEASE;
 }
 
+glm::dvec2
+HyperEngine::getMousePositionAbsolute(void) const noexcept
+{
+	glm::dvec2 pos;
+	glfwGetCursorPos(m_window, &pos.x, &pos.y);
+	return pos;
+}
+
+void 
+HyperEngine::setMousePositionAbsolute(float x, float y)
+{
+	auto size = this->getWindowSize();
+	x = std::clamp((int)x, 0, size.x);
+	y = std::clamp((int)y, 0, size.y);
+	glfwSetCursorPos(m_window, x, y);
+}
+
+glm::dvec2 
+HyperEngine::getMousePositionRelative(void) const noexcept
+{
+	// Devolver en coordenadas discretas, de 0 a 1
+
+	// glm::dvec2 pos = this->getMousePositionAbsolute();
+
+	// int w, h;
+	// glfwGetWindowSize(m_window, &w, &h);
+	// glfwSetCursorPos(m_window, x * w , y * h);
+
+	return glm::dvec2(0,0);
+}
+
+void 
+HyperEngine::setMousePositionRelative(float x, float y)
+{
+
+}
+
+void 
+HyperEngine::setMousePositionToCenter(void)
+{
+	auto size = this->getWindowSize();
+	glfwSetCursorPos(m_window, size.x / 2.0, size.y / 2.0);
+}
+
+void 
+HyperEngine::setCursorVisibility(bool const value)
+{
+	// Modos: GLFW_CURSOR_NORMAL, GLFW_CURSOR_HIDDEN, GLFW_CURSOR_DISABLED
+	// Cuando se deshabilita el mouse, aún actúa de manera oculta pero al volver no recuerda la posición de moverse en oculto
+	// de ahí el reposicionamiento
+
+	auto mode = glfwGetInputMode(m_window, GLFW_CURSOR);
+
+	if(mode == GLFW_CURSOR_NORMAL && !value)
+	{
+		glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	}
+	else if(mode == GLFW_CURSOR_DISABLED && value)
+	{
+		glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+		this->setMousePositionToCenter();
+	}
+}
+
+void 
+HyperEngine::setCursorPosition(double const x, double const y)
+{
+	// Por defecto va al centro, valores a pasar entre 0 y 1 (normalizados)
+	// No funciona con el cursor diabled, usar callback
+	int w, h;
+	glfwGetWindowSize(m_window, &w, &h);
+	glfwSetCursorPos(m_window, x * w , y * h);
+}
+
 bool const 
 HyperEngine::isTreeEmpty(void)
 {
 	if(!m_rootnode) return true;
 
 	return m_rootnode->getChildNumber() == 0;
+}
+
+glm::ivec2 
+HyperEngine::getWindowSize(void)
+{
+	glm::ivec2 size;
+	glfwGetWindowSize(m_window, &size.x, &size.y);
+	return size;
+}
+
+glm::ivec2 
+HyperEngine::getWindowSizeCenter(void)
+{
+	auto size = getWindowSize();
+	size.x /= 2.0;
+	size.y /= 2.0;
+	return size;
+}
+
+
+void 
+HyperEngine::setWindowSize(int const width, int const height)
+{
+	glfwSetWindowSize(m_window, width, height);
 }
 
 void 
@@ -392,24 +493,6 @@ HyperEngine::setWindowActive(bool const value)
 	glfwSetWindowShouldClose(m_window, !value);
 }
 
-void 
-HyperEngine::setCursorVisibility(bool const value)
-{
-	// glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN );
-
-	// Mal planteado, ahora lo deshabilita
-	glfwSetInputMode(m_window, GLFW_CURSOR, value ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_DISABLED );
-}
-
-void 
-HyperEngine::setCursorPosition(double const x, double const y)
-{
-	// Por defecto va al centro, valores a pasar entre 0 y 1 (normalizados)
-	// No funciona con el cursor diabled, usar callback
-	int w, h;
-	glfwGetWindowSize(m_window, &w, &h);
-	glfwSetCursorPos(m_window, x * w , y * h);
-}
 
 void 
 HyperEngine::enableZBuffer(int const method)

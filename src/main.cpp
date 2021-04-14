@@ -587,9 +587,9 @@ void test_collisions_bullet(void) {
     }
 }
 
-void test_skybox() {
+void test_skybox_and_mouse_input() {
     std::unique_ptr<hyper::HyperEngine> engine = std::make_unique<hyper::HyperEngine>(true);
-    engine->setWindowTitle("test_skybox");
+    engine->setWindowTitle("test_skybox_and_mouse_input");
     engine->setWindowIcon("assets/logo.jpg");
 
     hyper::Node* lightnode = engine->createLight(default_createnode_params);
@@ -605,15 +605,6 @@ void test_skybox() {
 
     // a medias de esto, hacer lo de los shaders y acordarse de cambiar la depth function (Z buffer) para que siempre se vea al fondo
     // hyper::RSkybox* skybox { hyper::ResourceManager::getResource_t<hyper::RSkybox>("xd") };
-
-    SkyboxNamelist namelist = {
-            std::string("assets/skybox/top.jpg")
-        ,   std::string("assets/skybox/bottom.jpg")
-        ,   std::string("assets/skybox/left.jpg")
-        ,   std::string("assets/skybox/right.jpg")
-        ,   std::string("assets/skybox/front.jpg")
-        ,   std::string("assets/skybox/back.jpg")
-    };
 
     hyper::Node* skyboxnode = engine->createSkybox(
             default_createnode_params
@@ -647,6 +638,52 @@ void test_skybox() {
         if(engine->getKeyContinuousPress(GLFW_KEY_RIGHT))   camnode->translate({.3,0,0});
         if(engine->getKeyContinuousPress(GLFW_KEY_UP))      camnode->translate({0,0,-.3f});
         if(engine->getKeyContinuousPress(GLFW_KEY_DOWN))    camnode->translate({0,0,.3f});
+
+        if(engine->getKeySinglePress(GLFW_KEY_1))
+        {
+            auto pos = engine->getMousePositionAbsolute();
+            INFOLOG("Posición del ratón: " << VAR(pos.x) << VAR(pos.y) );
+        }
+
+        if(engine->getKeySinglePress(GLFW_KEY_2))
+        {
+            auto pos = engine->getWindowSize();
+            INFOLOG("Tamaño de ventana: " << VAR(pos.x) << VAR(pos.y) );
+        }
+
+        if(engine->getKeySinglePress(GLFW_KEY_3))
+        {
+            //  Viewport y window size son totalmente distintas cosas
+            glViewport(0,0, 1600, 900);
+        }
+
+        if(engine->getKeySinglePress(GLFW_KEY_4))
+        {
+            engine->setWindowSize(1600, 900);
+            glViewport(0,0, 1600, 900);
+        }
+
+        if(engine->getKeySinglePress(GLFW_KEY_5))
+        {
+            engine->setMousePositionToCenter();
+        }
+
+        if(engine->getKeySinglePress(GLFW_KEY_6))
+        {
+            static bool trigger = true;
+            trigger = !trigger;
+            engine->setCursorVisibility(trigger);
+        }
+
+        if(engine->getKeySinglePress(GLFW_KEY_7))
+        {
+            // Diferencia entre centro y posición del mouse correcta
+            auto center = engine->getWindowSizeCenter();
+            auto pos = engine->getMousePositionAbsolute();
+            auto diff = center - glm::ivec2(pos.x, pos.y);
+
+            INFOLOG("Diff: " VAR(diff.x) << VAR(diff.y) )
+        }
     }
 }
 
@@ -665,5 +702,5 @@ int main(void) {
 
     // test_collisions_bullet();
 
-    test_skybox();
+    test_skybox_and_mouse_input();
 }

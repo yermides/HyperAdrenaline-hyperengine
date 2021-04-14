@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unordered_map>
-#include <map>
+#include <algorithm>
 // OpenGL
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
@@ -141,8 +141,11 @@ struct HyperEngine
             return node;
         }
 
-    // Related to the structure
+    // Relacionado con la estructura
+
     void clearTree(void);
+
+    // Relacionados con el renderizado
 
     void clearScreen(void) const;
 
@@ -154,13 +157,14 @@ struct HyperEngine
 
     void endRender(void) const;
 
+    // Registro de elementos entidad
+
     int registerCamera(Node* const camera);
 
     int registerLight(Node* const light);
 
     int registerViewport(int x, int y, int height, int width);
 
-    // No hay setActiveSkybox porque solo puede haber una
     int registerSkybox(Node* const skybox);
 
     void setActiveCamera(int const camID);
@@ -169,10 +173,17 @@ struct HyperEngine
 
     void setActiveViewport(int const viewportID);
 
-    // Utils
+    void setActiveSkybox(Node* const node);
+
+    // Útiles
+
+    // Ventana
+
     bool const isWindowActive(void) const noexcept;
 
     GLFWwindow* getWindow(void) const noexcept;
+
+    // Input de teclado
 
     bool const getKeySinglePress(int const key) noexcept;
 
@@ -182,7 +193,33 @@ struct HyperEngine
 
     bool const getKeyRelease(int const key) noexcept;
 
+    glm::dvec2 getMousePositionAbsolute(void) const noexcept;
+
+    void setMousePositionAbsolute(float x, float y);
+
+    glm::dvec2 getMousePositionRelative(void) const noexcept;
+
+    void setMousePositionRelative(float x, float y);
+
+    void setMousePositionToCenter(void);
+
+    // Estas dos de abajo están en pruebas
+
+    void setCursorVisibility(bool const value);
+
+    void setCursorPosition(double const x = 0.5, double const y = 0.5);
+
+    // Comprobación de si quedan nodos en el árbol
+
     bool const isTreeEmpty(void);
+
+    // Cosas cute
+
+    glm::ivec2 getWindowSize(void);
+
+    glm::ivec2 getWindowSizeCenter(void);
+
+    void setWindowSize(int const x, int const y);
 
     void setWindowTitle(std::string const& name);
 
@@ -192,9 +229,7 @@ struct HyperEngine
 
     void setWindowActive(bool const value); 
 
-    void setCursorVisibility(bool const value);
-
-    void setCursorPosition(double const x = 0.5, double const y = 0.5);
+    // Optimizaciones de renderizado
 
     void enableZBuffer(int const method = GL_LESS);
 
@@ -209,7 +244,7 @@ private:
     void resetKeyStates(void);
 
     // Declaración de la estructura
-    struct Viewport { int x, y, height, width; };
+    struct Viewport { int x, y, width, height; };
 
     Node* const     m_rootnode      { new Node   };
 
