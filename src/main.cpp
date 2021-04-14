@@ -660,7 +660,6 @@ void test_skybox_and_mouse_input() {
         if(engine->getKeySinglePress(GLFW_KEY_4))
         {
             engine->setWindowSize(1600, 900);
-            glViewport(0,0, 1600, 900);
         }
 
         if(engine->getKeySinglePress(GLFW_KEY_5))

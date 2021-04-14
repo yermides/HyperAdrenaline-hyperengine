@@ -83,6 +83,9 @@ HyperEngine::initialize(void)
 
 	// glfwSetWindowUserPointer( m_window, currentwindow );
 
+	glfwSetWindowSizeCallback(m_window, [](GLFWwindow* window, int width, int height) {
+		glViewport(0, 0, width, height);
+	});
 
 	// Initialize ImGUI
 	IMGUI_CHECKVERSION();
