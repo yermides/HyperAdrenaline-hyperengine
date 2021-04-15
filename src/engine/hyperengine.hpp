@@ -14,6 +14,9 @@
 #include <imgui/imgui.h>
 #include <imgui/imgui_impl_opengl3.h>
 #include <imgui/imgui_impl_glfw.h>
+// Bullet physics
+#include <bullet/btBulletDynamicsCommon.h>
+#include <bullet/btBulletCollisionCommon.h>
 // HyperEngine
 #include <tree/node.hpp>
 #include <resources/r_shader.hpp>
@@ -239,7 +242,16 @@ struct HyperEngine
 
     void disableCulling(void);
 
+    // Físicas
+
+    void updatePhysics(float const deltatime = 1.0f / 60.0f);
+
+    void createRigidbody(Node * const node);
+
 private:
+    void initializeGraphics(void);
+    void initializePhysics(void);
+
     void setKeyState(int const key, int const action);
     void resetKeyStates(void);
 
@@ -268,6 +280,10 @@ private:
     // std::vector<LightData> m_lights;
     std::vector<Node*> m_lights;
     std::vector<bool> m_active_lights;
+
+
+    // Físicas (bullet)
+    btDiscreteDynamicsWorld* m_world { nullptr };
 
     // imgui
     ImGuiIO* m_io;

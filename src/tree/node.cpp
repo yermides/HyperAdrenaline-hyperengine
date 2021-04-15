@@ -94,6 +94,24 @@ Node::traverse(glm::mat4 const& accumulatedTrans)
             * glm::scale(m_scale);
         
         m_wantsUpdate = false;
+
+        // Actualizar físicas (ver si los graficos dependen de las físicas o al revés)
+        // de momento las físicas dependen de las transformaciones TODO:: cambiar eso
+        if(m_physicproperties)
+        {
+            auto body = m_physicproperties->body;
+            // TODO:: realmente no es la translación, sino m_transform, la columna de la translación (para tener en cuenta la translación heredada) 
+            
+            btTransform transform;
+            body->getMotionState()->getWorldTransform(transform);
+            auto trans = this->getTranslation();
+            transform.setOrigin( btVector3(trans.x, trans.y, trans.z) );
+            body->getMotionState()->setWorldTransform(transform);
+            
+            // auto trans = this->getTranslation();
+            // transform.setOrigin( btVector3(trans.x, trans.y, trans.z) );
+            // body->setCenterOfMassTransform(transform);
+        }
     }
     
     if(m_entity && !m_ignoreDraw)

@@ -1,14 +1,26 @@
 #pragma once
+// C++
 #include <vector>
 #include <algorithm>
+// GLM
 #include <glm/glm.hpp>
 #include <glm/gtx/transform.hpp>
+// Bullet physics
+#include <bullet/btBulletDynamicsCommon.h>
+#include <bullet/btBulletCollisionCommon.h>
+// HyperEngine
 #include "entities/entity.hpp"
 
 namespace hyper {
 
 struct Node
 {
+    // Estructura que almacena todos los datos físicos
+    struct PhysicProperties {
+        btRigidBody *body { nullptr };
+    };
+
+    // Alias para la lista de nodos
     using NodeList = std::vector<Node*>;
     
     explicit Node(bool const ignoreDrawInTraverse = false);
@@ -17,11 +29,6 @@ struct Node
     void                addChild(Node* node);
     void                removeChild(Node* node);
 
-    inline glm::mat4 const    getUpdatedMatrixTransform()
-    { 
-        return m_transform * glm::translate(m_translation)*glm::rotate(glm::radians( m_rotation.x ), glm::vec3(1.0f,0.0f,0.0f))*glm::rotate(glm::radians( m_rotation.y ), glm::vec3(0.0f,1.0f,0.0f))*glm::rotate(glm::radians( m_rotation.z ), glm::vec3(0.0f,0.0f,1.0f))*glm::scale(m_scale); 
-    }
-    
     constexpr void                setMatrixTransform(glm::mat4 const& newTransform)		noexcept 
         { m_transform = newTransform; m_wantsUpdate = true;	}
     
@@ -64,6 +71,12 @@ struct Node
     inline int const              getNameID(void)                                       const noexcept
         { return m_name;                    }
 
+    constexpr PhysicProperties* getPhysicProperties(void)
+        { return m_physicproperties;        }
+
+    constexpr void setPhysicProperties(PhysicProperties* properties)
+        { m_physicproperties = properties;  }
+
     void                translate(glm::vec3 const& accumulation);
     void                rotate(glm::vec3 const& accumulation);
     void                scale(glm::vec3 const& accumulation);
@@ -73,7 +86,9 @@ struct Node
     static void                deleteBranch(Node* node);
     static void                deleteBranchChilds(Node* node);
 private:
-    glm::mat4 m_transform {1.0f};
+    PhysicProperties * m_physicproperties { nullptr };
+
+    glm::mat4 m_transform { 1.0f };
     NodeList m_childs;
     Node* m_parent { nullptr };
     Entity* m_entity { nullptr };

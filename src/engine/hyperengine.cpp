@@ -13,8 +13,8 @@ HyperEngine::~HyperEngine()
 	m_shaders.clear();
 	Node::deleteBranch(m_rootnode);
 	ImGui_ImplOpenGL3_Shutdown();
-    ImGui_ImplGlfw_Shutdown();
-    gui::DestroyContext();
+	ImGui_ImplGlfw_Shutdown();
+	gui::DestroyContext();
 	glfwDestroyWindow(m_window);
 	glfwTerminate();
 }
@@ -22,83 +22,8 @@ HyperEngine::~HyperEngine()
 void 
 HyperEngine::initialize(void)
 {
-    // Initialise GLFW
-	if( !glfwInit() )
-	{
-		throw new std::runtime_error("Failed to initialize GLFW");
-		fprintf( stderr, "Failed to initialize GLFW\n" );
-		getchar();
-		exit(-1);
-	}
-
-	glfwWindowHint(GLFW_SAMPLES, 4);					// antialiasing x4
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // To make MacOS happy; should not be needed
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
-
-	// Open a window and create its OpenGL context
-	m_window = glfwCreateWindow( 1366, 768, "HyperEngine Test 1", NULL, NULL);
-	if( !m_window ) {
-		throw new std::runtime_error("Failed to open GLFW window");
-		fprintf( stderr, "Failed to open GLFW window. If you have an Intel GPU, they are not 3.3 compatible. Try the 2.1 version of the tutorials.\n" );
-		getchar();
-		glfwTerminate();
-		exit(-1);
-	}
-	glfwMakeContextCurrent(m_window);
-
-	// Initialize GLEW
-	glewExperimental = true; // Needed for core profile
-	if (glewInit() != GLEW_OK) {
-		throw new std::runtime_error("Failed to initialize GLEW");
-		fprintf(stderr, "Failed to initialize GLEW\n");
-		getchar();
-		glfwTerminate();
-		exit(-1);
-	}
-
-	// Ensure we can capture the escape key being pressed below
-	glfwSetInputMode(m_window, GLFW_STICKY_KEYS, GL_TRUE);
-
-	// Default clear color = Dark blue background
-	glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
-
-	// Enable depth test
-	glEnable(GL_DEPTH_TEST);
-	// Accept fragment if it closer to the camera than the former one
-	glDepthFunc(GL_LESS); 
-
-	// glfwSwapInterval(1);	// VSync
-
-	// Callbacks, guardar el puntero a window porque es necesario modificar dónde apunta
-	// GLFWwindow* currentwindow = m_window;
-
-	glfwSetWindowUserPointer( m_window, this );
-	glfwSetKeyCallback(m_window, [](GLFWwindow* window, int key, int scancode, int action, int mods){
-		HyperEngine* engine = static_cast<HyperEngine*>( glfwGetWindowUserPointer( window ) );
-		engine->setKeyState(key, action);
-	});
-
-	// glfwSetWindowUserPointer( m_window, currentwindow );
-
-	glfwSetWindowSizeCallback(m_window, [](GLFWwindow* window, int width, int height) {
-		glViewport(0, 0, width, height);
-	});
-
-	// Initialize ImGUI
-	IMGUI_CHECKVERSION();
-    gui::CreateContext();
-    // ImGuiIO& io = gui::GetIO(); (void)io;
-    m_io = &gui::GetIO(); (void)m_io;
-    gui::StyleColorsDark();
-    ImGui_ImplGlfw_InitForOpenGL(m_window, true);
-    ImGui_ImplOpenGL3_Init("#version 130");
-
-	// Load shaders here
-	m_shaders[OpenGLShader::SHADER_DEFAULT] = ResourceManager::getResource_t<RShader>(SHADER_DEFAULT_PATH);
-	m_shaders[OpenGLShader::SHADER_SKYBOX] 	= ResourceManager::getResource_t<RShader>(SHADER_SKYBOX_PATH);
+	this->initializeGraphics();
+	this->initializePhysics();
 }
 
 Node* 
@@ -135,8 +60,8 @@ HyperEngine::clearTree(void)
 	m_active_viewport = engine_invalid_id;
 
 	nextCameraID      = 0;
-    nextLightID       = 0;
-    nextViewportID    = 0;
+	nextLightID       = 0;
+	nextViewportID    = 0;
 }
 
 
@@ -530,7 +455,151 @@ HyperEngine::disableCulling(void)
 	glDisable(GL_CULL_FACE);
 }
 
+void 
+HyperEngine::updatePhysics(float const deltatime)
+{
+	m_world->stepSimulation(deltatime);
+}
+
+void 
+HyperEngine::createRigidbody(Node * const node)
+{
+	static int cinematic_mass = 0;
+
+	auto prop = node->getPhysicProperties();
+	
+	if(prop) return;
+
+	// Setup de variables necesarias para la creación del rigidbody
+	btTransform transform;
+	transform.setIdentity();
+	auto trans = node->getTranslation();
+	transform.setOrigin( btVector3(trans.x, trans.y, trans.z) );
+	btDefaultMotionState *motionState = new btDefaultMotionState(transform);
+	// Definiendo las dimensiones de la bounding box, hardcoded as fck boiii // TODO:: parametrizar
+	btCollisionShape *shape = new btBoxShape( btVector3(1,1,1) );
+
+	btVector3 localInertia;
+	shape->calculateLocalInertia(cinematic_mass, localInertia);
+
+	// Creando finalmente el rigidbody y seteando parámetros
+	btRigidBody *body = new btRigidBody(cinematic_mass, motionState, shape, localInertia);
+
+	using CO = btCollisionObject;
+	// TODO:: parametrizar, solo son cinemáticos de momento
+	body->setCollisionFlags(body->getCollisionFlags() | CO::CF_KINEMATIC_OBJECT); 
+	body->setActivationState(DISABLE_DEACTIVATION);
+
+	// Pasárselo al nodo
+	Node::PhysicProperties* properties = new Node::PhysicProperties;
+	properties->body = body;
+	node->setPhysicProperties(properties);
+
+	// Y finalmente al mundo
+	m_world->addRigidBody(body);
+
+	// Debug, TODO:: borrar
+	btTransform nodetransform;
+	body->getMotionState()->getWorldTransform(nodetransform);
+	auto pos = nodetransform.getOrigin();
+	INFOLOG("Posición del nodo: " << VAR(pos.x()) << VAR(pos.y()) << VAR(pos.z()) );
+}
+
 // Funciones privadas
+
+void 
+HyperEngine::initializeGraphics(void)
+{
+	// Initialise GLFW
+	if( !glfwInit() )
+	{
+		throw new std::runtime_error("Failed to initialize GLFW");
+		fprintf( stderr, "Failed to initialize GLFW\n" );
+		getchar();
+		exit(-1);
+	}
+
+	glfwWindowHint(GLFW_SAMPLES, 4);					// antialiasing x4
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // To make MacOS happy; should not be needed
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
+
+	// Open a window and create its OpenGL context
+	m_window = glfwCreateWindow( 1366, 768, "HyperEngine Test 1", NULL, NULL);
+	if( !m_window ) {
+		throw new std::runtime_error("Failed to open GLFW window");
+		fprintf( stderr, "Failed to open GLFW window. If you have an Intel GPU, they are not 3.3 compatible. Try the 2.1 version of the tutorials.\n" );
+		getchar();
+		glfwTerminate();
+		exit(-1);
+	}
+	glfwMakeContextCurrent(m_window);
+
+	// Initialize GLEW
+	glewExperimental = true; // Needed for core profile
+	if (glewInit() != GLEW_OK) {
+		throw new std::runtime_error("Failed to initialize GLEW");
+		fprintf(stderr, "Failed to initialize GLEW\n");
+		getchar();
+		glfwTerminate();
+		exit(-1);
+	}
+
+	// Ensure we can capture the escape key being pressed below
+	glfwSetInputMode(m_window, GLFW_STICKY_KEYS, GL_TRUE);
+
+	// Default clear color = Dark blue background
+	glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
+
+	// Enable depth test
+	glEnable(GL_DEPTH_TEST);
+	// Accept fragment if it closer to the camera than the former one
+	glDepthFunc(GL_LESS); 
+
+	// glfwSwapInterval(1);	// VSync
+
+	// Callbacks, guardar el puntero a window porque es necesario modificar dónde apunta
+	// GLFWwindow* currentwindow = m_window;
+
+	glfwSetWindowUserPointer( m_window, this );
+	glfwSetKeyCallback(m_window, [](GLFWwindow* window, int key, int scancode, int action, int mods){
+		HyperEngine* engine = static_cast<HyperEngine*>( glfwGetWindowUserPointer( window ) );
+		engine->setKeyState(key, action);
+	});
+
+	// glfwSetWindowUserPointer( m_window, currentwindow );
+
+	glfwSetWindowSizeCallback(m_window, [](GLFWwindow* window, int width, int height) {
+		glViewport(0, 0, width, height);
+	});
+
+	// Initialize ImGUI
+	IMGUI_CHECKVERSION();
+	gui::CreateContext();
+	// ImGuiIO& io = gui::GetIO(); (void)io;
+	m_io = &gui::GetIO(); (void)m_io;
+	gui::StyleColorsDark();
+	ImGui_ImplGlfw_InitForOpenGL(m_window, true);
+	ImGui_ImplOpenGL3_Init("#version 130");
+
+	// Load shaders here
+	m_shaders[OpenGLShader::SHADER_DEFAULT] = ResourceManager::getResource_t<RShader>(SHADER_DEFAULT_PATH);
+	m_shaders[OpenGLShader::SHADER_SKYBOX] 	= ResourceManager::getResource_t<RShader>(SHADER_SKYBOX_PATH);
+}
+
+void 
+HyperEngine::initializePhysics(void)
+{
+	btCollisionConfiguration *collisionConfiguration 	=     new btDefaultCollisionConfiguration();
+	btBroadphaseInterface *broadPhase 					=     new btAxisSweep3(btVector3(-1000, -1000, -1000), btVector3(1000, 1000, 1000));
+	btDispatcher *dispatcher 							=     new btCollisionDispatcher(collisionConfiguration);
+	btConstraintSolver *solver 							=     new btSequentialImpulseConstraintSolver();
+
+	// World seteado
+	m_world 											=     new btDiscreteDynamicsWorld(dispatcher, broadPhase,solver, collisionConfiguration);
+}
 
 void 
 HyperEngine::setKeyState(int const key, int const action)

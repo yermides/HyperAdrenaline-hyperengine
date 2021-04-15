@@ -27,7 +27,7 @@ using namespace glm;
 
 
 // Esto es para una prueba, test_collisions_bullet
-#include <managers/collision_manager.hpp>
+// #include <managers/collision_manager.hpp>
 
 // #pragma once
 // #include <iostream>

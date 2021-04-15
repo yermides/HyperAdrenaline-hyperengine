@@ -528,63 +528,63 @@ void test_matrices_data_lights(void) {
 }
 
 void test_collisions_bullet(void) {
-    std::unique_ptr<hyper::HyperEngine> engine = std::make_unique<hyper::HyperEngine>(true);
-    engine->setWindowTitle("test_collisions_bullet");
-    engine->setWindowIcon("assets/logo.jpg");
+    // std::unique_ptr<hyper::HyperEngine> engine = std::make_unique<hyper::HyperEngine>(true);
+    // engine->setWindowTitle("test_collisions_bullet");
+    // engine->setWindowIcon("assets/logo.jpg");
 
-    hyper::Node* camnode = engine->createCamera(nullptr, {0.0f,0.0f,5.0f}, default_rot_and_scale); // tendrá la proyección por defecto
-    hyper::Node* missile_launcher = engine->createModel(nullptr, {0,1,0}, default_rot_and_scale, "assets/missile-launcher.obj");
-    hyper::Node* floor = engine->createModel(nullptr, {0, -1, 0}, default_rot_and_scale, "assets/planes/plano1.obj");
+    // hyper::Node* camnode = engine->createCamera(nullptr, {0.0f,0.0f,5.0f}, default_rot_and_scale); // tendrá la proyección por defecto
+    // hyper::Node* missile_launcher = engine->createModel(nullptr, {0,1,0}, default_rot_and_scale, "assets/missile-launcher.obj");
+    // hyper::Node* floor = engine->createModel(nullptr, {0, -1, 0}, default_rot_and_scale, "assets/planes/plano1.obj");
 
-    CollisionManager* collisionManager { new CollisionManager };
-	btBoxShape* groundShape = new btBoxShape(btVector3(btScalar(50.),btScalar(50.),btScalar(50.)));
-	collisionManager->m_collisionShapes.push_back(groundShape);
+    // CollisionManager* collisionManager { new CollisionManager };
+	// btBoxShape* groundShape = new btBoxShape(btVector3(btScalar(50.),btScalar(50.),btScalar(50.)));
+	// collisionManager->m_collisionShapes.push_back(groundShape);
 
 
-    btVector3 floorPosition = { floor->getTranslation().x, floor->getTranslation().y, floor->getTranslation().z };
-	btTransform groundTransform;
-	groundTransform.setIdentity();
-	groundTransform.setOrigin(floorPosition);      // btVector3(0,-50,0)
+    // btVector3 floorPosition = { floor->getTranslation().x, floor->getTranslation().y, floor->getTranslation().z };
+	// btTransform groundTransform;
+	// groundTransform.setIdentity();
+	// groundTransform.setOrigin(floorPosition);      // btVector3(0,-50,0)
 
-    {
-		btScalar mass(0.);
+    // {
+	// 	btScalar mass(0.);
 
-		//rigidbody is dynamic if and only if mass is non zero, otherwise static
-		bool isDynamic = (mass != 0.f);
+	// 	//rigidbody is dynamic if and only if mass is non zero, otherwise static
+	// 	bool isDynamic = (mass != 0.f);
 
-		btVector3 localInertia(0,0,0);
-		if (isDynamic)
-			groundShape->calculateLocalInertia(mass,localInertia);
+	// 	btVector3 localInertia(0,0,0);
+	// 	if (isDynamic)
+	// 		groundShape->calculateLocalInertia(mass,localInertia);
 
-		//using motionstate is recommended, it provides interpolation capabilities, and only synchronizes 'active' objects
-		btDefaultMotionState* myMotionState = new btDefaultMotionState(groundTransform);
-		btRigidBody::btRigidBodyConstructionInfo rbInfo(mass,myMotionState,groundShape,localInertia);
-		btRigidBody* body = new btRigidBody(rbInfo);
+	// 	//using motionstate is recommended, it provides interpolation capabilities, and only synchronizes 'active' objects
+	// 	btDefaultMotionState* myMotionState = new btDefaultMotionState(groundTransform);
+	// 	btRigidBody::btRigidBodyConstructionInfo rbInfo(mass,myMotionState,groundShape,localInertia);
+	// 	btRigidBody* body = new btRigidBody(rbInfo);
 
-		//add the body to the dynamics world
-		collisionManager->m_dynamicsWorld->addRigidBody(body);
-	}
+	// 	//add the body to the dynamics world
+	// 	collisionManager->m_dynamicsWorld->addRigidBody(body);
+	// }
 
-    while(engine->isWindowActive() && !engine->getKeyContinuousPress(GLFW_KEY_ESCAPE))
-    {
-        engine->beginRender();
-        engine->drawScene();
+    // while(engine->isWindowActive() && !engine->getKeyContinuousPress(GLFW_KEY_ESCAPE))
+    // {
+    //     engine->beginRender();
+    //     engine->drawScene();
 
-        collisionManager->m_dynamicsWorld->debugDrawWorld();
+    //     collisionManager->m_dynamicsWorld->debugDrawWorld();
 
-        engine->endRender();
+    //     engine->endRender();
 
-        missile_launcher->rotate({0,2,0});
+    //     missile_launcher->rotate({0,2,0});
 
-        if(engine->getKeyContinuousPress(GLFW_KEY_A))       camnode->rotate({0,3,0});
-        if(engine->getKeyContinuousPress(GLFW_KEY_D))       camnode->rotate({0,-3,0});
-        if(engine->getKeyContinuousPress(GLFW_KEY_W))       camnode->rotate({3,0,0});
-        if(engine->getKeyContinuousPress(GLFW_KEY_S))       camnode->rotate({-3,0,0});
-        if(engine->getKeyContinuousPress(GLFW_KEY_LEFT))    camnode->translate({-.3,0,0});
-        if(engine->getKeyContinuousPress(GLFW_KEY_RIGHT))   camnode->translate({.3,0,0});
-        if(engine->getKeyContinuousPress(GLFW_KEY_UP))      camnode->translate({0,0,-.3f});
-        if(engine->getKeyContinuousPress(GLFW_KEY_DOWN))    camnode->translate({0,0,.3f});
-    }
+    //     if(engine->getKeyContinuousPress(GLFW_KEY_A))       camnode->rotate({0,3,0});
+    //     if(engine->getKeyContinuousPress(GLFW_KEY_D))       camnode->rotate({0,-3,0});
+    //     if(engine->getKeyContinuousPress(GLFW_KEY_W))       camnode->rotate({3,0,0});
+    //     if(engine->getKeyContinuousPress(GLFW_KEY_S))       camnode->rotate({-3,0,0});
+    //     if(engine->getKeyContinuousPress(GLFW_KEY_LEFT))    camnode->translate({-.3,0,0});
+    //     if(engine->getKeyContinuousPress(GLFW_KEY_RIGHT))   camnode->translate({.3,0,0});
+    //     if(engine->getKeyContinuousPress(GLFW_KEY_UP))      camnode->translate({0,0,-.3f});
+    //     if(engine->getKeyContinuousPress(GLFW_KEY_DOWN))    camnode->translate({0,0,.3f});
+    // }
 }
 
 void test_skybox_and_mouse_input() {
@@ -751,6 +751,28 @@ void test_physics(void) {
         if(engine->getKeyContinuousPress(GLFW_KEY_RIGHT))   camnode->translate({.3,0,0});
         if(engine->getKeyContinuousPress(GLFW_KEY_UP))      camnode->translate({0,0,-.3f});
         if(engine->getKeyContinuousPress(GLFW_KEY_DOWN))    camnode->translate({0,0,.3f});
+
+        if(engine->getKeySinglePress(GLFW_KEY_1))
+        {
+            INFOLOG("Tratando de añadir colisiones a nodo missile_launcher");
+            engine->createRigidbody(missile_launcher);
+        }
+
+        if(engine->getKeySinglePress(GLFW_KEY_2))
+        {
+            missile_launcher->translate({0,0,-2});
+            auto rigidbody = missile_launcher->getPhysicProperties()->body;
+            // Debug, TODO:: borrar
+            INFOLOG("llego" );
+
+            btTransform nodetransform;
+            rigidbody->getMotionState()->getWorldTransform(nodetransform);
+            auto pos = nodetransform.getOrigin();
+            INFOLOG("Posición del nodo: " << VAR(pos.x()) << VAR(pos.y()) << VAR(pos.z()) );
+        }
+
+        // Update de las físicas
+        engine->updatePhysics();
     }
 }
 
