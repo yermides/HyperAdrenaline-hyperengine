@@ -593,30 +593,24 @@ void test_skybox_and_mouse_input() {
     engine->setWindowIcon("assets/logo.jpg");
 
     hyper::Node* lightnode = engine->createLight(default_createnode_params);
-    hyper::Node* camnode = engine->createCamera(nullptr,{1.0f,0.0f,4.0f},{0,15,0} , default_scale); // tendrá la proyección por defecto
-    hyper::Node* missile_launcher = engine->createModel(default_createnode_params, "assets/missile-launcher.obj");
-    // hyper::Node* funador_pesado2 = engine->createModel(nullptr, {-1.0f, 0.0f, 1.0f}, default_rot_and_scale, "assets/newmachinegun/HA_funador_pesado.obj");
-    hyper::Node* cubito_rosa = engine->createModel(default_createnode_params, "assets/cubito_rosa.obj");
-    hyper::Node* icosphere = engine->createModel(default_createnode_params, "assets/icosphere.obj");
+    hyper::Node* camnode = engine->createCamera(default_createnode_params); // tendrá la proyección por defecto
 
-    cubito_rosa->setTranslation({-2.0f,0.0f,0.0f});
-    cubito_rosa->setScale({0.3f,0.3f,0.3f});
-    icosphere->setTranslation({2,0,0});
+    hyper::Node* missile_launcher = engine->createModel(nullptr, {0,0,-4}, default_rot_and_scale, "assets/missile-launcher.obj");
+    hyper::Node* cubito_rosa = engine->createModel(nullptr, {-2,0,-4}, default_rot_and_scale, "assets/cubito_rosa.obj");
+    hyper::Node* icosphere = engine->createModel(nullptr, {2,0,-4}, default_rot_and_scale, "assets/icosphere.obj");
 
-    // a medias de esto, hacer lo de los shaders y acordarse de cambiar la depth function (Z buffer) para que siempre se vea al fondo
-    // hyper::RSkybox* skybox { hyper::ResourceManager::getResource_t<hyper::RSkybox>("xd") };
-
+    // a medias de la skybox, hacer lo de los shaders y acordarse de cambiar la depth function (Z buffer) para que siempre se vea al fondo
     hyper::Node* skyboxnode = engine->createSkybox(
-            default_createnode_params
-        ,   SkyboxNamelist 
-            { 
-                "assets/skybox/top.jpg"
-            ,   "assets/skybox/bottom.jpg"
-            ,   "assets/skybox/left.jpg"
-            ,   "assets/skybox/right.jpg"
-            ,   "assets/skybox/front.jpg"
-            ,   "assets/skybox/back.jpg" 
-            }
+        default_createnode_params
+    ,   SkyboxNamelist 
+        { 
+            "assets/skybox/space/lightblue/top.png"
+        ,   "assets/skybox/space/lightblue/bot.png"
+        ,   "assets/skybox/space/lightblue/left.png"
+        ,   "assets/skybox/space/lightblue/right.png"
+        ,   "assets/skybox/space/lightblue/front.png"
+        ,   "assets/skybox/space/lightblue/back.png" 
+        }
     );
 
     while(engine->isWindowActive() && !engine->getKeyContinuousPress(GLFW_KEY_ESCAPE))
@@ -686,6 +680,80 @@ void test_skybox_and_mouse_input() {
     }
 }
 
+void test_physics(void) {
+    std::unique_ptr<hyper::HyperEngine> engine = std::make_unique<hyper::HyperEngine>(true);
+    engine->setWindowTitle("test_physics");
+    engine->setWindowIcon("assets/logo.jpg");
+
+    hyper::Node* lightnode = engine->createLight(default_createnode_params);
+    hyper::Node* camnode = engine->createCamera(default_createnode_params); // tendrá la proyección por defecto
+
+    hyper::Node* missile_launcher = engine->createModel(nullptr, {0,0,-4}, default_rot_and_scale, "assets/missile-launcher.obj");
+    hyper::Node* cubito_rosa = engine->createModel(nullptr, {-2,0,-4}, default_rot_and_scale, "assets/cubito_rosa.obj");
+    hyper::Node* icosphere = engine->createModel(nullptr, {2,0,-4}, default_rot_and_scale, "assets/icosphere.obj");
+
+    // a medias de la skybox, hacer lo de los shaders y acordarse de cambiar la depth function (Z buffer) para que siempre se vea al fondo
+    // hyper::Node* skyboxnode = engine->createSkybox(
+    //     default_createnode_params
+    // ,   SkyboxNamelist 
+    //     { 
+    //         "assets/skybox/space/lightblue/top.png"
+    //     ,   "assets/skybox/space/lightblue/bot.png"
+    //     ,   "assets/skybox/space/lightblue/left.png"
+    //     ,   "assets/skybox/space/lightblue/right.png"
+    //     ,   "assets/skybox/space/lightblue/front.png"
+    //     ,   "assets/skybox/space/lightblue/back.png" 
+    //     }
+    // );
+
+    // hyper::Node* skyboxnode = engine->createSkybox(
+    //     default_createnode_params
+    // ,   SkyboxNamelist 
+    //     { 
+    //         "assets/skybox/space/red/bkg1_top3.png"
+    //     ,   "assets/skybox/space/red/bkg1_bottom4.png"
+    //     ,   "assets/skybox/space/red/bkg1_left2.png"
+    //     ,   "assets/skybox/space/red/bkg1_right1.png"
+    //     ,   "assets/skybox/space/red/bkg1_front5.png"
+    //     ,   "assets/skybox/space/red/bkg1_back6.png" 
+    //     }
+    // );
+
+    hyper::Node* skyboxnode = engine->createSkybox(
+        default_createnode_params
+    ,   SkyboxNamelist 
+        { 
+            "assets/skybox/space/blue/bkg1_top.png"
+        ,   "assets/skybox/space/blue/bkg1_bot.png"
+        ,   "assets/skybox/space/blue/bkg1_left.png"
+        ,   "assets/skybox/space/blue/bkg1_right.png"
+        ,   "assets/skybox/space/blue/bkg1_front.png"
+        ,   "assets/skybox/space/blue/bkg1_back.png" 
+        }
+    );
+
+    while(engine->isWindowActive() && !engine->getKeyContinuousPress(GLFW_KEY_ESCAPE))
+    {
+        // Render
+        engine->beginRender();
+        engine->drawScene();
+        engine->endRender();
+
+        // Fancy rotation
+        missile_launcher->rotate({0,5.5f,0});
+
+        // Input
+        if(engine->getKeyContinuousPress(GLFW_KEY_A))       camnode->rotate({0,3,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_D))       camnode->rotate({0,-3,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_W))       camnode->rotate({3,0,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_S))       camnode->rotate({-3,0,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_LEFT))    camnode->translate({-.3,0,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_RIGHT))   camnode->translate({.3,0,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_UP))      camnode->translate({0,0,-.3f});
+        if(engine->getKeyContinuousPress(GLFW_KEY_DOWN))    camnode->translate({0,0,.3f});
+    }
+}
+
 int main(void) {
 	// test_models_and_imgui();
 	// test_basic_lights();
@@ -701,5 +769,7 @@ int main(void) {
 
     // test_collisions_bullet();
 
-    test_skybox_and_mouse_input();
+    // test_skybox_and_mouse_input();
+
+    test_physics();
 }
