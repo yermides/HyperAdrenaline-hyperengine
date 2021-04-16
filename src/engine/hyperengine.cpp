@@ -167,7 +167,6 @@ void
 HyperEngine::endRender(void) const
 { 
 	// Render gui
-
 	gui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(gui::GetDrawData());
 	
@@ -505,6 +504,28 @@ HyperEngine::createRigidbody(Node * const node)
 	INFOLOG("Posición del nodo: " << VAR(pos.x()) << VAR(pos.y()) << VAR(pos.z()) );
 }
 
+void
+HyperEngine::drawDebugPhysics(/* glm::mat4 const& projection, glm::mat4 const& view */)
+{
+	m_world->debugDrawWorld();
+
+	auto shader = m_shaders[OpenGLShader::SHADER_DEFAULT];
+	m_debugDrawer->drawAllLines(shader);
+}
+
+DebugDrawer* const 
+HyperEngine::getDebugDrawer(void)
+{
+	return m_debugDrawer;
+}
+
+void 
+HyperEngine::setDebugDrawer(DebugDrawer* debugDrawer)
+{
+	m_debugDrawer = debugDrawer;
+	m_world->setDebugDrawer(m_debugDrawer);
+}
+
 // Funciones privadas
 
 void 
@@ -585,8 +606,10 @@ HyperEngine::initializeGraphics(void)
 	ImGui_ImplOpenGL3_Init("#version 130");
 
 	// Load shaders here
-	m_shaders[OpenGLShader::SHADER_DEFAULT] = ResourceManager::getResource_t<RShader>(SHADER_DEFAULT_PATH);
-	m_shaders[OpenGLShader::SHADER_SKYBOX] 	= ResourceManager::getResource_t<RShader>(SHADER_SKYBOX_PATH);
+	m_shaders[OpenGLShader::SHADER_DEFAULT] 		= ResourceManager::getResource_t<RShader>(SHADER_DEFAULT_PATH);
+	m_shaders[OpenGLShader::SHADER_SKYBOX] 			= ResourceManager::getResource_t<RShader>(SHADER_SKYBOX_PATH);
+	m_shaders[OpenGLShader::SHADER_DEBUGDRAWER] 	= ResourceManager::getResource_t<RShader>(SHADER_DEBUGDRAWER_PATH);
+	
 }
 
 void 
@@ -598,7 +621,12 @@ HyperEngine::initializePhysics(void)
 	btConstraintSolver *solver 							=     new btSequentialImpulseConstraintSolver();
 
 	// World seteado
-	m_world 											=     new btDiscreteDynamicsWorld(dispatcher, broadPhase,solver, collisionConfiguration);
+	m_world 											=     new btDiscreteDynamicsWorld(dispatcher, broadPhase, solver, collisionConfiguration);
+
+	// setear su debug drawer
+	m_debugDrawer = new DebugDrawer;
+
+	m_world->setDebugDrawer(m_debugDrawer);
 }
 
 void 

@@ -719,24 +719,36 @@ void test_physics(void) {
     //     }
     // );
 
-    hyper::Node* skyboxnode = engine->createSkybox(
-        default_createnode_params
-    ,   SkyboxNamelist 
-        { 
-            "assets/skybox/space/blue/bkg1_top.png"
-        ,   "assets/skybox/space/blue/bkg1_bot.png"
-        ,   "assets/skybox/space/blue/bkg1_left.png"
-        ,   "assets/skybox/space/blue/bkg1_right.png"
-        ,   "assets/skybox/space/blue/bkg1_front.png"
-        ,   "assets/skybox/space/blue/bkg1_back.png" 
-        }
-    );
+    // hyper::Node* skyboxnode = engine->createSkybox(
+    //     default_createnode_params
+    // ,   SkyboxNamelist 
+    //     { 
+    //         "assets/skybox/space/blue/bkg1_top.png"
+    //     ,   "assets/skybox/space/blue/bkg1_bot.png"
+    //     ,   "assets/skybox/space/blue/bkg1_left.png"
+    //     ,   "assets/skybox/space/blue/bkg1_right.png"
+    //     ,   "assets/skybox/space/blue/bkg1_front.png"
+    //     ,   "assets/skybox/space/blue/bkg1_back.png" 
+    //     }
+    // );
+
 
     while(engine->isWindowActive() && !engine->getKeyContinuousPress(GLFW_KEY_ESCAPE))
     {
         // Render
         engine->beginRender();
         engine->drawScene();
+
+        auto dbgdrw = engine->getDebugDrawer();
+        dbgdrw->setDebugMode( btIDebugDraw::DBG_DrawWireframe | btIDebugDraw::DBG_DrawAabb);
+
+        INFOLOG("debug mode:" VAR(dbgdrw->getDebugMode()))
+
+        for(int i=0; i<30;++i)
+            dbgdrw->drawLine(btVector3{0,0,0}, btVector3{i*0.1,10,0}, btVector3{1,0,0});
+
+        engine->drawDebugPhysics();
+
         engine->endRender();
 
         // Fancy rotation

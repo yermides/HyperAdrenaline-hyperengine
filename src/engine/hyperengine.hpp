@@ -24,6 +24,7 @@
 #include <entities/e_light.hpp>
 #include <entities/e_model.hpp>
 #include <entities/e_skybox.hpp>
+#include <util/debugdrawer.hpp>
 
 // Create node params
 #define default_trans                       {0.0f,0.0f,0.0f}
@@ -40,6 +41,7 @@
 // #define SHADER_DEFAULT_PATH                 "src/shaders/materials" 
 #define SHADER_DEFAULT_PATH                 "src/shaders/materials-and-lights" 
 #define SHADER_SKYBOX_PATH                  "src/shaders/skybox"
+#define SHADER_DEBUGDRAWER_PATH             "src/shaders/debugdrawer"
 
 namespace hyper {
 
@@ -49,6 +51,7 @@ namespace gui = ImGui;
 enum class OpenGLShader {
         SHADER_DEFAULT
     ,   SHADER_SKYBOX
+    ,   SHADER_DEBUGDRAWER
 };
 
 struct HyperEngine
@@ -248,6 +251,12 @@ struct HyperEngine
 
     void createRigidbody(Node * const node);
 
+    void drawDebugPhysics(/* glm::mat4 const& projection, glm::mat4 const& view */);
+
+    DebugDrawer* const getDebugDrawer(void);
+
+    void setDebugDrawer(DebugDrawer* debugDrawer);
+
 private:
     void initializeGraphics(void);
     void initializePhysics(void);
@@ -283,7 +292,8 @@ private:
 
 
     // Físicas (bullet)
-    btDiscreteDynamicsWorld* m_world { nullptr };
+    btDiscreteDynamicsWorld* m_world    { nullptr };
+    DebugDrawer* m_debugDrawer          { nullptr };
 
     // imgui
     ImGuiIO* m_io;
