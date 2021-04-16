@@ -733,6 +733,10 @@ void test_physics(void) {
     // );
 
 
+    // auto dbgdrw = engine->getDebugDrawer();
+    // dbgdrw->setDebugMode( btIDebugDraw::DBG_DrawWireframe | btIDebugDraw::DBG_DrawAabb);
+    // INFOLOG("debug mode:" VAR(dbgdrw->getDebugMode()))
+
     while(engine->isWindowActive() && !engine->getKeyContinuousPress(GLFW_KEY_ESCAPE))
     {
         // Render
@@ -740,16 +744,17 @@ void test_physics(void) {
         engine->drawScene();
 
         auto dbgdrw = engine->getDebugDrawer();
-        dbgdrw->setDebugMode( btIDebugDraw::DBG_DrawWireframe | btIDebugDraw::DBG_DrawAabb);
-
-        INFOLOG("debug mode:" VAR(dbgdrw->getDebugMode()))
 
         for(int i=0; i<30;++i)
-            dbgdrw->drawLine(btVector3{0,0,0}, btVector3{i*0.1,10,0}, btVector3{1,0,0});
+            dbgdrw->drawLine(btVector3{0,0,0}, btVector3{i*0.1,1000,1000}, btVector3{1,0,0});
+        // engine->drawDebugPhysics();
 
-        engine->drawDebugPhysics();
+    // auto dbgdrw = engine->getDebugDrawer();
 
         engine->endRender();
+
+        for(int i=0; i<30;++i)
+            dbgdrw->drawLine(btVector3{0,0,0}, btVector3{i*0.2,1000,1000}, btVector3{1,0,0});
 
         // Fancy rotation
         missile_launcher->rotate({0,5.5f,0});
@@ -782,6 +787,12 @@ void test_physics(void) {
             auto pos = nodetransform.getOrigin();
             INFOLOG("Posición del nodo: " << VAR(pos.x()) << VAR(pos.y()) << VAR(pos.z()) );
         }
+
+        if(engine->getKeySinglePress(GLFW_KEY_3))
+            engine->enableDebugDraw();
+        if(engine->getKeySinglePress(GLFW_KEY_4))
+            engine->disableDebugDraw();
+
 
         // Update de las físicas
         engine->updatePhysics();

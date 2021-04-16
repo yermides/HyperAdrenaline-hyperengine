@@ -7,7 +7,7 @@ namespace hyper {
 DebugDrawer::DebugDrawer()
 : m_debugMode(DBG_NoDebug)
 {
-    m_lines.reserve(default_max_lines_debug);
+    // m_lines.reserve(default_max_lines_debug);
 
     // Generar un buffer, poner el resultado en el vertexbuffer que acabamos de crear
     // glGenBuffers(1, &m_vbo);
@@ -19,15 +19,61 @@ DebugDrawer::~DebugDrawer()
 }
 
 void 
-DebugDrawer::drawLine(const btVector3& from, const btVector3& to, const btVector3& fromColor, const btVector3& toColor)
+DebugDrawer::setMatrices(glm::mat4 const& view, glm::mat4 const& projection, RShader * const shader)
 {
+    // glUseProgram(0); // Use Fixed-function pipeline (no shaders)
+    // glMatrixMode(GL_MODELVIEW);
+    // glLoadMatrixf(&view[0][0]);
+    // glMatrixMode(GL_PROJECTION);
+    // glLoadMatrixf(&projection[0][0]);
+
+    shader->setMat4("projection", projection);
+    shader->setMat4("view", view);
 }
 
 void 
 DebugDrawer::drawLine(const btVector3& from, const btVector3& to, const btVector3& color)
 {
-    line3d line{from, to/*, color */};
-    m_lines.push_back(std::move(line));
+    // glColor3f(color.x(), color.y(), color.z());
+
+    // glBegin(GL_LINES);
+    //     glVertex3f(from.x(), from.y(), from.z());
+    //     glVertex3f(to.x(), to.y(), to.z());
+    // glEnd();
+
+    // Vertex data
+    GLfloat points[12];
+
+    points[0] = from.x();
+    points[1] = from.y();
+    points[2] = from.z();
+    points[3] = color.x();
+    points[4] = color.y();
+    points[5] = color.z();
+
+    points[6] = to.x();
+    points[7] = to.y();
+    points[8] = to.z();
+    points[9] = color.x();
+    points[10] = color.y();
+    points[11] = color.z();
+
+    glDeleteBuffers(1, &m_vbo);
+    glDeleteVertexArrays(1, &m_vao);
+    glGenBuffers(1, &m_vbo);
+    glGenVertexArrays(1, &m_vao);
+    glBindVertexArray(m_vao);
+    glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(points), &points, GL_STATIC_DRAW);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), 0);
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
+    glBindVertexArray(0);
+
+    glBindVertexArray(m_vao);
+    glDrawArrays(GL_LINES, 0, 2);
+    glBindVertexArray(0);
 }
 
 void 
@@ -47,7 +93,7 @@ DebugDrawer::drawContactPoint(const btVector3& PointOnB, const btVector3& normal
 void 
 DebugDrawer::reportErrorWarning(const char* warningString)
 {
-    ERRLOG(warningString)
+    ERRLOG(warningString);
 }
 
 void 
@@ -73,41 +119,38 @@ void
 DebugDrawer::toggleDebugFlag(int flag)
 {
     // checks if a flag is set and enables/disables it
-	if (m_debugMode & flag)
-		// flag is enabled, so disable it
-		m_debugMode = m_debugMode & (~flag);
-	else
-		// flag is disabled, so enable it
-		m_debugMode |= flag;
+
+	if (m_debugMode & flag) m_debugMode = m_debugMode & (~flag);
+	else m_debugMode |= flag;
 }
 
 void 
 DebugDrawer::drawAllLines(RShader * const shader)
 {
-    shader->bind();
+    // shader->bind();
 
-    // // Los siguientes comandos le darán características especiales al 'vertexbuffer' 
-    // glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
-    // // Darle nuestros vértices a  OpenGL.
-    // glBufferData(GL_ARRAY_BUFFER, m_lines.size() * sizeof(line3d), &m_lines.front(), GL_STATIC_DRAW);
+    // // // Los siguientes comandos le darán características especiales al 'vertexbuffer' 
+    // // glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
+    // // // Darle nuestros vértices a  OpenGL.
+    // // glBufferData(GL_ARRAY_BUFFER, m_lines.size() * sizeof(line3d), &m_lines.front(), GL_STATIC_DRAW);
 
-    // //load the vertex data info
-    // glVertexAttribPointer(
-    //     this->positionLoc,  // the handle for the a_position shader attrib
-    //     ,   3,	// there are 3 values xyz
-    //     ,   GL_FLOAT, // they a float
-    //     ,   GL_FALSE, // don't need to be normalised
-    //     ,   4*sizeof(float),  // how many floats to the next one(be aware btVector3 uses 4 floats)
-    //     (GLfloat*)&this->TheLines[0]  // where do they start as an index); // use 3 values, but add stride each time to get to the next
-    // );
+    // // //load the vertex data info
+    // // glVertexAttribPointer(
+    // //     this->positionLoc,  // the handle for the a_position shader attrib
+    // //     ,   3,	// there are 3 values xyz
+    // //     ,   GL_FLOAT, // they a float
+    // //     ,   GL_FALSE, // don't need to be normalised
+    // //     ,   4*sizeof(float),  // how many floats to the next one(be aware btVector3 uses 4 floats)
+    // //     (GLfloat*)&this->TheLines[0]  // where do they start as an index); // use 3 values, but add stride each time to get to the next
+    // // );
 
-    // glEnableVertexAttribArray(this->positionLoc);
-    // glDrawArrays(GL_LINES, 0, TheLines.size()*2);
+    // // glEnableVertexAttribArray(this->positionLoc);
+    // // glDrawArrays(GL_LINES, 0, TheLines.size()*2);
     
 
-    m_lines.clear();
+    // m_lines.clear();
 
-    shader->unbind();
+    // shader->unbind();
 }
 
 }

@@ -16,8 +16,7 @@ struct DebugDrawer : public btIDebugDraw
     explicit DebugDrawer();
     ~DebugDrawer();
 
-    // No usar este, sino el de abajo
-	void drawLine(const btVector3& from, const btVector3& to, const btVector3& fromColor, const btVector3& toColor) final;
+    void setMatrices(glm::mat4 const& view, glm::mat4 const& projection, RShader * const shader);
 
     void drawLine(const btVector3& from, const btVector3& to, const btVector3& color) final;
 
@@ -40,8 +39,9 @@ private:
     struct line3d { btVector3 from, to /*, color */; };
 
     int m_debugMode;
-    std::vector<line3d> m_lines;
-    uint32_t m_vbo; // para los datos de las lineas
+    uint32_t m_vao, m_vbo; // para los datos de las lineas
+    
+    // std::vector<line3d> m_lines;
 };
 
 }

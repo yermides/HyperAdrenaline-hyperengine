@@ -85,7 +85,7 @@ HyperEngine::beginRender(void)
 }
 
 void 
-HyperEngine::drawScene(void) const
+HyperEngine::drawScene(void)
 {
 	// Si no hay cámara activa, no renderizar la escena
 	if(m_active_camera == engine_invalid_id)
@@ -129,6 +129,10 @@ HyperEngine::drawScene(void) const
 
 	// Recorrer los nodos y actualizar sus matrices
 	m_rootnode->traverse(glm::mat4{1.0f});
+
+	// Si quiero pintar el debug de las físicas, lo pinto
+	if(m_useDebugDrawer)
+		this->drawDebugPhysics(view, projection);
 
 	// Ahora, pintar skybox si hay
 	if(!m_skybox) return;
@@ -505,12 +509,27 @@ HyperEngine::createRigidbody(Node * const node)
 }
 
 void
-HyperEngine::drawDebugPhysics(/* glm::mat4 const& projection, glm::mat4 const& view */)
+HyperEngine::drawDebugPhysics(glm::mat4 const& view, glm::mat4 const& projection)
 {
-	m_world->debugDrawWorld();
+	// INFOLOG("Dibujando fisicas (debug)");
 
-	auto shader = m_shaders[OpenGLShader::SHADER_DEFAULT];
-	m_debugDrawer->drawAllLines(shader);
+	auto debugdrawshader = m_shaders[OpenGLShader::SHADER_DEBUGDRAWER];
+
+	debugdrawshader->bind();
+	m_debugDrawer->setMatrices(view, projection, debugdrawshader);
+	m_world->debugDrawWorld();
+}
+
+void 
+HyperEngine::enableDebugDraw(void)
+{
+	m_useDebugDrawer = true;
+}
+
+void 
+HyperEngine::disableDebugDraw(void)
+{
+	m_useDebugDrawer = false;
 }
 
 DebugDrawer* const 
@@ -544,8 +563,10 @@ HyperEngine::initializeGraphics(void)
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // To make MacOS happy; should not be needed
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
+	// OpenGL new compatibility (glfw)
+	// glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
 
 	// Open a window and create its OpenGL context
 	m_window = glfwCreateWindow( 1366, 768, "HyperEngine Test 1", NULL, NULL);
@@ -623,9 +644,9 @@ HyperEngine::initializePhysics(void)
 	// World seteado
 	m_world 											=     new btDiscreteDynamicsWorld(dispatcher, broadPhase, solver, collisionConfiguration);
 
-	// setear su debug drawer
+	// setear su debug drawer y opciones por defecto
 	m_debugDrawer = new DebugDrawer;
-
+	m_debugDrawer->setDebugMode(DebugDrawer::DBG_DrawWireframe | DebugDrawer::DBG_DrawAabb);
 	m_world->setDebugDrawer(m_debugDrawer);
 }
 

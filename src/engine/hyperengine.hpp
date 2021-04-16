@@ -157,7 +157,7 @@ struct HyperEngine
 
     void beginRender(void);
 
-    void drawScene(void) const;
+    void drawScene(void);
 
     void drawExampleWindowGUI(void);    // TODO:: borrar, es solo un ejemplo
 
@@ -251,7 +251,11 @@ struct HyperEngine
 
     void createRigidbody(Node * const node);
 
-    void drawDebugPhysics(/* glm::mat4 const& projection, glm::mat4 const& view */);
+    void drawDebugPhysics(glm::mat4 const& view, glm::mat4 const& projection);
+
+    void enableDebugDraw(void);
+
+    void disableDebugDraw(void);
 
     DebugDrawer* const getDebugDrawer(void);
 
@@ -294,6 +298,7 @@ private:
     // Físicas (bullet)
     btDiscreteDynamicsWorld* m_world    { nullptr };
     DebugDrawer* m_debugDrawer          { nullptr };
+    bool m_useDebugDrawer               { false   };
 
     // imgui
     ImGuiIO* m_io;
