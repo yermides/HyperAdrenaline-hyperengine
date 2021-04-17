@@ -251,7 +251,14 @@ struct HyperEngine
 
     void createRigidbody(Node * const node);
 
+    // Realmente no es convex hull, es la geometría pura (todo es por el testing)
     void createRigidBodyConvexHull(Node * const node);
+
+    // habría que parametrizar, equis dé
+    void createRigidBodyDynamic(Node * const node = nullptr);
+
+    // Las colisiones que usarán los mapas
+    void createTriangleMeshShape(Node * const node);
 
     void drawDebugPhysics(glm::mat4 const& view, glm::mat4 const& projection);
 

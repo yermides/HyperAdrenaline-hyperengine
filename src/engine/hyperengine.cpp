@@ -491,6 +491,7 @@ HyperEngine::createRigidbody(Node * const node)
 	using CO = btCollisionObject;
 	// TODO:: parametrizar, solo son cinemáticos de momento
 	body->setCollisionFlags(body->getCollisionFlags() | CO::CF_KINEMATIC_OBJECT); 
+	// Esto desactiva totalmente el estado de colisiones, ya no colisionará con nada, WARNING!!!!!1!!!!111!
 	body->setActivationState(DISABLE_DEACTIVATION);
 
 	// Pasárselo al nodo
@@ -560,6 +561,96 @@ HyperEngine::createRigidBodyConvexHull(Node * const node)
 	body->getMotionState()->getWorldTransform(nodetransform);
 	auto pos = nodetransform.getOrigin();
 	INFOLOG("Posición del nodo: " << VAR(pos.x()) << VAR(pos.y()) << VAR(pos.z()) );
+}
+
+void 
+HyperEngine::createRigidBodyDynamic(Node * const node)
+{
+	static float dynamic_mass = 1.0f;
+
+	// auto prop = node->getPhysicProperties();
+	// if(prop) return;
+
+	// Setup de variables necesarias para la creación del rigidbody
+	btTransform transform;
+	transform.setIdentity();
+	// auto trans = node->getTranslation();
+	transform.setOrigin( btVector3(0, 2, 0) );
+	btDefaultMotionState *motionState = new btDefaultMotionState(transform);
+
+	// Definiendo las dimensiones de la bounding box, de momento aquí es una tremenda esfera
+	btCollisionShape *shape = new btSphereShape(1);
+
+	btVector3 localInertia;
+	shape->calculateLocalInertia(dynamic_mass, localInertia);
+
+	// Creando finalmente el rigidbody y seteando parámetros
+	btRigidBody *body = new btRigidBody(dynamic_mass, motionState, shape, localInertia);
+
+	using CO = btCollisionObject;
+	// TODO:: parametrizar, solo son cinemáticos de momento
+	// body->setCollisionFlags(body->getCollisionFlags() | CO::CF_KINEMATIC_OBJECT | CO::CF_DYNAMIC_OBJECT); 
+	// body->setActivationState(DISABLE_DEACTIVATION);
+
+	// Pasárselo al nodo
+	// Node::PhysicProperties* properties = new Node::PhysicProperties;
+	// properties->body = body;
+	// node->setPhysicProperties(properties);
+
+	// Y finalmente al mundo
+	m_world->addRigidBody(body);
+}
+
+void 
+HyperEngine::createTriangleMeshShape(Node * const node)
+{
+	static int cinematic_mass = 0;
+
+	auto prop = node->getPhysicProperties();
+	
+	if(prop) return;
+
+	// Setup de variables necesarias para la creación del rigidbody
+	btTransform transform;
+	transform.setIdentity();
+	auto trans = node->getTranslation();
+	transform.setOrigin( btVector3(trans.x, trans.y, trans.z) );
+	btDefaultMotionState *motionState = new btDefaultMotionState(transform);
+
+	// Definiendo la triangle mesh
+
+	auto model 			= static_cast<EModel*>(node->getEntity());
+	auto trianglemesh	= new btTriangleMesh;
+	auto vertices 		= model->getVertexPositions();
+
+	for(auto i {0}; i< vertices.size(); i=i+9) {
+		trianglemesh->addTriangle(
+				btVector3(vertices[i], vertices[i+1], vertices[i+2])
+			,	btVector3(vertices[i+3], vertices[i+4], vertices[i+5])
+			,	btVector3(vertices[i+6], vertices[i+7], vertices[i+8])
+		);
+	}
+
+	auto shape	= new btBvhTriangleMeshShape(trianglemesh, false);
+
+	btVector3 localInertia;
+	shape->calculateLocalInertia(cinematic_mass, localInertia);
+
+	// Creando finalmente el rigidbody y seteando parámetros
+	btRigidBody *body = new btRigidBody(cinematic_mass, motionState, shape, localInertia);
+
+	using CO = btCollisionObject;
+	// TODO:: parametrizar, solo son cinemáticos de momento
+	body->setCollisionFlags(body->getCollisionFlags() | CO::CF_KINEMATIC_OBJECT); 
+	body->setActivationState(DISABLE_DEACTIVATION);
+
+	// Pasárselo al nodo
+	Node::PhysicProperties* properties = new Node::PhysicProperties;
+	properties->body = body;
+	node->setPhysicProperties(properties);
+
+	// Y finalmente al mundo
+	m_world->addRigidBody(body);
 }
 
 void
@@ -702,6 +793,9 @@ HyperEngine::initializePhysics(void)
 	m_debugDrawer = new DebugDrawer;
 	m_debugDrawer->setDebugMode(DebugDrawer::DBG_DrawWireframe | DebugDrawer::DBG_DrawAabb);
 	m_world->setDebugDrawer(m_debugDrawer);
+
+	// poner gravedad
+	m_world->setGravity( btVector3(0, -9.81f, 0) );
 }
 
 void 

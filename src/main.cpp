@@ -685,13 +685,15 @@ void test_physics(void) {
     engine->setWindowTitle("test_physics");
     engine->setWindowIcon("assets/logo.jpg");
 
-    hyper::Node* lightnode = engine->createLight(default_createnode_params);
-    hyper::Node* camnode = engine->createCamera(default_createnode_params); // tendrá la proyección por defecto
+    hyper::Node* lightnode          = engine->createLight(default_createnode_params);
+    hyper::Node* camnode            = engine->createCamera(default_createnode_params); // tendrá la proyección por defecto
 
-    hyper::Node* missile_launcher = engine->createModel(nullptr, {0,0,-4}, default_rot_and_scale, "assets/missile-launcher.obj");
-    hyper::Node* cubito_rosa = engine->createModel(nullptr, {-2,0,-4}, default_rot_and_scale, "assets/cubito_rosa.obj");
-    hyper::Node* icosphere = engine->createModel(nullptr, {2,0,-4}, default_rot_and_scale, "assets/icosphere.obj");
+    hyper::Node* missile_launcher   = engine->createModel(nullptr, {0,0,-4}, default_rot_and_scale, "assets/missile-launcher.obj");
+    hyper::Node* cubito_rosa        = engine->createModel(nullptr, {-2,0,-4}, default_rot_and_scale, "assets/cubito_rosa.obj");
+    hyper::Node* icosphere          = engine->createModel(nullptr, {2,0,-4}, default_rot_and_scale, "assets/icosphere.obj");
+    hyper::Node* plane              = engine->createModel(nullptr, {0,-2.0f,0}, {0,0,0}, default_scale, "assets/planes/plano3.obj");
 
+    {
     // a medias de la skybox, hacer lo de los shaders y acordarse de cambiar la depth function (Z buffer) para que siempre se vea al fondo
     // hyper::Node* skyboxnode = engine->createSkybox(
     //     default_createnode_params
@@ -731,7 +733,7 @@ void test_physics(void) {
     //     ,   "assets/skybox/space/blue/bkg1_back.png" 
     //     }
     // );
-
+    };
 
     // auto dbgdrw = engine->getDebugDrawer();
     // dbgdrw->setDebugMode( btIDebugDraw::DBG_DrawWireframe | btIDebugDraw::DBG_DrawAabb);
@@ -789,6 +791,18 @@ void test_physics(void) {
             // INFOLOG("Tratando de añadir colisiones a nodo missile_launcher");
             engine->createRigidBodyConvexHull(missile_launcher);
         }
+
+        if(engine->getKeySinglePress(GLFW_KEY_6))
+        {
+            engine->createTriangleMeshShape(plane);
+        }
+
+        if(engine->getKeySinglePress(GLFW_KEY_7))
+            engine->getDebugDrawer()->toggleDebugFlag(2);
+
+        if(engine->getKeySinglePress(GLFW_KEY_8))
+            engine->createRigidBodyDynamic();
+
 
         // Update de las físicas
         engine->updatePhysics();
