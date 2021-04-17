@@ -40,4 +40,16 @@ EModel::loadFromFile(std::string const& path)
     m_rmesh = ResourceManager::getResource_t<RMesh>(path);
 }
 
+std::vector<float> const
+EModel::getVertexPositions(void)
+{
+    std::vector<float> vertices;
+
+    for(auto mesh : m_rmesh->m_meshes) { 
+        vertices.insert( vertices.end(), mesh->m_vertices.begin(), mesh->m_vertices.end() );
+    }
+
+    return vertices;
+}
+
 }

@@ -21,11 +21,9 @@ struct RMesh : public Resource
 
     void loadFromFile(std::string const& path) final;
 
-    // constexpr uint32_t getVertexCount() const noexcept 
-    //     { return m_nVertex; }
+    friend class EModel;
 private:
     std::vector<Mesh*> m_meshes;
-    // uint32_t m_nVertex {0};
 };
 
 }

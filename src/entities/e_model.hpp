@@ -5,7 +5,6 @@
 
 namespace hyper {
 
-
 struct EModel : public Entity
 {
     explicit EModel();
@@ -14,6 +13,8 @@ struct EModel : public Entity
 
     void draw(glm::mat4 const& tranform) final;
     void loadFromFile(std::string const& path);
+
+    std::vector<float> const getVertexPositions(void); 
 private:
     RMesh* m_rmesh { nullptr };
 };

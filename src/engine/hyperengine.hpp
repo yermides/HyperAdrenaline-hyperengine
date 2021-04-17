@@ -251,6 +251,8 @@ struct HyperEngine
 
     void createRigidbody(Node * const node);
 
+    void createRigidBodyConvexHull(Node * const node);
+
     void drawDebugPhysics(glm::mat4 const& view, glm::mat4 const& projection);
 
     void enableDebugDraw(void);

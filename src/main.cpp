@@ -745,16 +745,7 @@ void test_physics(void) {
 
         auto dbgdrw = engine->getDebugDrawer();
 
-        for(int i=0; i<30;++i)
-            dbgdrw->drawLine(btVector3{0,0,0}, btVector3{i*0.1,1000,1000}, btVector3{1,0,0});
-        // engine->drawDebugPhysics();
-
-    // auto dbgdrw = engine->getDebugDrawer();
-
         engine->endRender();
-
-        for(int i=0; i<30;++i)
-            dbgdrw->drawLine(btVector3{0,0,0}, btVector3{i*0.2,1000,1000}, btVector3{1,0,0});
 
         // Fancy rotation
         missile_launcher->rotate({0,5.5f,0});
@@ -793,6 +784,11 @@ void test_physics(void) {
         if(engine->getKeySinglePress(GLFW_KEY_4))
             engine->disableDebugDraw();
 
+        if(engine->getKeySinglePress(GLFW_KEY_5))
+        {
+            // INFOLOG("Tratando de añadir colisiones a nodo missile_launcher");
+            engine->createRigidBodyConvexHull(missile_launcher);
+        }
 
         // Update de las físicas
         engine->updatePhysics();
