@@ -653,6 +653,57 @@ HyperEngine::createTriangleMeshShape(Node * const node)
 	m_world->addRigidBody(body);
 }
 
+btVector3 
+HyperEngine::getPickingRay(int x, int y)
+{
+	// Seguramente esta función se borre
+	// TODO:: borrar
+ 	return btVector3(0,0,0);
+}
+
+bool 
+HyperEngine::throwRaycast(const btVector3 &startPosition, const btVector3 &direction, RayResult &output)
+{
+		if (!m_world)
+			return false;
+		
+		// get the picking ray from where we clicked
+		btVector3 rayTo = direction;
+		btVector3 rayFrom = startPosition;
+		
+		// create our raycast callback object
+		btCollisionWorld::ClosestRayResultCallback rayCallback(rayFrom,rayTo);
+		
+		// perform the raycast
+		m_world->rayTest(rayFrom, rayTo, rayCallback);
+
+		m_debugDrawer->drawLine(rayFrom, rayTo, btVector3(0,1,0));
+		
+		// did we hit something?
+		if (rayCallback.hasHit())
+		{
+			// if so, get the rigid body we hit
+			btRigidBody* pBody = (btRigidBody*)btRigidBody::upcast(rayCallback.m_collisionObject);
+			if (!pBody)
+				return false;
+		
+			// prevent us from picking objects 
+			// like the ground plane
+
+			// TODO:: descomentar
+			// if (pBody->isStaticObject() || pBody->isKinematicObject()) 
+			// 	return false;
+	    
+			// set the result data
+			output.pBody = pBody;
+			output.hitPoint = rayCallback.m_hitPointWorld;
+			return true;
+		}
+	
+		// we didn't hit anything
+		return false;
+}
+
 void
 HyperEngine::drawDebugPhysics(glm::mat4 const& view, glm::mat4 const& projection)
 {

@@ -54,8 +54,14 @@ enum class OpenGLShader {
     ,   SHADER_DEBUGDRAWER
 };
 
+struct RayResult    { btRigidBody* pBody; btVector3 hitPoint;   };
+struct Viewport     { int x, y, width, height;                  };
+
 struct HyperEngine
 {
+private:
+    // Declaración de estructuras
+public:
     explicit HyperEngine(bool const init = false);
     ~HyperEngine();
 
@@ -260,6 +266,12 @@ struct HyperEngine
     // Las colisiones que usarán los mapas
     void createTriangleMeshShape(Node * const node);
 
+    // Funciones necesarias para el raycast (1/2)
+    btVector3 getPickingRay(int x, int y);
+
+    // Funciones necesarias para el raycast (2/2)
+    bool throwRaycast(const btVector3 &startPosition, const btVector3 &direction, RayResult &output);
+
     void drawDebugPhysics(glm::mat4 const& view, glm::mat4 const& projection);
 
     void enableDebugDraw(void);
@@ -271,18 +283,17 @@ struct HyperEngine
     void setDebugDrawer(DebugDrawer* debugDrawer);
 
 private:
+    // Inicializadores, solo se llaman en el constructor
     void initializeGraphics(void);
     void initializePhysics(void);
 
+    // Funciones auxiliares
     void setKeyState(int const key, int const action);
     void resetKeyStates(void);
 
-    // Declaración de la estructura
-    struct Viewport { int x, y, width, height; };
+    // No se necesita el resource manager por su naturaleza singleton
 
     Node* const     m_rootnode      { new Node   };
-
-    // No se necesita el resource manager por su naturaleza singleton
 
     // Administrador de shaders
     std::unordered_map<OpenGLShader, RShader*> m_shaders;
@@ -302,7 +313,6 @@ private:
     // std::vector<LightData> m_lights;
     std::vector<Node*> m_lights;
     std::vector<bool> m_active_lights;
-
 
     // Físicas (bullet)
     btDiscreteDynamicsWorld* m_world    { nullptr };

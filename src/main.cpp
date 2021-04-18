@@ -747,6 +747,23 @@ void test_physics(void) {
 
         auto dbgdrw = engine->getDebugDrawer();
 
+        if(engine->getKeyContinuousPress(GLFW_KEY_9))
+        {
+            hyper::RayResult result;
+            bool hashit = engine->throwRaycast({0,1,-10}, {0, 1, 25}, result);
+
+            if(hashit)
+            {
+                auto point = result.hitPoint;
+                INFOLOG("Sí le he dado con el raycast: " VAR(point.getX()) << VAR(point.getY()) << VAR(point.getZ()) )
+            }
+            else
+            {
+                INFOLOG("No le he dado con el raycast")
+            }
+
+        }
+
         engine->endRender();
 
         // Fancy rotation
@@ -802,6 +819,9 @@ void test_physics(void) {
 
         if(engine->getKeySinglePress(GLFW_KEY_8))
             engine->createRigidBodyDynamic();
+
+
+
 
 
         // Update de las físicas
