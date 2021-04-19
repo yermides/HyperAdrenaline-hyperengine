@@ -11,12 +11,14 @@ HyperEngine::HyperEngine(bool const init)
 HyperEngine::~HyperEngine()
 {
 	m_shaders.clear();
+	m_keystates.clear();
 	Node::deleteBranch(m_rootnode);
 	ImGui_ImplOpenGL3_Shutdown();
 	ImGui_ImplGlfw_Shutdown();
 	gui::DestroyContext();
 	glfwDestroyWindow(m_window);
 	glfwTerminate();
+	delete m_world;
 }
 
 void 
@@ -244,6 +246,24 @@ HyperEngine::setActiveSkybox(Node* const node)
 	m_skybox = node;
 }
 
+bool 
+HyperEngine::isSkyboxActive(void) const noexcept
+{
+	if(!m_skybox) 	return false;
+	else 			return true;
+}
+
+void 
+HyperEngine::deleteSkybox(void)
+{
+	if(!m_skybox) return;
+
+	m_rootnode->removeChild(m_skybox);
+	delete m_skybox;
+	m_skybox = nullptr;
+}
+
+
 bool const 
 HyperEngine::isWindowActive(void) const noexcept
 { 
@@ -465,6 +485,38 @@ HyperEngine::updatePhysics(float const deltatime)
 }
 
 void 
+HyperEngine::createPhysicProperties(
+		Node* const node
+	, 	btCollisionShape* pShape
+	, 	float const mass
+	, 	btVector3 const& initialPosition
+	, 	btQuaternion const& initialRotation
+)
+{
+	if(!node || node->getPhysicProperties()) return;
+
+	btTransform transform;
+	transform.setIdentity();
+	transform.setOrigin(initialPosition);
+	transform.setRotation(initialRotation);
+
+	auto collisionShape = pShape;
+	auto motionState = new OpenGLMotionState(transform);
+	btVector3 localInertia(0,0,0);
+
+	if (mass != 0.0f)
+		collisionShape->calculateLocalInertia(mass, localInertia);
+
+	btRigidBody::btRigidBodyConstructionInfo cInfo(mass, motionState, collisionShape, localInertia);
+	auto rigidBody = new btRigidBody(cInfo);
+
+	auto properties = new PhysicProperties(rigidBody, collisionShape, motionState);
+	node->setPhysicProperties(properties);
+
+	m_world->addRigidBody(rigidBody);
+}
+
+void 
 HyperEngine::createRigidbody(Node * const node)
 {
 	static int cinematic_mass = 0;
@@ -495,8 +547,8 @@ HyperEngine::createRigidbody(Node * const node)
 	body->setActivationState(DISABLE_DEACTIVATION);
 
 	// Pasárselo al nodo
-	Node::PhysicProperties* properties = new Node::PhysicProperties;
-	properties->body = body;
+	PhysicProperties* properties = new PhysicProperties;
+	properties->m_body = body;
 	node->setPhysicProperties(properties);
 
 	// Y finalmente al mundo
@@ -549,8 +601,8 @@ HyperEngine::createRigidBodyConvexHull(Node * const node)
 	body->setActivationState(DISABLE_DEACTIVATION);
 
 	// Pasárselo al nodo
-	Node::PhysicProperties* properties = new Node::PhysicProperties;
-	properties->body = body;
+	PhysicProperties* properties = new PhysicProperties;
+	properties->m_body = body;
 	node->setPhysicProperties(properties);
 
 	// Y finalmente al mundo
@@ -593,7 +645,7 @@ HyperEngine::createRigidBodyDynamic(Node * const node)
 	// body->setActivationState(DISABLE_DEACTIVATION);
 
 	// Pasárselo al nodo
-	// Node::PhysicProperties* properties = new Node::PhysicProperties;
+	// PhysicProperties* properties = new PhysicProperties;
 	// properties->body = body;
 	// node->setPhysicProperties(properties);
 
@@ -645,8 +697,8 @@ HyperEngine::createTriangleMeshShape(Node * const node)
 	body->setActivationState(DISABLE_DEACTIVATION);
 
 	// Pasárselo al nodo
-	Node::PhysicProperties* properties = new Node::PhysicProperties;
-	properties->body = body;
+	PhysicProperties* properties = new PhysicProperties;
+	properties->m_body = body;
 	node->setPhysicProperties(properties);
 
 	// Y finalmente al mundo
@@ -687,7 +739,7 @@ HyperEngine::throwRaycast(const btVector3 &startPosition, const btVector3 &direc
 			if (!pBody)
 				return false;
 		
-			// prevent us from picking objects 
+			// prevent us from picking objects
 			// like the ground plane
 
 			// TODO:: descomentar

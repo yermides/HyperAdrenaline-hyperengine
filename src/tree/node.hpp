@@ -9,21 +9,20 @@
 #include <bullet/btBulletDynamicsCommon.h>
 #include <bullet/btBulletCollisionCommon.h>
 // HyperEngine
+#include <util/physics.hpp>
 #include "entities/entity.hpp"
+
+#define default_first_node_id 0
 
 namespace hyper {
 
 struct Node
 {
-    // Estructura que almacena todos los datos físicos
-    struct PhysicProperties {
-        btRigidBody *body { nullptr };
-    };
-
     // Alias para la lista de nodos
     using NodeList = std::vector<Node*>;
+    using NodeID   = int;
     
-    explicit Node(bool const ignoreDrawInTraverse = false);
+    explicit Node();
     ~Node();
 
     void                addChild(Node* node);
@@ -72,10 +71,10 @@ struct Node
         { return m_name;                    }
 
     constexpr PhysicProperties* getPhysicProperties(void)
-        { return m_physicproperties;        }
+        { return m_physicProperties;        }
 
     constexpr void setPhysicProperties(PhysicProperties* properties)
-        { m_physicproperties = properties;  }
+        { m_physicProperties = properties;  }
 
     void                translate(glm::vec3 const& accumulation);
     void                rotate(glm::vec3 const& accumulation);
@@ -83,30 +82,24 @@ struct Node
 
     void                traverse(glm::mat4 const& accumulatedTrans);
 
-    static void                deleteBranch(Node* node);
-    static void                deleteBranchChilds(Node* node);
+    static void         deleteBranch(Node* node);
+    static void         deleteBranchChilds(Node* node);
 private:
-    PhysicProperties * m_physicproperties { nullptr };
+    // Transformación gráfica del objeto en el mundo y opciones de dibujado
+    glm::mat4 m_transform   { 1.0f };   // Matriz resultado de operar con los valores de debajo
+    glm::vec3 m_translation { 0.0f };   // Vector de tres floats que informa de la posición
+    glm::vec3 m_rotation    { 0.0f };   // Vector de tres floats que informa de la rotación
+    glm::vec3 m_scale       { 1.0f };   // Vector de tres floats que informa del escalado 
+    bool m_wantsUpdate      { true };   // Booleano que informa de si hay que actualizar la matriz en la iteración
 
-    glm::mat4 m_transform { 1.0f };
-    NodeList m_childs;
-    Node* m_parent { nullptr };
-    Entity* m_entity { nullptr };
-
-    glm::vec3 m_translation {0.0f};
-    glm::vec3 m_rotation {0.0f};
-    glm::vec3 m_scale {1.0f};
-
-    bool m_wantsUpdate { true };
-
-    // Variable usada para arreglar el recorrido del árbol 
-    // no se renderizan las cámaras y luces durante el traverse
-    // sino antes por control del engine
-    bool const m_ignoreDraw { false };
-    int m_name;
+    // Datos importantes relacionados del nodo
+    NodeList m_childs;                                      // Lista de hijos del nodo
+    Node* m_parent                          { nullptr };    // Padre del nodo
+    Entity* m_entity                        { nullptr };    // Entidad con datos importantes del nodo
+    PhysicProperties *m_physicProperties    { nullptr };    // Propiedades físicas si tiene
+    NodeID m_name                           { default_first_node_id };  // Para compatibilidad, identificador del nodo
 private:
-    // Rootnode tendrá ID = 0 por hacer postincremento 
-    inline static int nextNameID {0};
+    inline static NodeID nextNameID         { default_first_node_id };  // Autoincrementable identificador
 };
 
 }

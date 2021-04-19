@@ -259,7 +259,7 @@ void test_hyperengine_traverse(void) {
     auto engine = new HyperEngine(true);
 
     auto shader = ResourceManager::getResource_t<RShader>("src/shaders/1.model_loading");
-	auto shaderID = shader->getProgramID();
+	[[maybe_unused]] auto shaderID = shader->getProgramID();
 
     Node* node = engine->createModel(default_createnode_params, "assets/missile-launcher.obj");
     Node* node2 = engine->createModel(nullptr, {2.0f, 0.0f, 0.0f}, default_rot, default_scale, "assets/HA_funador_pesado.obj");
@@ -337,13 +337,13 @@ void test_full_tree_traverse() {
     auto camnode = engine->createCamera(default_createnode_params); // tendrá la proyección por defecto
 
     hyper::Node* missile_launcher = engine->createModel(default_createnode_params, "assets/missile-launcher.obj");
-    hyper::Node* funador_pesado = engine->createModel(nullptr, {2.0f, 0.0f, 0.0f}, default_rot, default_scale, "assets/HA_funador_pesado.obj");
+    [[maybe_unused]] hyper::Node* funador_pesado = engine->createModel(nullptr, {2.0f, 0.0f, 0.0f}, default_rot, default_scale, "assets/HA_funador_pesado.obj");
 
     camnode->translate({0,0,4});
     missile_launcher->translate({0.0f,0.0f,-3.0f});
 
-    glm::vec3* camtrans = { new glm::vec3( camnode->getTranslation() )};
-    glm::vec3* camrot = { new glm::vec3( camnode->getRotation() )};
+    glm::vec3* misiletrans  = { new glm::vec3( missile_launcher->getTranslation() )};
+    glm::vec3* misilerot    = { new glm::vec3( missile_launcher->getRotation() )};
 
     while(engine->isWindowActive() && !engine->getKeyContinuousPress(GLFW_KEY_ESCAPE))
     {
@@ -357,8 +357,8 @@ void test_full_tree_traverse() {
         hyper::gui::Begin("Ventana temporal2 - HyperEngine::drawExampleWindowGUI()", 0,
             ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove);
 	    hyper::gui::Button("Hola mundo2!");
-        ImGui::SliderFloat3("Translación de la cámara", (float*)camtrans, -10.0f, 10.0f);
-        ImGui::SliderFloat3("Rotación de la cámara", (float*)camrot, -180.0f, 180.0f);
+        ImGui::SliderFloat3("Lanzamisiles - Translación", (float*)misiletrans, -10.0f, 10.0f);
+        ImGui::SliderFloat3("Lanzamisiles - Rotación   ", (float*)misilerot, -180.0f, 180.0f);
 	    hyper::gui::End();
 
         engine->endRender();
@@ -381,8 +381,8 @@ void test_full_tree_traverse() {
         if(engine->getKeyContinuousPress(GLFW_KEY_RIGHT))
             camnode->translate({0.1f,0,0});
 
-        camnode->setTranslation( *(glm::vec3*)camtrans );
-        camnode->setRotation( *(glm::vec3*)camrot );
+        missile_launcher->setTranslation( *(glm::vec3*)misiletrans );
+        missile_launcher->setRotation( *(glm::vec3*)misilerot );
     }
 
 }
@@ -479,7 +479,7 @@ void test_matrices_data_lights(void) {
     engine->setWindowTitle("test_matrices_data_lights");
     engine->setWindowIcon("assets/logo.jpg");
 
-    hyper::Node* lightnode = engine->createLight(default_createnode_params);
+    [[maybe_unused]] hyper::Node* lightnode = engine->createLight(default_createnode_params);
     hyper::Node* camnode = engine->createCamera(nullptr,{1.0f,0.0f,4.0f},{0,15,0} , default_scale); // tendrá la proyección por defecto
     hyper::Node* missile_launcher = engine->createModel(default_createnode_params, "assets/missile-launcher.obj");
     // hyper::Node* funador_pesado2 = engine->createModel(nullptr, {-1.0f, 0.0f, 1.0f}, default_rot_and_scale, "assets/newmachinegun/HA_funador_pesado.obj");
@@ -592,15 +592,15 @@ void test_skybox_and_mouse_input() {
     engine->setWindowTitle("test_skybox_and_mouse_input");
     engine->setWindowIcon("assets/logo.jpg");
 
-    hyper::Node* lightnode = engine->createLight(default_createnode_params);
+    [[maybe_unused]] hyper::Node* lightnode = engine->createLight(default_createnode_params);
     hyper::Node* camnode = engine->createCamera(default_createnode_params); // tendrá la proyección por defecto
 
     hyper::Node* missile_launcher = engine->createModel(nullptr, {0,0,-4}, default_rot_and_scale, "assets/missile-launcher.obj");
-    hyper::Node* cubito_rosa = engine->createModel(nullptr, {-2,0,-4}, default_rot_and_scale, "assets/cubito_rosa.obj");
-    hyper::Node* icosphere = engine->createModel(nullptr, {2,0,-4}, default_rot_and_scale, "assets/icosphere.obj");
+    [[maybe_unused]] hyper::Node* cubito_rosa = engine->createModel(nullptr, {-2,0,-4}, default_rot_and_scale, "assets/cubito_rosa.obj");
+    [[maybe_unused]] hyper::Node* icosphere = engine->createModel(nullptr, {2,0,-4}, default_rot_and_scale, "assets/icosphere.obj");
 
     // a medias de la skybox, hacer lo de los shaders y acordarse de cambiar la depth function (Z buffer) para que siempre se vea al fondo
-    hyper::Node* skyboxnode = engine->createSkybox(
+    [[maybe_unused]] hyper::Node* skyboxnode = engine->createSkybox(
         default_createnode_params
     ,   SkyboxNamelist 
         { 
@@ -685,13 +685,14 @@ void test_physics(void) {
     engine->setWindowTitle("test_physics");
     engine->setWindowIcon("assets/logo.jpg");
 
-    hyper::Node* lightnode          = engine->createLight(default_createnode_params);
+    [[maybe_unused]] hyper::Node* lightnode          = engine->createLight(default_createnode_params);
     hyper::Node* camnode            = engine->createCamera(default_createnode_params); // tendrá la proyección por defecto
 
     hyper::Node* missile_launcher   = engine->createModel(nullptr, {0,0,-4}, default_rot_and_scale, "assets/missile-launcher.obj");
-    hyper::Node* cubito_rosa        = engine->createModel(nullptr, {-2,0,-4}, default_rot_and_scale, "assets/cubito_rosa.obj");
-    hyper::Node* icosphere          = engine->createModel(nullptr, {2,0,-4}, default_rot_and_scale, "assets/icosphere.obj");
+    hyper::Node* cubito_rosa        = engine->createModel(nullptr, {-4,0,-4}, default_rot_and_scale, "assets/cubito_rosa.obj");
+    hyper::Node* icosphere          = engine->createModel(nullptr, {4,0,-4}, default_rot_and_scale, "assets/icosphere.obj");
     hyper::Node* plane              = engine->createModel(nullptr, {0,-2.0f,0}, {0,0,0}, default_scale, "assets/planes/plano3.obj");
+    // hyper::Node* plane              = nullptr;
 
     {
     // a medias de la skybox, hacer lo de los shaders y acordarse de cambiar la depth function (Z buffer) para que siempre se vea al fondo
@@ -744,30 +745,12 @@ void test_physics(void) {
         // Render
         engine->beginRender();
         engine->drawScene();
-
-        auto dbgdrw = engine->getDebugDrawer();
-
-        if(engine->getKeyContinuousPress(GLFW_KEY_9))
-        {
-            hyper::RayResult result;
-            bool hashit = engine->throwRaycast({0,1,-10}, {0, 1, 25}, result);
-
-            if(hashit)
-            {
-                auto point = result.hitPoint;
-                INFOLOG("Sí le he dado con el raycast: " VAR(point.getX()) << VAR(point.getY()) << VAR(point.getZ()) )
-            }
-            else
-            {
-                INFOLOG("No le he dado con el raycast")
-            }
-
-        }
-
         engine->endRender();
 
         // Fancy rotation
-        missile_launcher->rotate({0,5.5f,0});
+        missile_launcher->rotate({0,3,0});
+        cubito_rosa->rotate({3,0,0});
+        icosphere->rotate({0,0,3});
 
         // Input
         if(engine->getKeyContinuousPress(GLFW_KEY_A))       camnode->rotate({0,3,0});
@@ -788,7 +771,7 @@ void test_physics(void) {
         if(engine->getKeySinglePress(GLFW_KEY_2))
         {
             missile_launcher->translate({0,0,-2});
-            auto rigidbody = missile_launcher->getPhysicProperties()->body;
+            auto rigidbody = missile_launcher->getPhysicProperties()->m_body;
             // Debug, TODO:: borrar
             INFOLOG("llego" );
 
@@ -820,9 +803,129 @@ void test_physics(void) {
         if(engine->getKeySinglePress(GLFW_KEY_8))
             engine->createRigidBodyDynamic();
 
+        if(engine->getKeyContinuousPress(GLFW_KEY_9))
+        {
+            hyper::RayResult result;
+            bool hashit = engine->throwRaycast({0,1,-10}, {0, 1, 25}, result);
 
+            if(hashit)
+            {
+                auto point = result.hitPoint;
+                INFOLOG("Sí le he dado con el raycast: " VAR(point.getX()) << VAR(point.getY()) << VAR(point.getZ()) )
+            }
+            else
+            {
+                INFOLOG("No le he dado con el raycast")
+            }
 
+        }
 
+        if(engine->getKeySinglePress(GLFW_KEY_F))
+        {
+            [[maybe_unused]] hyper::Node* skyboxnode = engine->createSkybox(
+                default_createnode_params
+            ,   SkyboxNamelist 
+                { 
+                    "assets/skybox/space/lightblue/top.png"
+                ,   "assets/skybox/space/lightblue/bot.png"
+                ,   "assets/skybox/space/lightblue/left.png"
+                ,   "assets/skybox/space/lightblue/right.png"
+                ,   "assets/skybox/space/lightblue/front.png"
+                ,   "assets/skybox/space/lightblue/back.png" 
+                }
+            );
+        }
+
+        // Update de las físicas
+        engine->updatePhysics();
+    }
+}
+
+void test_physics_2(void) {
+    std::unique_ptr<hyper::HyperEngine> engine = std::make_unique<hyper::HyperEngine>(true);
+    engine->setWindowTitle("test_physics_2");
+    engine->setWindowIcon("assets/logo.jpg");
+
+    [[maybe_unused]] 
+    hyper::Node* lightnode          = engine->createLight(default_createnode_params);
+    
+    hyper::Node* camnode            = engine->createCamera(default_createnode_params); // tendrá la proyección por defecto
+    
+    hyper::Node* missile_launcher   = engine->createModel(nullptr, {0,0,-4}, default_rot_and_scale, "assets/missile-launcher.obj");
+    hyper::Node* cubito_rosa        = engine->createModel(nullptr, {-4,0,-4}, default_rot_and_scale, "assets/cubito_rosa.obj");
+    hyper::Node* icosphere          = engine->createModel(nullptr, {4,0,-4}, default_rot_and_scale, "assets/icosphere.obj");
+    
+    [[maybe_unused]] 
+    hyper::Node* plane              = engine->createModel(nullptr, {0,-2.0f,0}, {0,0,0}, default_scale, "assets/planes/plano3.obj");
+
+    engine->enableDebugDraw();
+
+    while(engine->isWindowActive() && !engine->getKeyContinuousPress(GLFW_KEY_ESCAPE))
+    {
+        // Render
+        engine->beginRender();
+        engine->drawScene();
+        engine->endRender();
+
+        // Fancy rotation
+        missile_launcher->rotate({0,3,0});
+        cubito_rosa->rotate({3,0,0});
+        icosphere->rotate({0,0,3});
+
+        // Input
+        if(engine->getKeyContinuousPress(GLFW_KEY_A))       camnode->rotate({0,3,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_D))       camnode->rotate({0,-3,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_W))       camnode->rotate({3,0,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_S))       camnode->rotate({-3,0,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_LEFT))    camnode->translate({-.3,0,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_RIGHT))   camnode->translate({.3,0,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_UP))      camnode->translate({0,0,-.3f});
+        if(engine->getKeyContinuousPress(GLFW_KEY_DOWN))    camnode->translate({0,0,.3f});
+
+        if(engine->getKeySinglePress(GLFW_KEY_1))
+        {
+            auto pos = icosphere->getTranslation();
+            engine->createPhysicProperties(
+                    icosphere
+                ,   new btSphereShape(1)
+                ,   0
+                ,   btVector3(pos.x, pos.y, pos.z)
+            );
+        }
+
+        if(engine->getKeySinglePress(GLFW_KEY_2))    
+        {
+            auto pos = cubito_rosa->getTranslation();
+            engine->createPhysicProperties(
+                    cubito_rosa
+                ,   new btBoxShape({1,1,1})
+                ,   0
+                ,   btVector3(pos.x, pos.y, pos.z)
+            );
+        }
+
+        if(engine->getKeyContinuousPress(GLFW_KEY_3)) 
+        {
+            // Nota, el raycast no se puede ver si no se hace entre begin y end del render
+            // Arreglar para tener una stack de rayos o algo así
+            auto pos = cubito_rosa->getTranslation();
+            hyper::RayResult result;
+
+            auto hasHit = engine->throwRaycast(
+                    {pos.x, -20, pos.z}
+                ,   {pos.x, pos.y+100, pos.z}
+                ,   result
+            );
+
+            if(hasHit)
+            {
+                INFOLOG("He dado!" << VAR(result.hitPoint.getX()) << VAR(result.hitPoint.getY()) << VAR(result.hitPoint.getZ()))
+            }
+            else
+            {
+                INFOLOG("No he dado?")
+            }
+        }
 
         // Update de las físicas
         engine->updatePhysics();
@@ -846,5 +949,7 @@ int main(void) {
 
     // test_skybox_and_mouse_input();
 
-    test_physics();
+    // test_physics();
+
+    test_physics_2();
 }

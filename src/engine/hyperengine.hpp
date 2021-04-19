@@ -54,14 +54,12 @@ enum class OpenGLShader {
     ,   SHADER_DEBUGDRAWER
 };
 
+// Declaración de estructuras
 struct RayResult    { btRigidBody* pBody; btVector3 hitPoint;   };
 struct Viewport     { int x, y, width, height;                  };
 
 struct HyperEngine
 {
-private:
-    // Declaración de estructuras
-public:
     explicit HyperEngine(bool const init = false);
     ~HyperEngine();
 
@@ -187,6 +185,10 @@ public:
 
     void setActiveSkybox(Node* const node);
 
+    bool isSkyboxActive(void) const noexcept;
+
+    void deleteSkybox(void);
+
     // Útiles
 
     // Ventana
@@ -255,6 +257,14 @@ public:
 
     void updatePhysics(float const deltatime = 1.0f / 60.0f);
 
+    void createPhysicProperties(
+            Node* const node
+        ,   btCollisionShape* pShape
+        ,   float const mass
+        ,   btVector3 const& initialPosition = btVector3(0.0f,0.0f,0.0f)
+        ,   btQuaternion const& initialRotation = btQuaternion(0,0,1,1)
+    );
+
     void createRigidbody(Node * const node);
 
     // Realmente no es convex hull, es la geometría pura (todo es por el testing)
@@ -302,9 +312,9 @@ private:
     std::unordered_map<int, int> m_keystates;
 
     // Atributos para mantenimiento de las cámaras, luces y viewports  (y ahora skybox)
-    GLFWwindow*     m_window   { nullptr    };
-    std::vector<Node*> m_cameras;
-    std::vector<Viewport> m_viewports;
+    GLFWwindow*             m_window   { nullptr };
+    std::vector<Node*>      m_cameras;
+    std::vector<Viewport>   m_viewports;
     int m_active_camera  {engine_invalid_id} 
     ,   m_active_viewport{engine_invalid_id};
 

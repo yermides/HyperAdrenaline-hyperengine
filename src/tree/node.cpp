@@ -3,8 +3,7 @@
 
 namespace hyper {
 
-Node::Node(bool const ignoreDrawInTraverse)
-: m_ignoreDraw(ignoreDrawInTraverse)
+Node::Node()
 {
     m_name = nextNameID++;
     INFOLOG("I am the node "<<VAR(this));
@@ -97,9 +96,9 @@ Node::traverse(glm::mat4 const& accumulatedTrans)
 
         // Actualizar físicas (ver si los graficos dependen de las físicas o al revés)
         // de momento las físicas dependen de las transformaciones TODO:: cambiar eso
-        if(m_physicproperties)
+        if(m_physicProperties)
         {
-            auto body = m_physicproperties->body;
+            auto body = m_physicProperties->m_body;
             // TODO:: realmente no es la translación, sino m_transform, la columna de la translación (para tener en cuenta la translación heredada) 
             
             btTransform transform;
@@ -114,7 +113,7 @@ Node::traverse(glm::mat4 const& accumulatedTrans)
         }
     }
     
-    if(m_entity && !m_ignoreDraw)
+    if(m_entity)
         m_entity->draw(m_transform);
 
     for(auto* child : m_childs) { 
