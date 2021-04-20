@@ -10,6 +10,7 @@
 #include <bullet/btBulletCollisionCommon.h>
 // HyperEngine
 #include <util/physics.hpp>
+#include <util/functions.hpp>
 #include "entities/entity.hpp"
 
 #define default_first_node_id 0

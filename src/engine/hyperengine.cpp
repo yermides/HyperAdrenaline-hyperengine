@@ -517,6 +517,91 @@ HyperEngine::createPhysicProperties(
 }
 
 void 
+HyperEngine::createPhysicPropertiesStatic(
+		Node* const node
+	,   btCollisionShape* pShape
+	,   btVector3 const& initialPosition
+	,   btQuaternion const& initialRotation
+)
+{
+	if(!node || node->getPhysicProperties()) return;
+
+	// No afectado por las fuerzas por tener masa cero
+	this->createPhysicProperties(
+			node
+		,	pShape
+		,	0
+		,	initialPosition
+		,	initialRotation
+	);
+
+	auto properties = node->getPhysicProperties();
+	auto body 		= properties->m_body;
+
+	using CO = btCollisionObject;
+	body->setCollisionFlags(body->getCollisionFlags() | CO::CF_STATIC_OBJECT); 
+}
+
+void 
+HyperEngine::createPhysicPropertiesKinematic(
+		Node* const node
+	,   btCollisionShape* pShape
+	,   btVector3 const& initialPosition
+	,   btQuaternion const& initialRotation
+)
+{
+	if(!node || node->getPhysicProperties()) return;
+
+	// No afectado por las fuerzas por tener masa cero
+	this->createPhysicProperties(
+			node
+		,	pShape
+		,	0
+		,	initialPosition
+		,	initialRotation
+	);
+
+	auto properties = node->getPhysicProperties();
+	auto body 		= properties->m_body;
+
+	using CO = btCollisionObject;
+	// Marcado como cinemático para que el world consulte su motionState en cada iteración (modificable por el usuario)
+	body->setCollisionFlags(body->getCollisionFlags() | CO::CF_KINEMATIC_OBJECT); 
+	// Marcado como que bullet no puede llegar a ignorar sus físicas por optimizaciones internas
+	body->setActivationState(DISABLE_DEACTIVATION);
+}
+
+void 
+HyperEngine::createPhysicPropertiesDynamic(
+		Node* const node
+	,   btCollisionShape* pShape
+	,   float mass
+	,   btVector3 const& initialPosition
+	,   btQuaternion const& initialRotation
+)
+{
+	if(!node || node->getPhysicProperties()) return;
+
+	// Masa mínima de 1
+	mass = std::max(mass, 1.0f);
+
+	// No afectado por las fuerzas por tener masa cero
+	this->createPhysicProperties(
+			node
+		,	pShape
+		,	mass
+		,	initialPosition
+		,	initialRotation
+	);
+
+	auto properties = node->getPhysicProperties();
+	auto body 		= properties->m_body;
+
+	using CO = btCollisionObject;
+	body->setCollisionFlags(body->getCollisionFlags() | CO::CF_DYNAMIC_OBJECT); 
+}
+
+void 
 HyperEngine::createPhysicPropertiesTriangleMeshShape(
 	Node* const node
 ,   float const mass
@@ -524,6 +609,8 @@ HyperEngine::createPhysicPropertiesTriangleMeshShape(
 ,   btQuaternion const& initialRotation
 )
 {
+	if(!node || node->getPhysicProperties()) return;
+
 	auto model 			= static_cast<EModel*>(node->getEntity());
 	auto vertices 		= model->getVertexPositions();
 	auto indices 		= model->getVertexIndices();

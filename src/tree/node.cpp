@@ -96,20 +96,39 @@ Node::traverse(glm::mat4 const& accumulatedTrans)
 
         // Actualizar físicas (ver si los graficos dependen de las físicas o al revés)
         // de momento las físicas dependen de las transformaciones TODO:: cambiar eso
+
+            
+        // auto trans = this->getTranslation();
+        // transform.setOrigin( btVector3(trans.x, trans.y, trans.z) );
+        // body->setCenterOfMassTransform(transform);
         if(m_physicProperties)
         {
             auto body = m_physicProperties->m_body;
-            // TODO:: realmente no es la translación, sino m_transform, la columna de la translación (para tener en cuenta la translación heredada) 
-            
-            btTransform transform;
-            body->getMotionState()->getWorldTransform(transform);
-            auto trans = this->getTranslation();
-            transform.setOrigin( btVector3(trans.x, trans.y, trans.z) );
-            body->getMotionState()->setWorldTransform(transform);
-            
-            // auto trans = this->getTranslation();
-            // transform.setOrigin( btVector3(trans.x, trans.y, trans.z) );
-            // body->setCenterOfMassTransform(transform);
+            auto motionState = m_physicProperties->m_motionState;
+
+            if(body->isKinematicObject())
+            {
+                // Aplicar translación al objeto de bullet
+                btTransform transform;
+                body->getMotionState()->getWorldTransform(transform);
+                // TODO:: realmente no es la translación, sino m_transform, la columna de la translación (para tener en cuenta la translación heredada) 
+                // Y lo mismo para la rotación
+                auto trans = util::glmVec3TobtVec3(this->getTranslation());
+                transform.setOrigin( trans );
+                body->getMotionState()->setWorldTransform(transform);
+                
+                // TODO:: aplicar también rotación
+            }
+            else if(!body->isStaticObject())    // Es decir, es dinámico
+            {
+                btTransform transform;
+                motionState->getWorldTransform(transform);
+                auto trans = util::btVec3ToGlmVec3(transform.getOrigin());
+                this->setTranslation(trans);
+
+                // TODO:: aplicar también rotación
+            }
+
         }
     }
     

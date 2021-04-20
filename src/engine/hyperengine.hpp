@@ -257,6 +257,7 @@ struct HyperEngine
 
     void updatePhysics(float const deltatime = 1.0f / 60.0f);
 
+    // Las crea como objeto estático, TODO:: hacer una función para objetos estáticos, cinemáticos y dinámicos
     void createPhysicProperties(
             Node* const node
         ,   btCollisionShape* pShape
@@ -265,7 +266,29 @@ struct HyperEngine
         ,   btQuaternion const& initialRotation = btQuaternion(0,0,0,1)
     );
 
-    // Las colisiones que usarán los mapas
+    void createPhysicPropertiesStatic(
+            Node* const node
+        ,   btCollisionShape* pShape
+        ,   btVector3 const& initialPosition = btVector3(0.0f,0.0f,0.0f)
+        ,   btQuaternion const& initialRotation = btQuaternion(0,0,0,1)
+    );
+
+    void createPhysicPropertiesKinematic(
+            Node* const node
+        ,   btCollisionShape* pShape
+        ,   btVector3 const& initialPosition = btVector3(0.0f,0.0f,0.0f)
+        ,   btQuaternion const& initialRotation = btQuaternion(0,0,0,1)
+    );
+
+    void createPhysicPropertiesDynamic(
+            Node* const node
+        ,   btCollisionShape* pShape
+        ,   float mass = 1
+        ,   btVector3 const& initialPosition = btVector3(0.0f,0.0f,0.0f)
+        ,   btQuaternion const& initialRotation = btQuaternion(0,0,0,1)
+    );
+
+    // Las colisiones que usarán los mapas, WARNING, solo funciona con meshes totalmente trianguladas, also, debería ser estatic o cinematic (no dynamic)
     void createPhysicPropertiesTriangleMeshShape(
             Node* const node
         ,   float const mass = 0

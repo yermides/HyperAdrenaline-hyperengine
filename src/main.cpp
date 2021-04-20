@@ -280,7 +280,7 @@ void test_hyperengine_traverse(void) {
 
 void printMat4(glm::mat4 const& m)
 {
-    LOG(glm::to_string(m));
+    INFOLOG("Matriz entera de transformación: " << glm::to_string(m));
 }
 
 void test_view_matrix_inverse(void) {
@@ -856,7 +856,7 @@ void test_physics_2(void) {
     hyper::Node* icosphere          = engine->createModel(nullptr, {4,0,-4}, default_rot_and_scale, "assets/icosphere.obj");
     
     [[maybe_unused]] 
-    hyper::Node* plane              = engine->createModel(nullptr, {0,-2.0f,0}, {0,0,0}, default_scale, "assets/planes/plano3.obj");
+    hyper::Node* plane              = engine->createModel(nullptr, {0,-2.0f,0}, {0,0,0}, default_scale, "assets/planes/plano3-2.obj");
 
     engine->enableDebugDraw();
 
@@ -892,9 +892,13 @@ void test_physics_2(void) {
         engine->endRender();
 
         // Fancy rotation
-        missile_launcher->rotate({0,3,0});
+        // missile_launcher->rotate({0,3,0});
         cubito_rosa->rotate({3,0,0});
         icosphere->rotate({0,0,3});
+
+        // Debug
+        // auto& trans = missile_launcher->getMatrixTransform();
+        // printMat4(trans);
 
         // Input
         if(engine->getKeyContinuousPress(GLFW_KEY_A))       camnode->rotate({0,3,0});
@@ -909,6 +913,9 @@ void test_physics_2(void) {
         if(engine->getKeyContinuousPress(GLFW_KEY_E))    camnode->translate({0,.3f,0});
         if(engine->getKeyContinuousPress(GLFW_KEY_R))    camnode->translate({0,-.3f,0});
 
+        if(engine->getKeyContinuousPress(GLFW_KEY_T))    missile_launcher->rotate({0,3,0});
+
+
         if(engine->getKeySinglePress(GLFW_KEY_1))
         {
             auto pos = icosphere->getTranslation();
@@ -922,12 +929,20 @@ void test_physics_2(void) {
 
         if(engine->getKeySinglePress(GLFW_KEY_2))    
         {
-            auto pos = cubito_rosa->getTranslation();
-            engine->createPhysicProperties(
+            // Test de objetos dinámicos
+
+            auto pos = hyper::util::glmVec3TobtVec3(cubito_rosa->getTranslation());
+            // engine->createPhysicProperties(
+            //         cubito_rosa
+            //     ,   new btBoxShape({1,1,1})
+            //     ,   0
+            //     ,   btVector3(pos.x, pos.y, pos.z)
+            // );
+            engine->createPhysicPropertiesDynamic(
                     cubito_rosa
                 ,   new btBoxShape({1,1,1})
-                ,   0
-                ,   btVector3(pos.x, pos.y, pos.z)
+                ,   1
+                ,   pos
             );
         }
 
@@ -947,6 +962,31 @@ void test_physics_2(void) {
 
         if(engine->getKeySinglePress(GLFW_KEY_6))
             engine->createRigidBodyDynamic();
+
+
+        if(engine->getKeyContinuousPress(GLFW_KEY_7))
+        {
+            static int dir = 1;
+            static int const threshold = 7;
+            missile_launcher->translate({0,0,.1*dir});
+
+            auto translation = missile_launcher->getTranslation();
+            if(translation.z > threshold)
+                dir=-1;
+            else if(translation.z < -threshold)
+                dir=1;
+        }    
+        if(engine->getKeyContinuousPress(GLFW_KEY_8))
+        {
+            auto pos = hyper::util::glmVec3TobtVec3(missile_launcher->getTranslation());
+            engine->createPhysicPropertiesKinematic(
+                    missile_launcher
+                ,   new btBoxShape({1,1,1})
+                ,   pos
+            );
+        }
+
+
 
         // Update de las físicas
         engine->updatePhysics();
