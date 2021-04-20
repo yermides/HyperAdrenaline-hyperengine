@@ -865,44 +865,6 @@ void test_physics_2(void) {
         // Render
         engine->beginRender();
         engine->drawScene();
-        engine->endRender();
-
-        // Fancy rotation
-        missile_launcher->rotate({0,3,0});
-        cubito_rosa->rotate({3,0,0});
-        icosphere->rotate({0,0,3});
-
-        // Input
-        if(engine->getKeyContinuousPress(GLFW_KEY_A))       camnode->rotate({0,3,0});
-        if(engine->getKeyContinuousPress(GLFW_KEY_D))       camnode->rotate({0,-3,0});
-        if(engine->getKeyContinuousPress(GLFW_KEY_W))       camnode->rotate({3,0,0});
-        if(engine->getKeyContinuousPress(GLFW_KEY_S))       camnode->rotate({-3,0,0});
-        if(engine->getKeyContinuousPress(GLFW_KEY_LEFT))    camnode->translate({-.3,0,0});
-        if(engine->getKeyContinuousPress(GLFW_KEY_RIGHT))   camnode->translate({.3,0,0});
-        if(engine->getKeyContinuousPress(GLFW_KEY_UP))      camnode->translate({0,0,-.3f});
-        if(engine->getKeyContinuousPress(GLFW_KEY_DOWN))    camnode->translate({0,0,.3f});
-
-        if(engine->getKeySinglePress(GLFW_KEY_1))
-        {
-            auto pos = icosphere->getTranslation();
-            engine->createPhysicProperties(
-                    icosphere
-                ,   new btSphereShape(1)
-                ,   0
-                ,   btVector3(pos.x, pos.y, pos.z)
-            );
-        }
-
-        if(engine->getKeySinglePress(GLFW_KEY_2))    
-        {
-            auto pos = cubito_rosa->getTranslation();
-            engine->createPhysicProperties(
-                    cubito_rosa
-                ,   new btBoxShape({1,1,1})
-                ,   0
-                ,   btVector3(pos.x, pos.y, pos.z)
-            );
-        }
 
         if(engine->getKeyContinuousPress(GLFW_KEY_3)) 
         {
@@ -926,6 +888,65 @@ void test_physics_2(void) {
                 INFOLOG("No he dado?")
             }
         }
+
+        engine->endRender();
+
+        // Fancy rotation
+        missile_launcher->rotate({0,3,0});
+        cubito_rosa->rotate({3,0,0});
+        icosphere->rotate({0,0,3});
+
+        // Input
+        if(engine->getKeyContinuousPress(GLFW_KEY_A))       camnode->rotate({0,3,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_D))       camnode->rotate({0,-3,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_W))       camnode->rotate({3,0,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_S))       camnode->rotate({-3,0,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_LEFT))    camnode->translate({-.3,0,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_RIGHT))   camnode->translate({.3,0,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_UP))      camnode->translate({0,0,-.3f});
+        if(engine->getKeyContinuousPress(GLFW_KEY_DOWN))    camnode->translate({0,0,.3f});
+
+        if(engine->getKeyContinuousPress(GLFW_KEY_E))    camnode->translate({0,.3f,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_R))    camnode->translate({0,-.3f,0});
+
+        if(engine->getKeySinglePress(GLFW_KEY_1))
+        {
+            auto pos = icosphere->getTranslation();
+            engine->createPhysicProperties(
+                    icosphere
+                ,   new btSphereShape(1)
+                ,   0
+                ,   btVector3(pos.x, pos.y, pos.z)
+            );
+        }
+
+        if(engine->getKeySinglePress(GLFW_KEY_2))    
+        {
+            auto pos = cubito_rosa->getTranslation();
+            engine->createPhysicProperties(
+                    cubito_rosa
+                ,   new btBoxShape({1,1,1})
+                ,   0
+                ,   btVector3(pos.x, pos.y, pos.z)
+            );
+        }
+
+        if(engine->getKeySinglePress(GLFW_KEY_4))
+        {
+            auto pos = plane->getTranslation();
+            engine->createPhysicPropertiesTriangleMeshShape(
+                    plane
+                ,   0
+                ,   hyper::util::glmVec3TobtVec3(pos)
+            );
+
+        }
+
+        if(engine->getKeySinglePress(GLFW_KEY_5))
+            engine->getDebugDrawer()->toggleDebugFlag(2);
+
+        if(engine->getKeySinglePress(GLFW_KEY_6))
+            engine->createRigidBodyDynamic();
 
         // Update de las físicas
         engine->updatePhysics();

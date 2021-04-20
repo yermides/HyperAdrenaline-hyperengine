@@ -14,7 +14,9 @@ struct EModel : public Entity
     void draw(glm::mat4 const& tranform) final;
     void loadFromFile(std::string const& path);
 
-    std::vector<float> const getVertexPositions(void); 
+    std::vector<float> const getVertexPositions(void);
+    std::vector<float> const getVertexNormals(void);
+    std::vector<float> const getVertexIndices(void);
 private:
     RMesh* m_rmesh { nullptr };
 };

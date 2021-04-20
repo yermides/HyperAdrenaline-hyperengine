@@ -89,9 +89,9 @@ DebugDrawer::drawContactPoint(const btVector3& PointOnB, const btVector3& normal
     // glVertex3d(to.getX(), to.getY(), to.getZ());
     // glEnd();
 
-    // btVector3 const startPoint = PointOnB;
-	// btVector3 const endPoint = PointOnB + normalOnB * distance;
-	// drawLine( startPoint, endPoint, color );
+    btVector3 const startPoint = PointOnB;
+	btVector3 const endPoint = PointOnB + normalOnB * distance;
+	drawLine( startPoint, endPoint, color );
 }
 
 void 

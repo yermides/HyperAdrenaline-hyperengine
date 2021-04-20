@@ -6,6 +6,7 @@
 #include <entities/e_light.hpp>
 #include <entities/e_model.hpp>
 #include <tree/node.hpp>
+#include <util/functions.hpp>
 
 // Esto es para una prueba, cube_test
 #include <glm/glm.hpp>

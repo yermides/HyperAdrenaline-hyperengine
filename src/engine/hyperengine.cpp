@@ -517,6 +517,49 @@ HyperEngine::createPhysicProperties(
 }
 
 void 
+HyperEngine::createPhysicPropertiesTriangleMeshShape(
+	Node* const node
+,   float const mass
+,   btVector3 const& initialPosition
+,   btQuaternion const& initialRotation
+)
+{
+	auto model 			= static_cast<EModel*>(node->getEntity());
+	auto vertices 		= model->getVertexPositions();
+	auto indices 		= model->getVertexIndices();
+	auto trianglemesh	= new btTriangleMesh;
+
+	INFOLOG("vertices.size()"<< VAR(vertices.size()))
+	INFOLOG("indices.size()"<< VAR(indices.size()))
+
+	for(uint32_t i {0}; i<vertices.size() && i<vertices.size()-9; i+=9 )
+	{
+		trianglemesh->addTriangle(
+				btVector3(vertices[i], vertices[i+1], vertices[i+2])
+			,	btVector3(vertices[i+3], vertices[i+4], vertices[i+5])
+			,	btVector3(vertices[i+6], vertices[i+7], vertices[i+8])
+		);
+	}
+
+	for(uint32_t i {0}; i<indices.size() && i+3 <indices.size(); i+=3 )
+	{
+		trianglemesh->addTriangleIndices(
+			indices[i], indices[i+1], indices[i+2]
+		);
+	}
+
+	auto shape	= new btBvhTriangleMeshShape(trianglemesh, false);
+
+	this->createPhysicProperties(
+			node
+		,	shape
+		,	mass
+		,	initialPosition
+		,	{0,0,0,1}
+	);
+}
+
+void 
 HyperEngine::createRigidbody(Node * const node)
 {
 	static int cinematic_mass = 0;
@@ -739,8 +782,7 @@ HyperEngine::throwRaycast(const btVector3 &startPosition, const btVector3 &direc
 			if (!pBody)
 				return false;
 		
-			// prevent us from picking objects
-			// like the ground plane
+			// prevent us from picking objects like the ground plane
 
 			// TODO:: descomentar
 			// if (pBody->isStaticObject() || pBody->isKinematicObject()) 
@@ -894,7 +936,8 @@ HyperEngine::initializePhysics(void)
 
 	// setear su debug drawer y opciones por defecto
 	m_debugDrawer = new DebugDrawer;
-	m_debugDrawer->setDebugMode(DebugDrawer::DBG_DrawWireframe | DebugDrawer::DBG_DrawAabb);
+	using DBG = DebugDrawer;
+	m_debugDrawer->setDebugMode(DBG::DBG_DrawWireframe | DBG::DBG_DrawAabb | DBG::DBG_DrawContactPoints);
 	m_world->setDebugDrawer(m_debugDrawer);
 
 	// poner gravedad

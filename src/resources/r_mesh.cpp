@@ -39,7 +39,12 @@ RMesh::loadMesh(std::string const& filepath)
     |   aiProcess_Triangulate 
     |   aiProcess_FlipUVs 
     |   aiProcess_CalcTangentSpace
-    // |   aiProcess_GenSmoothNormals 
+    // |   aiProcess_OptimizeMeshes
+    // |   aiProcess_JoinIdenticalVertices
+    // |   aiProcess_ImproveCacheLocality
+    // |   aiProcess_OptimizeGraph
+    // |   aiProcess_SplitLargeMeshes 
+    // |   aiProcess_SortByPType
     ;
     auto scene = importer.ReadFile(filepath, flags);
 

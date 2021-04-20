@@ -262,9 +262,18 @@ struct HyperEngine
         ,   btCollisionShape* pShape
         ,   float const mass
         ,   btVector3 const& initialPosition = btVector3(0.0f,0.0f,0.0f)
-        ,   btQuaternion const& initialRotation = btQuaternion(0,0,1,1)
+        ,   btQuaternion const& initialRotation = btQuaternion(0,0,0,1)
     );
 
+    // Las colisiones que usarán los mapas
+    void createPhysicPropertiesTriangleMeshShape(
+            Node* const node
+        ,   float const mass = 0
+        ,   btVector3 const& initialPosition = btVector3(0.0f,0.0f,0.0f)
+        ,   btQuaternion const& initialRotation = btQuaternion(0,0,0,1)
+    );
+
+    // Funciones patateras, mejoradas arriba
     void createRigidbody(Node * const node);
 
     // Realmente no es convex hull, es la geometría pura (todo es por el testing)
