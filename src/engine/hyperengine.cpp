@@ -491,6 +491,8 @@ HyperEngine::createPhysicProperties(
 	, 	float const mass
 	, 	btVector3 const& initialPosition
 	, 	btQuaternion const& initialRotation
+	,   int collisionGroupFlags
+	,   int collisionMaskFlags
 )
 {
 	if(!node || node->getPhysicProperties()) return;
@@ -509,11 +511,16 @@ HyperEngine::createPhysicProperties(
 
 	btRigidBody::btRigidBodyConstructionInfo cInfo(mass, motionState, collisionShape, localInertia);
 	auto rigidBody = new btRigidBody(cInfo);
+	rigidBody->setUserPointer( static_cast<void*>(node) );	// Contiene al nodo para facilitar el coste de la búsqueda
 
 	auto properties = new PhysicProperties(rigidBody, collisionShape, motionState);
 	node->setPhysicProperties(properties);
 
 	m_world->addRigidBody(rigidBody);
+
+	// Meter las flags del grupo de objetos colisionables y los objetos contra los que puede colisionar
+	// TODO:: descomentar cuando se haga bien
+	// m_world->addRigidBody(rigidBody, collisionGroupFlags, collisionMaskFlags);	
 }
 
 void 
@@ -522,6 +529,8 @@ HyperEngine::createPhysicPropertiesStatic(
 	,   btCollisionShape* pShape
 	,   btVector3 const& initialPosition
 	,   btQuaternion const& initialRotation
+	,   int collisionGroupFlags
+	,   int collisionMaskFlags
 )
 {
 	if(!node || node->getPhysicProperties()) return;
@@ -533,6 +542,8 @@ HyperEngine::createPhysicPropertiesStatic(
 		,	0
 		,	initialPosition
 		,	initialRotation
+		,	collisionGroupFlags
+		,	collisionMaskFlags
 	);
 
 	auto properties = node->getPhysicProperties();
@@ -548,6 +559,8 @@ HyperEngine::createPhysicPropertiesKinematic(
 	,   btCollisionShape* pShape
 	,   btVector3 const& initialPosition
 	,   btQuaternion const& initialRotation
+	,   int collisionGroupFlags
+	,   int collisionMaskFlags
 )
 {
 	if(!node || node->getPhysicProperties()) return;
@@ -559,6 +572,8 @@ HyperEngine::createPhysicPropertiesKinematic(
 		,	0
 		,	initialPosition
 		,	initialRotation
+		,	collisionGroupFlags
+		,	collisionMaskFlags
 	);
 
 	auto properties = node->getPhysicProperties();
@@ -578,6 +593,8 @@ HyperEngine::createPhysicPropertiesDynamic(
 	,   float mass
 	,   btVector3 const& initialPosition
 	,   btQuaternion const& initialRotation
+	,   int collisionGroupFlags
+	,   int collisionMaskFlags
 )
 {
 	if(!node || node->getPhysicProperties()) return;
@@ -592,6 +609,8 @@ HyperEngine::createPhysicPropertiesDynamic(
 		,	mass
 		,	initialPosition
 		,	initialRotation
+		,	collisionGroupFlags
+		,	collisionMaskFlags
 	);
 
 	auto properties = node->getPhysicProperties();
@@ -603,10 +622,12 @@ HyperEngine::createPhysicPropertiesDynamic(
 
 void 
 HyperEngine::createPhysicPropertiesTriangleMeshShape(
-	Node* const node
-,   float const mass
-,   btVector3 const& initialPosition
-,   btQuaternion const& initialRotation
+		Node* const node
+	,   float const mass
+	,   btVector3 const& initialPosition
+	,   btQuaternion const& initialRotation
+	,   int collisionGroupFlags
+	,   int collisionMaskFlags
 )
 {
 	if(!node || node->getPhysicProperties()) return;
@@ -615,9 +636,6 @@ HyperEngine::createPhysicPropertiesTriangleMeshShape(
 	auto vertices 		= model->getVertexPositions();
 	auto indices 		= model->getVertexIndices();
 	auto trianglemesh	= new btTriangleMesh;
-
-	INFOLOG("vertices.size()"<< VAR(vertices.size()))
-	INFOLOG("indices.size()"<< VAR(indices.size()))
 
 	for(uint32_t i {0}; i<vertices.size() && i<vertices.size()-9; i+=9 )
 	{
@@ -642,9 +660,29 @@ HyperEngine::createPhysicPropertiesTriangleMeshShape(
 		,	shape
 		,	mass
 		,	initialPosition
-		,	{0,0,0,1}
+		,	initialRotation
+		,   collisionGroupFlags
+		,   collisionMaskFlags
 	);
 }
+
+void 
+HyperEngine::getPhysicsContactPairInfo(Node* const nodeA, Node* const nodeB)
+{
+	auto propA = nodeA->getPhysicProperties();
+	auto propB = nodeB->getPhysicProperties();
+
+	if(!propA || !propB) return;
+
+	auto collObjA = propA->m_body;
+	auto collObjB = propB->m_body;
+
+	// auto resultCallback = new MyBulletContactResult;
+	// m_world->contactPairTest(collObjA, collObjB, );
+
+}
+
+// Old functions for physics
 
 void 
 HyperEngine::createRigidbody(Node * const node)
@@ -712,7 +750,7 @@ HyperEngine::createRigidBodyConvexHull(Node * const node)
 	auto model = static_cast<EModel*>(node->getEntity());
 	auto vertices = model->getVertexPositions();
 
-	for(auto i {0}; i< vertices.size(); i=i+3) {
+	for(std::size_t i {0}; i< vertices.size(); i=i+3) {
 		convexhull->addPoint(btVector3(vertices[i], vertices[i+1], vertices[i+2]));
 	}
 
@@ -769,7 +807,7 @@ HyperEngine::createRigidBodyDynamic(Node * const node)
 	// Creando finalmente el rigidbody y seteando parámetros
 	btRigidBody *body = new btRigidBody(dynamic_mass, motionState, shape, localInertia);
 
-	using CO = btCollisionObject;
+	// using CO = btCollisionObject;
 	// TODO:: parametrizar, solo son cinemáticos de momento
 	// body->setCollisionFlags(body->getCollisionFlags() | CO::CF_KINEMATIC_OBJECT | CO::CF_DYNAMIC_OBJECT); 
 	// body->setActivationState(DISABLE_DEACTIVATION);
@@ -805,7 +843,7 @@ HyperEngine::createTriangleMeshShape(Node * const node)
 	auto trianglemesh	= new btTriangleMesh;
 	auto vertices 		= model->getVertexPositions();
 
-	for(auto i {0}; i< vertices.size(); i=i+9) {
+	for(std::size_t i {0}; i<vertices.size(); i=i+9) {
 		trianglemesh->addTriangle(
 				btVector3(vertices[i], vertices[i+1], vertices[i+2])
 			,	btVector3(vertices[i+3], vertices[i+4], vertices[i+5])
@@ -1026,6 +1064,11 @@ HyperEngine::initializePhysics(void)
 	using DBG = DebugDrawer;
 	m_debugDrawer->setDebugMode(DBG::DBG_DrawWireframe | DBG::DBG_DrawAabb | DBG::DBG_DrawContactPoints);
 	m_world->setDebugDrawer(m_debugDrawer);
+	// debug de cuántos contactos hay entre objetos
+	m_world->setInternalTickCallback([](btDynamicsWorld *world, btScalar timeStep){
+		int numManifolds = world->getDispatcher()->getNumManifolds();
+		INFOLOG( "numManifolds = " VAR(numManifolds) )
+	});
 
 	// poner gravedad
 	m_world->setGravity( btVector3(0, -9.81f, 0) );

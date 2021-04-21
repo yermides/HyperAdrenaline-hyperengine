@@ -264,6 +264,8 @@ struct HyperEngine
         ,   float const mass
         ,   btVector3 const& initialPosition = btVector3(0.0f,0.0f,0.0f)
         ,   btQuaternion const& initialRotation = btQuaternion(0,0,0,1)
+        ,   int collisionGroupFlags = 0
+        ,   int collisionMaskFlags  = 0
     );
 
     void createPhysicPropertiesStatic(
@@ -271,6 +273,8 @@ struct HyperEngine
         ,   btCollisionShape* pShape
         ,   btVector3 const& initialPosition = btVector3(0.0f,0.0f,0.0f)
         ,   btQuaternion const& initialRotation = btQuaternion(0,0,0,1)
+        ,   int collisionGroupFlags = 0
+        ,   int collisionMaskFlags  = 0
     );
 
     void createPhysicPropertiesKinematic(
@@ -278,6 +282,8 @@ struct HyperEngine
         ,   btCollisionShape* pShape
         ,   btVector3 const& initialPosition = btVector3(0.0f,0.0f,0.0f)
         ,   btQuaternion const& initialRotation = btQuaternion(0,0,0,1)
+        ,   int collisionGroupFlags = 0
+        ,   int collisionMaskFlags  = 0
     );
 
     void createPhysicPropertiesDynamic(
@@ -286,6 +292,8 @@ struct HyperEngine
         ,   float mass = 1
         ,   btVector3 const& initialPosition = btVector3(0.0f,0.0f,0.0f)
         ,   btQuaternion const& initialRotation = btQuaternion(0,0,0,1)
+        ,   int collisionGroupFlags = 0
+        ,   int collisionMaskFlags  = 0
     );
 
     // Las colisiones que usarán los mapas, WARNING, solo funciona con meshes totalmente trianguladas, also, debería ser estatic o cinematic (no dynamic)
@@ -294,7 +302,11 @@ struct HyperEngine
         ,   float const mass = 0
         ,   btVector3 const& initialPosition = btVector3(0.0f,0.0f,0.0f)
         ,   btQuaternion const& initialRotation = btQuaternion(0,0,0,1)
+        ,   int collisionGroupFlags = 0
+        ,   int collisionMaskFlags  = 0
     );
+
+    void getPhysicsContactPairInfo(Node* const nodeA, Node* const nodeB);
 
     // Funciones patateras, mejoradas arriba
     void createRigidbody(Node * const node);

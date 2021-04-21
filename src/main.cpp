@@ -968,7 +968,7 @@ void test_physics_2(void) {
         {
             static int dir = 1;
             static int const threshold = 7;
-            missile_launcher->translate({0,0,.1*dir});
+            missile_launcher->translate({.1*dir,0,0});
 
             auto translation = missile_launcher->getTranslation();
             if(translation.z > threshold)

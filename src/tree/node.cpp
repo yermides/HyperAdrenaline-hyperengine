@@ -5,7 +5,6 @@ namespace hyper {
 
 Node::Node()
 {
-    m_name = nextNameID++;
     INFOLOG("I am the node "<<VAR(this));
 }
 

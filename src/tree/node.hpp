@@ -13,7 +13,7 @@
 #include <util/functions.hpp>
 #include "entities/entity.hpp"
 
-#define default_first_node_id 0
+#define default_node_id -1
 
 namespace hyper {
 
@@ -66,10 +66,13 @@ struct Node
         { return m_scale;					}
 
     inline bool const             getChildNumber(void)									const noexcept 
-        { return m_childs.size();					}
+        { return m_childs.size();			}
 
-    inline int const              getNameID(void)                                       const noexcept
+    constexpr NodeID const        getNameID(void)                                       const noexcept
         { return m_name;                    }
+
+    constexpr void                setNameID(NodeID const& name)                         noexcept
+        { m_name = name;                    }
 
     constexpr PhysicProperties* getPhysicProperties(void)
         { return m_physicProperties;        }
@@ -98,9 +101,7 @@ private:
     Node* m_parent                          { nullptr };    // Padre del nodo
     Entity* m_entity                        { nullptr };    // Entidad con datos importantes del nodo
     PhysicProperties *m_physicProperties    { nullptr };    // Propiedades físicas si tiene
-    NodeID m_name                           { default_first_node_id };  // Para compatibilidad, identificador del nodo
-private:
-    inline static NodeID nextNameID         { default_first_node_id };  // Autoincrementable identificador
+    NodeID m_name                           { default_node_id };  // Para compatibilidad, identificador del nodo
 };
 
 }
