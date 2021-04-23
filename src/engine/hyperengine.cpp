@@ -500,7 +500,16 @@ HyperEngine::createPhysicProperties(
 	btTransform transform;
 	transform.setIdentity();
 	transform.setOrigin(initialPosition);
-	transform.setRotation(initialRotation);
+
+	// Test, meter la rotación puntual del nodo
+	// transform.setRotation(initialRotation);
+	auto noderot = node->getRotation();
+	
+	btQuaternion btquatx( {1.0,0.0,0.0}, glm::radians( noderot.x ) );
+	btQuaternion btquaty( {0.0,1.0,0.0}, glm::radians( noderot.y ) );
+	btQuaternion btquatz( {0.0,0.0,1.0}, glm::radians( noderot.z ) );
+	btQuaternion btquat = btquatx * btquaty * btquatz;
+	transform.setRotation(btquat);
 
 	auto collisionShape = pShape;
 	auto motionState = new OpenGLMotionState(transform);
@@ -873,19 +882,10 @@ HyperEngine::createTriangleMeshShape(Node * const node)
 	m_world->addRigidBody(body);
 }
 
-btVector3 
-HyperEngine::getPickingRay(int x, int y)
-{
-	// Seguramente esta función se borre
-	// TODO:: borrar
- 	return btVector3(0,0,0);
-}
-
 bool 
 HyperEngine::throwRaycast(const btVector3 &startPosition, const btVector3 &direction, RayResult &output)
 {
-		if (!m_world)
-			return false;
+		if (!m_world) return false;
 		
 		// get the picking ray from where we clicked
 		btVector3 rayTo = direction;
@@ -916,12 +916,19 @@ HyperEngine::throwRaycast(const btVector3 &startPosition, const btVector3 &direc
 			// set the result data
 			output.pBody = pBody;
 			output.hitPoint = rayCallback.m_hitPointWorld;
+			output.node = static_cast<Node*>(pBody->getUserPointer());
 			return true;
 		}
 	
 		// we didn't hit anything
 		return false;
 }
+
+bool 
+HyperEngine::checkRaycastCollisionWithNode(const btVector3 &startPosition, const btVector3 &direction)
+{
+}
+
 
 void
 HyperEngine::drawDebugPhysics(glm::mat4 const& view, glm::mat4 const& projection)

@@ -5,6 +5,7 @@
 // GLM
 #include <glm/glm.hpp>
 #include <glm/gtx/transform.hpp>
+#include <glm/detail/type_quat.hpp>
 // Bullet physics
 #include <bullet/btBulletDynamicsCommon.h>
 #include <bullet/btBulletCollisionCommon.h>

@@ -80,10 +80,34 @@ Node::scale(glm::vec3 const& accumulation)
 void 
 Node::traverse(glm::mat4 const& accumulatedTrans) 
 {
+    if( m_physicProperties && !m_physicProperties->m_body->isKinematicObject() && !m_physicProperties->m_body->isStaticObject() )
+    {
+        INFOLOG("Soy dynamic");
+
+        auto body = m_physicProperties->m_body;
+        auto motionState = m_physicProperties->m_motionState;
+
+        // Aplicar transformaciones al objeto de bullet (obviando el escalado)
+        btTransform transform;
+        motionState->getWorldTransform(transform);
+
+        auto trans = util::btVec3ToGlmVec3(transform.getOrigin());
+        this->setTranslation(trans);
+
+        auto btquatrot = transform.getRotation();
+        auto eulerrot = glm::vec3(0,0,0);
+        btquatrot.getEulerZYX(eulerrot.z, eulerrot.y, eulerrot.x);
+        eulerrot.x = glm::degrees(eulerrot.x);
+        eulerrot.y = glm::degrees(eulerrot.y);
+        eulerrot.z = glm::degrees(eulerrot.z);
+        this->setRotation(eulerrot);
+    }
+
     // TODO:: comprobar esto
     bool wantsUpdate = m_wantsUpdate;
 
-    if(wantsUpdate) {
+    // Cambiar la comprobación final por !isStatic para que los static no puedan ser modificados, los dynamichay que controlar que no se modifiquen desde fuera
+    if( wantsUpdate /* && ( !m_physicProperties || ( m_physicProperties && m_physicProperties->m_body->isKinematicObject() ) ) */ ) {
         m_transform = accumulatedTrans 
             * glm::translate(m_translation)
             * glm::rotate(glm::radians( m_rotation.x ), glm::vec3(1.0f,0.0f,0.0f))
@@ -93,41 +117,32 @@ Node::traverse(glm::mat4 const& accumulatedTrans)
         
         m_wantsUpdate = false;
 
-        // Actualizar físicas (ver si los graficos dependen de las físicas o al revés)
-        // de momento las físicas dependen de las transformaciones TODO:: cambiar eso
-
-            
-        // auto trans = this->getTranslation();
-        // transform.setOrigin( btVector3(trans.x, trans.y, trans.z) );
-        // body->setCenterOfMassTransform(transform);
-        if(m_physicProperties)
+        if(m_physicProperties && m_physicProperties->m_body->isKinematicObject())
         {
+            INFOLOG("Soy kinematic");
+
             auto body = m_physicProperties->m_body;
             auto motionState = m_physicProperties->m_motionState;
 
-            if(body->isKinematicObject())
-            {
-                // Aplicar translación al objeto de bullet
-                btTransform transform;
-                body->getMotionState()->getWorldTransform(transform);
-                // TODO:: realmente no es la translación, sino m_transform, la columna de la translación (para tener en cuenta la translación heredada) 
-                // Y lo mismo para la rotación
-                auto trans = util::glmVec3TobtVec3(this->getTranslation());
-                transform.setOrigin( trans );
-                body->getMotionState()->setWorldTransform(transform);
-                
-                // TODO:: aplicar también rotación
-            }
-            else if(!body->isStaticObject())    // Es decir, es dinámico
-            {
-                btTransform transform;
-                motionState->getWorldTransform(transform);
-                auto trans = util::btVec3ToGlmVec3(transform.getOrigin());
-                this->setTranslation(trans);
+            // Aplicar transformaciones al objeto de bullet (obviando el escalado)
+            btTransform transform;
+            body->getMotionState()->getWorldTransform(transform);
+            // TODO:: realmente no es la translación, sino m_transform, la columna de la translación (para tener en cuenta la translación heredada) 
+            // Y lo mismo para la rotación
+            // Recordar que se puede hacer cast a mat3 desde mat4 y directamente crear un btTransform((casteada)mat3, transfrom->getOrigin());
 
-                // TODO:: aplicar también rotación
-            }
+            // Translación
+            auto trans = util::glmVec3TobtVec3(this->getTranslation());
+            transform.setOrigin( trans );
 
+            // Rotación
+            btQuaternion btquatx( {1.0,0.0,0.0}, glm::radians( m_rotation.x ) );
+            btQuaternion btquaty( {0.0,1.0,0.0}, glm::radians( m_rotation.y ) );
+            btQuaternion btquatz( {0.0,0.0,1.0}, glm::radians( m_rotation.z ) );
+            btQuaternion btquat = btquatx * btquaty * btquatz;
+            transform.setRotation(btquat);
+
+            body->getMotionState()->setWorldTransform(transform);
         }
     }
     

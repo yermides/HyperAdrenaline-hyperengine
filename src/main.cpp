@@ -852,12 +852,13 @@ void test_physics_2(void) {
     hyper::Node* camnode            = engine->createCamera(default_createnode_params); // tendrá la proyección por defecto
     
     hyper::Node* missile_launcher   = engine->createModel(nullptr, {0,0,-4}, default_rot_and_scale, "assets/missile-launcher.obj");
-    hyper::Node* cubito_rosa        = engine->createModel(nullptr, {-4,0,-4}, default_rot_and_scale, "assets/cubito_rosa.obj");
+    hyper::Node* cubito_rosa        = engine->createModel(nullptr, {-4,0,-4},{10,10,10}, default_scale, "assets/cubito_rosa.obj");
     hyper::Node* icosphere          = engine->createModel(nullptr, {4,0,-4}, default_rot_and_scale, "assets/icosphere.obj");
     
     [[maybe_unused]] 
     hyper::Node* plane              = engine->createModel(nullptr, {0,-2.0f,0}, {0,0,0}, default_scale, "assets/planes/plano3-2.obj");
 
+    cubito_rosa->setNameID(13);
     engine->enableDebugDraw();
 
     while(engine->isWindowActive() && !engine->getKeyContinuousPress(GLFW_KEY_ESCAPE))
@@ -882,6 +883,7 @@ void test_physics_2(void) {
             if(hasHit)
             {
                 INFOLOG("He dado!" << VAR(result.hitPoint.getX()) << VAR(result.hitPoint.getY()) << VAR(result.hitPoint.getZ()))
+                INFOLOG("El nodo tiene índice: " << VAR(result.node->getNameID()) );
             }
             else
             {
@@ -893,7 +895,7 @@ void test_physics_2(void) {
 
         // Fancy rotation
         // missile_launcher->rotate({0,3,0});
-        cubito_rosa->rotate({3,0,0});
+        // cubito_rosa->rotate({3,0,0});
         icosphere->rotate({0,0,3});
 
         // Debug
@@ -981,11 +983,25 @@ void test_physics_2(void) {
             auto pos = hyper::util::glmVec3TobtVec3(missile_launcher->getTranslation());
             engine->createPhysicPropertiesKinematic(
                     missile_launcher
-                ,   new btBoxShape({1,1,1})
+                ,   new btBoxShape({.5,.8,1.5})
+                // ,   new btCylinderShape({1,5,1})
                 ,   pos
             );
         }
 
+
+        if(engine->getKeyContinuousPress(GLFW_KEY_H)) 
+        {
+            missile_launcher->rotate({1,0,0});
+        }
+        if(engine->getKeyContinuousPress(GLFW_KEY_J)) 
+        {
+            missile_launcher->rotate({0,1,0});
+        }
+        if(engine->getKeyContinuousPress(GLFW_KEY_K)) 
+        {
+            missile_launcher->rotate({0,0,1});
+        }
 
 
         // Update de las físicas

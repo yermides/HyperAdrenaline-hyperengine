@@ -55,8 +55,8 @@ enum class OpenGLShader {
 };
 
 // Declaración de estructuras
-struct RayResult    { btRigidBody* pBody; btVector3 hitPoint;   };
-struct Viewport     { int x, y, width, height;                  };
+struct RayResult    { btRigidBody* pBody; btVector3 hitPoint; Node* node;   };
+struct Viewport     { int x, y, width, height;                              };
 
 struct HyperEngine
 {
@@ -320,11 +320,10 @@ struct HyperEngine
     // Las colisiones que usarán los mapas
     void createTriangleMeshShape(Node * const node);
 
-    // Funciones necesarias para el raycast (1/2)
-    btVector3 getPickingRay(int x, int y);
-
     // Funciones necesarias para el raycast (2/2)
     bool throwRaycast(const btVector3 &startPosition, const btVector3 &direction, RayResult &output);
+
+    bool checkRaycastCollisionWithNode(const btVector3 &startPosition, const btVector3 &direction);
 
     void drawDebugPhysics(glm::mat4 const& view, glm::mat4 const& projection);
 
