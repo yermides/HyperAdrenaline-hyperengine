@@ -75,6 +75,12 @@ struct Node
     constexpr void                setNameID(NodeID const& name)                         noexcept
         { m_name = name;                    }
 
+    constexpr NodeID const        getIsCamera(void)                                     const noexcept
+        { return m_isCamera;                }
+
+    constexpr void                setIsCamera(bool isCamera)                            noexcept
+        { m_isCamera = isCamera;            }
+
     constexpr PhysicProperties* getPhysicProperties(void)
         { return m_physicProperties;        }
 
@@ -89,6 +95,10 @@ struct Node
 
     static void         deleteBranch(Node* node);
     static void         deleteBranchChilds(Node* node);
+
+    // Camera specific
+    glm::vec3 const&    getCameraTarget();
+    void                setCameraTarget(glm::vec3 const& target);
 private:
     // Transformación gráfica del objeto en el mundo y opciones de dibujado
     glm::mat4 m_transform   { 1.0f };   // Matriz resultado de operar con los valores de debajo
@@ -96,6 +106,10 @@ private:
     glm::vec3 m_rotation    { 0.0f };   // Vector de tres floats que informa de la rotación
     glm::vec3 m_scale       { 1.0f };   // Vector de tres floats que informa del escalado 
     bool m_wantsUpdate      { true };   // Booleano que informa de si hay que actualizar la matriz en la iteración
+
+    // Específicos de la cámara
+    bool m_isCamera         { false };
+    glm::vec3 m_target      { 0.0f };  
 
     // Datos importantes relacionados del nodo
     NodeList m_childs;                                      // Lista de hijos del nodo

@@ -13,7 +13,7 @@ struct ECamera : public Entity
 		glm::radians(45.0f) // 45° Field of View
 		, 16.0f / 9.0f      // 16:9 ratio
 		, 0.1f              // display range : 0.1 unit <--
-		, 100.0f            // --> 100 units
+		, 1000.0f            // --> 100 units
 	));
 	~ECamera();
 

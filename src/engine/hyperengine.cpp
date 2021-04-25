@@ -80,7 +80,6 @@ HyperEngine::beginRender(void)
 	this->resetKeyStates();
 
 	// Imgui
-
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplGlfw_NewFrame();
 	gui::NewFrame();
@@ -124,7 +123,12 @@ HyperEngine::drawScene(void)
 	camerashader->setMat4("projection", projection);
 
 	auto cameraMatrix = camnode->getMatrixTransform();
-	auto view = glm::inverse(cameraMatrix);
+
+	// Ya no es así porque setCameraTarget machaca toda la transformación necesariamente
+	// auto view = glm::inverse(cameraMatrix);
+	auto view = cameraMatrix;
+
+
 	camerashader->setMat4("view", view);
 
 	camerashader->unbind();

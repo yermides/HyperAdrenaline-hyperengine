@@ -97,6 +97,7 @@ Node::traverse(glm::mat4 const& accumulatedTrans)
         auto btquatrot = transform.getRotation();
         auto eulerrot = glm::vec3(0,0,0);
         btquatrot.getEulerZYX(eulerrot.z, eulerrot.y, eulerrot.x);
+        // btquatrot.getEulerZYX(eulerrot.y, eulerrot.x, eulerrot.z);
         eulerrot.x = glm::degrees(eulerrot.x);
         eulerrot.y = glm::degrees(eulerrot.y);
         eulerrot.z = glm::degrees(eulerrot.z);
@@ -105,6 +106,9 @@ Node::traverse(glm::mat4 const& accumulatedTrans)
 
     // TODO:: comprobar esto
     bool wantsUpdate = m_wantsUpdate;
+
+    if(this->m_isCamera)
+        goto cameraskip;
 
     // Cambiar la comprobación final por !isStatic para que los static no puedan ser modificados, los dynamichay que controlar que no se modifiquen desde fuera
     if( wantsUpdate /* && ( !m_physicProperties || ( m_physicProperties && m_physicProperties->m_body->isKinematicObject() ) ) */ ) {
@@ -145,7 +149,8 @@ Node::traverse(glm::mat4 const& accumulatedTrans)
             body->getMotionState()->setWorldTransform(transform);
         }
     }
-    
+
+cameraskip:
     if(m_entity)
         m_entity->draw(m_transform);
 
@@ -184,6 +189,26 @@ Node::deleteBranchChilds(Node* node)
     }
 
     node->m_childs.clear();
+}
+
+glm::vec3 const&    
+Node::getCameraTarget()
+{
+    return m_target;
+}
+
+void                
+Node::setCameraTarget(glm::vec3 const& target)
+{
+    m_target = target;
+
+    auto forcedViewMatrix = glm::lookAt(
+            getTranslation()
+        ,   m_target
+        ,   glm::vec3(0,1,0)
+    );
+
+    setMatrixTransform(forcedViewMatrix);
 }
 
 }

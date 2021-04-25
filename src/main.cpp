@@ -852,7 +852,7 @@ void test_physics_2(void) {
     hyper::Node* camnode            = engine->createCamera(default_createnode_params); // tendrá la proyección por defecto
     
     hyper::Node* missile_launcher   = engine->createModel(nullptr, {0,0,-4}, default_rot_and_scale, "assets/missile-launcher.obj");
-    hyper::Node* cubito_rosa        = engine->createModel(nullptr, {-4,0,-4},{10,10,10}, default_scale, "assets/cubito_rosa.obj");
+    hyper::Node* cubito_rosa        = engine->createModel(nullptr, {-4,4,-4},{10,10,10}, default_scale, "assets/cubito_rosa.obj");
     hyper::Node* icosphere          = engine->createModel(nullptr, {4,0,-4}, default_rot_and_scale, "assets/icosphere.obj");
     
     [[maybe_unused]] 
@@ -989,6 +989,11 @@ void test_physics_2(void) {
             );
         }
 
+        if(engine->getKeyContinuousPress(GLFW_KEY_9))
+        {
+            auto prop = cubito_rosa->getPhysicProperties();
+            prop->m_body->applyCentralForce({0,20,0});
+        }
 
         if(engine->getKeyContinuousPress(GLFW_KEY_H)) 
         {
@@ -1001,6 +1006,13 @@ void test_physics_2(void) {
         if(engine->getKeyContinuousPress(GLFW_KEY_K)) 
         {
             missile_launcher->rotate({0,0,1});
+        }
+
+        if(engine->getKeyContinuousPress(GLFW_KEY_L))
+        {
+            auto target = camnode->getCameraTarget();
+            target.y += 0;
+            camnode->setCameraTarget(target);
         }
 
 

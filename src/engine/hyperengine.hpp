@@ -89,6 +89,7 @@ struct HyperEngine
 
             node->setEntity(camera);
             registerCamera(node);
+            node->setIsCamera(true);
             return node;
         }
     
@@ -335,6 +336,7 @@ struct HyperEngine
 
     void setDebugDrawer(DebugDrawer* debugDrawer);
 
+    void resetKeyStates(void);
 private:
     // Inicializadores, solo se llaman en el constructor
     void initializeGraphics(void);
@@ -342,7 +344,6 @@ private:
 
     // Funciones auxiliares
     void setKeyState(int const key, int const action);
-    void resetKeyStates(void);
 
     // No se necesita el resource manager por su naturaleza singleton
 
