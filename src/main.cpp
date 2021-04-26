@@ -771,7 +771,7 @@ void test_physics(void) {
         if(engine->getKeySinglePress(GLFW_KEY_2))
         {
             missile_launcher->translate({0,0,-2});
-            auto rigidbody = missile_launcher->getPhysicProperties()->m_body;
+            auto rigidbody = missile_launcher->getPhysicProperties()->m_data.body;
             // Debug, TODO:: borrar
             INFOLOG("llego" );
 
@@ -920,13 +920,19 @@ void test_physics_2(void) {
 
         if(engine->getKeySinglePress(GLFW_KEY_1))
         {
-            auto pos = icosphere->getTranslation();
-            engine->createPhysicProperties(
+            auto pos = hyper::util::glmVec3TobtVec3(icosphere->getTranslation());
+
+            engine->createPhysicPropertiesCollisionObject(
                     icosphere
-                ,   new btSphereShape(1)
-                ,   0
-                ,   btVector3(pos.x, pos.y, pos.z)
+                ,   new btSphereShape(2)
             );
+
+            // engine->createPhysicProperties(
+            //         icosphere
+            //     ,   new btSphereShape(1)
+            //     ,   0
+            //     ,   btVector3(pos.x, pos.y, pos.z)
+            // );
         }
 
         if(engine->getKeySinglePress(GLFW_KEY_2))    
@@ -940,7 +946,7 @@ void test_physics_2(void) {
             //     ,   0
             //     ,   btVector3(pos.x, pos.y, pos.z)
             // );
-            engine->createPhysicPropertiesDynamic(
+            engine->createPhysicPropertiesDynamicBody(
                     cubito_rosa
                 ,   new btBoxShape({1,1,1})
                 ,   1
@@ -981,7 +987,7 @@ void test_physics_2(void) {
         if(engine->getKeyContinuousPress(GLFW_KEY_8))
         {
             auto pos = hyper::util::glmVec3TobtVec3(missile_launcher->getTranslation());
-            engine->createPhysicPropertiesKinematic(
+            engine->createPhysicPropertiesKinematicBody(
                     missile_launcher
                 ,   new btBoxShape({.5,.8,1.5})
                 // ,   new btCylinderShape({1,5,1})
@@ -992,7 +998,7 @@ void test_physics_2(void) {
         if(engine->getKeyContinuousPress(GLFW_KEY_9))
         {
             auto prop = cubito_rosa->getPhysicProperties();
-            prop->m_body->applyCentralForce({0,20,0});
+            prop->m_data.body->applyCentralForce({0,20,0});
         }
 
         if(engine->getKeyContinuousPress(GLFW_KEY_H)) 
@@ -1008,12 +1014,15 @@ void test_physics_2(void) {
             missile_launcher->rotate({0,0,1});
         }
 
-        if(engine->getKeyContinuousPress(GLFW_KEY_L))
-        {
-            auto target = camnode->getCameraTarget();
-            target.y += 0;
-            camnode->setCameraTarget(target);
-        }
+        // if(engine->getKeyContinuousPress(GLFW_KEY_L))
+        // {
+        //     auto target = camnode->getCameraTarget();
+        //     target.y += 0;
+        //     camnode->setCameraTarget(target);
+        // }
+
+        camnode->setCameraTarget({0,0,0});
+
 
 
         // Update de las físicas

@@ -80,11 +80,17 @@ Node::scale(glm::vec3 const& accumulation)
 void 
 Node::traverse(glm::mat4 const& accumulatedTrans) 
 {
-    if( m_physicProperties && !m_physicProperties->m_body->isKinematicObject() && !m_physicProperties->m_body->isStaticObject() )
+    if
+    ( 
+        m_physicProperties 
+    &&  m_physicProperties->m_type == PhysicProperties::PhysicDatatype::RIGID_BODY
+    &&  !m_physicProperties->m_data.body->isKinematicObject() 
+    &&  !m_physicProperties->m_data.body->isStaticObject() 
+    )
     {
         INFOLOG("Soy dynamic");
 
-        auto body = m_physicProperties->m_body;
+        auto body = m_physicProperties->m_data.body;
         auto motionState = m_physicProperties->m_motionState;
 
         // Aplicar transformaciones al objeto de bullet (obviando el escalado)
@@ -107,7 +113,7 @@ Node::traverse(glm::mat4 const& accumulatedTrans)
     // TODO:: comprobar esto
     bool wantsUpdate = m_wantsUpdate;
 
-    if(this->m_isCamera)
+    if(m_isCamera)
         goto cameraskip;
 
     // Cambiar la comprobación final por !isStatic para que los static no puedan ser modificados, los dynamichay que controlar que no se modifiquen desde fuera
@@ -121,11 +127,15 @@ Node::traverse(glm::mat4 const& accumulatedTrans)
         
         m_wantsUpdate = false;
 
-        if(m_physicProperties && m_physicProperties->m_body->isKinematicObject())
+        if(
+            m_physicProperties 
+            && m_physicProperties->m_type == PhysicProperties::PhysicDatatype::RIGID_BODY
+            && m_physicProperties->m_data.body->isKinematicObject()
+        )
         {
             INFOLOG("Soy kinematic");
 
-            auto body = m_physicProperties->m_body;
+            auto body = m_physicProperties->m_data.body;
             auto motionState = m_physicProperties->m_motionState;
 
             // Aplicar transformaciones al objeto de bullet (obviando el escalado)

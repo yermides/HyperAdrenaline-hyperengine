@@ -16,21 +16,22 @@ struct OpenGLMotionState : public btDefaultMotionState {
 	}
 };
 
+// El objeto puede ser un rigidbody (complejo) o tan solo un collisionObject, lo de ghost object es una especificación del CO
+union PhysicsData {
+    btRigidBody*        body;
+    btCollisionObject*  collObj;
+};
+
 // Estructura que almacena todos los datos físicos, contenida en cada nodo
 struct PhysicProperties {
-    btRigidBody*        m_body              { nullptr };
+    enum PhysicDatatype { COLLISION_OBJECT, RIGID_BODY };
+
+    PhysicDatatype      m_type;
+    PhysicsData         m_data;
+
+    // btRigidBody*        m_body              { nullptr };
     btCollisionShape*   m_collisionShape    { nullptr };
     OpenGLMotionState*  m_motionState       { nullptr };
-
-    PhysicProperties()
-    :   m_body(nullptr), m_collisionShape(nullptr), m_motionState(nullptr)
-    {
-    }
-
-    PhysicProperties(btRigidBody* body, btCollisionShape* collisionShape, OpenGLMotionState* motionState)
-    :   m_body(body), m_collisionShape(collisionShape), m_motionState(motionState)
-    {
-    }
 };
 
 struct MyBulletContactResult : public btCollisionWorld::ContactResultCallback

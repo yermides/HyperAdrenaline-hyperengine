@@ -263,13 +263,14 @@ struct HyperEngine
             Node* const node
         ,   btCollisionShape* pShape
         ,   float const mass
+        ,   PhysicProperties::PhysicDatatype collisionObjectType
         ,   btVector3 const& initialPosition = btVector3(0.0f,0.0f,0.0f)
         ,   btQuaternion const& initialRotation = btQuaternion(0,0,0,1)
         ,   int collisionGroupFlags = 0
         ,   int collisionMaskFlags  = 0
     );
 
-    void createPhysicPropertiesStatic(
+    void createPhysicPropertiesCollisionObject(
             Node* const node
         ,   btCollisionShape* pShape
         ,   btVector3 const& initialPosition = btVector3(0.0f,0.0f,0.0f)
@@ -278,7 +279,7 @@ struct HyperEngine
         ,   int collisionMaskFlags  = 0
     );
 
-    void createPhysicPropertiesKinematic(
+    void createPhysicPropertiesStaticBody(
             Node* const node
         ,   btCollisionShape* pShape
         ,   btVector3 const& initialPosition = btVector3(0.0f,0.0f,0.0f)
@@ -287,7 +288,16 @@ struct HyperEngine
         ,   int collisionMaskFlags  = 0
     );
 
-    void createPhysicPropertiesDynamic(
+    void createPhysicPropertiesKinematicBody(
+            Node* const node
+        ,   btCollisionShape* pShape
+        ,   btVector3 const& initialPosition = btVector3(0.0f,0.0f,0.0f)
+        ,   btQuaternion const& initialRotation = btQuaternion(0,0,0,1)
+        ,   int collisionGroupFlags = 0
+        ,   int collisionMaskFlags  = 0
+    );
+
+    void createPhysicPropertiesDynamicBody(
             Node* const node
         ,   btCollisionShape* pShape
         ,   float mass = 1
