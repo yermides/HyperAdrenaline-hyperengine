@@ -841,9 +841,197 @@ void test_physics(void) {
     }
 }
 
-void test_physics_2(void) {
+// void test_physics_2(void) {
+//     std::unique_ptr<hyper::HyperEngine> engine = std::make_unique<hyper::HyperEngine>(true);
+//     engine->setWindowTitle("test_physics_2");
+//     engine->setWindowIcon("assets/logo.jpg");
+
+//     [[maybe_unused]] 
+//     hyper::Node* lightnode          = engine->createLight(default_createnode_params);
+    
+//     hyper::Node* camnode            = engine->createCamera(default_createnode_params); // tendrá la proyección por defecto
+    
+//     hyper::Node* missile_launcher   = engine->createModel(nullptr, {0,0,-4}, default_rot_and_scale, "assets/missile-launcher.obj");
+//     hyper::Node* cubito_rosa        = engine->createModel(nullptr, {-4,4,-4},{10,10,10}, default_scale, "assets/cubito_rosa.obj");
+//     hyper::Node* icosphere          = engine->createModel(nullptr, {4,0,-4}, default_rot_and_scale, "assets/icosphere.obj");
+    
+//     [[maybe_unused]] 
+//     hyper::Node* plane              = engine->createModel(nullptr, {0,-2.0f,0}, {0,0,0}, default_scale, "assets/planes/plano3-2.obj");
+
+//     cubito_rosa->setNameID(13);
+//     engine->enableDebugDraw();
+
+//     while(engine->isWindowActive() && !engine->getKeyContinuousPress(GLFW_KEY_ESCAPE))
+//     {
+//         // Render
+//         engine->beginRender();
+//         engine->drawScene();
+
+//         if(engine->getKeyContinuousPress(GLFW_KEY_3)) 
+//         {
+//             // Nota, el raycast no se puede ver si no se hace entre begin y end del render
+//             // Arreglar para tener una stack de rayos o algo así
+//             auto pos = cubito_rosa->getTranslation();
+//             hyper::RayResult result;
+
+//             auto hasHit = engine->throwRaycast(
+//                     {pos.x, -20, pos.z}
+//                 ,   {pos.x, pos.y+100, pos.z}
+//                 ,   result
+//             );
+
+//             if(hasHit)
+//             {
+//                 INFOLOG("He dado!" << VAR(result.hitPoint.getX()) << VAR(result.hitPoint.getY()) << VAR(result.hitPoint.getZ()))
+//                 INFOLOG("El nodo tiene índice: " << VAR(result.node->getNameID()) );
+//             }
+//             else
+//             {
+//                 INFOLOG("No he dado?")
+//             }
+//         }
+
+//         engine->endRender();
+
+//         // Fancy rotation
+//         // missile_launcher->rotate({0,3,0});
+//         // cubito_rosa->rotate({3,0,0});
+//         icosphere->rotate({0,0,3});
+
+//         // Debug
+//         // auto& trans = missile_launcher->getMatrixTransform();
+//         // printMat4(trans);
+
+//         // Input
+//         if(engine->getKeyContinuousPress(GLFW_KEY_A))       camnode->rotate({0,3,0});
+//         if(engine->getKeyContinuousPress(GLFW_KEY_D))       camnode->rotate({0,-3,0});
+//         if(engine->getKeyContinuousPress(GLFW_KEY_W))       camnode->rotate({3,0,0});
+//         if(engine->getKeyContinuousPress(GLFW_KEY_S))       camnode->rotate({-3,0,0});
+//         if(engine->getKeyContinuousPress(GLFW_KEY_LEFT))    camnode->translate({-.3,0,0});
+//         if(engine->getKeyContinuousPress(GLFW_KEY_RIGHT))   camnode->translate({.3,0,0});
+//         if(engine->getKeyContinuousPress(GLFW_KEY_UP))      camnode->translate({0,0,-.3f});
+//         if(engine->getKeyContinuousPress(GLFW_KEY_DOWN))    camnode->translate({0,0,.3f});
+
+//         if(engine->getKeyContinuousPress(GLFW_KEY_E))    camnode->translate({0,.3f,0});
+//         if(engine->getKeyContinuousPress(GLFW_KEY_R))    camnode->translate({0,-.3f,0});
+
+//         if(engine->getKeyContinuousPress(GLFW_KEY_T))    missile_launcher->rotate({0,3,0});
+
+
+//         if(engine->getKeySinglePress(GLFW_KEY_1))
+//         {
+//             auto pos = hyper::util::glmVec3TobtVec3(icosphere->getTranslation());
+
+//             engine->createPhysicPropertiesCollisionObject(
+//                     icosphere
+//                 ,   new btSphereShape(2)
+//             );
+
+//             // engine->createPhysicPropertiesRigidBody(
+//             //         icosphere
+//             //     ,   new btSphereShape(1)
+//             //     ,   0
+//             //     ,   btVector3(pos.x, pos.y, pos.z)
+//             // );
+//         }
+
+//         if(engine->getKeySinglePress(GLFW_KEY_2))    
+//         {
+//             // Test de objetos dinámicos
+
+//             auto pos = hyper::util::glmVec3TobtVec3(cubito_rosa->getTranslation());
+//             // engine->createPhysicPropertiesRigidBody(
+//             //         cubito_rosa
+//             //     ,   new btBoxShape({1,1,1})
+//             //     ,   0
+//             //     ,   btVector3(pos.x, pos.y, pos.z)
+//             // );
+//             engine->createPhysicPropertiesDynamicBody(
+//                     cubito_rosa
+//                 ,   new btBoxShape({1,1,1})
+//                 ,   1
+//                 ,   pos
+//             );
+//         }
+
+//         if(engine->getKeySinglePress(GLFW_KEY_4))
+//         {
+//             auto pos = plane->getTranslation();
+//             engine->createPhysicPropertiesTriangleMeshShape(
+//                     plane
+//                 ,   0
+//                 ,   hyper::util::glmVec3TobtVec3(pos)
+//             );
+//         }
+
+//         if(engine->getKeySinglePress(GLFW_KEY_5))
+//             engine->getDebugDrawer()->toggleDebugFlag(2);
+
+//         if(engine->getKeySinglePress(GLFW_KEY_6))
+//             engine->createRigidBodyDynamic();
+
+
+//         if(engine->getKeyContinuousPress(GLFW_KEY_7))
+//         {
+//             static int dir = 1;
+//             static int const threshold = 7;
+//             missile_launcher->translate({.1*dir,0,0});
+
+//             auto translation = missile_launcher->getTranslation();
+//             if(translation.z > threshold)
+//                 dir=-1;
+//             else if(translation.z < -threshold)
+//                 dir=1;
+//         }    
+//         if(engine->getKeyContinuousPress(GLFW_KEY_8))
+//         {
+//             auto pos = hyper::util::glmVec3TobtVec3(missile_launcher->getTranslation());
+//             engine->createPhysicPropertiesKinematicBody(
+//                     missile_launcher
+//                 ,   new btBoxShape({.5,.8,1.5})
+//                 // ,   new btCylinderShape({1,5,1})
+//                 ,   pos
+//             );
+//         }
+
+//         if(engine->getKeyContinuousPress(GLFW_KEY_9))
+//         {
+//             auto prop = cubito_rosa->getPhysicProperties();
+//             prop->m_data.body->applyCentralForce({0,20,0});
+//         }
+
+//         if(engine->getKeyContinuousPress(GLFW_KEY_H)) 
+//         {
+//             missile_launcher->rotate({1,0,0});
+//         }
+//         if(engine->getKeyContinuousPress(GLFW_KEY_J)) 
+//         {
+//             missile_launcher->rotate({0,1,0});
+//         }
+//         if(engine->getKeyContinuousPress(GLFW_KEY_K)) 
+//         {
+//             missile_launcher->rotate({0,0,1});
+//         }
+
+//         // if(engine->getKeyContinuousPress(GLFW_KEY_L))
+//         // {
+//         //     auto target = camnode->getCameraTarget();
+//         //     target.y += 0;
+//         //     camnode->setCameraTarget(target);
+//         // }
+
+//         camnode->setCameraTarget({0,0,0});
+
+
+
+//         // Update de las físicas
+//         engine->updatePhysics();
+//     }
+// }
+
+void test_physics_3(void) {
     std::unique_ptr<hyper::HyperEngine> engine = std::make_unique<hyper::HyperEngine>(true);
-    engine->setWindowTitle("test_physics_2");
+    engine->setWindowTitle("test_physics_3");
     engine->setWindowIcon("assets/logo.jpg");
 
     [[maybe_unused]] 
@@ -851,14 +1039,13 @@ void test_physics_2(void) {
     
     hyper::Node* camnode            = engine->createCamera(default_createnode_params); // tendrá la proyección por defecto
     
-    hyper::Node* missile_launcher   = engine->createModel(nullptr, {0,0,-4}, default_rot_and_scale, "assets/missile-launcher.obj");
+    hyper::Node* missile_launcher   = engine->createModel(nullptr, {3,-1.5,-4}, default_rot_and_scale, "assets/missile-launcher.obj");
     hyper::Node* cubito_rosa        = engine->createModel(nullptr, {-4,4,-4},{10,10,10}, default_scale, "assets/cubito_rosa.obj");
-    hyper::Node* icosphere          = engine->createModel(nullptr, {4,0,-4}, default_rot_and_scale, "assets/icosphere.obj");
+    hyper::Node* icosphere          = engine->createModel(nullptr, {4,-1.5,-4}, default_rot_and_scale, "assets/icosphere.obj");
     
     [[maybe_unused]] 
-    hyper::Node* plane              = engine->createModel(nullptr, {0,-2.0f,0}, {0,0,0}, default_scale, "assets/planes/plano3-2.obj");
+    hyper::Node* plane              = engine->createModel(nullptr, {0,-2,0}, {0,0,0}, default_scale, "assets/planes/plano3-2.obj");
 
-    cubito_rosa->setNameID(13);
     engine->enableDebugDraw();
 
     while(engine->isWindowActive() && !engine->getKeyContinuousPress(GLFW_KEY_ESCAPE))
@@ -867,11 +1054,11 @@ void test_physics_2(void) {
         engine->beginRender();
         engine->drawScene();
 
-        if(engine->getKeyContinuousPress(GLFW_KEY_3)) 
+        if(engine->getKeyContinuousPress(GLFW_KEY_R)) 
         {
             // Nota, el raycast no se puede ver si no se hace entre begin y end del render
             // Arreglar para tener una stack de rayos o algo así
-            auto pos = cubito_rosa->getTranslation();
+            auto pos = icosphere->getTranslation();
             hyper::RayResult result;
 
             auto hasHit = engine->throwRaycast(
@@ -893,15 +1080,6 @@ void test_physics_2(void) {
 
         engine->endRender();
 
-        // Fancy rotation
-        // missile_launcher->rotate({0,3,0});
-        // cubito_rosa->rotate({3,0,0});
-        icosphere->rotate({0,0,3});
-
-        // Debug
-        // auto& trans = missile_launcher->getMatrixTransform();
-        // printMat4(trans);
-
         // Input
         if(engine->getKeyContinuousPress(GLFW_KEY_A))       camnode->rotate({0,3,0});
         if(engine->getKeyContinuousPress(GLFW_KEY_D))       camnode->rotate({0,-3,0});
@@ -914,121 +1092,62 @@ void test_physics_2(void) {
 
         if(engine->getKeyContinuousPress(GLFW_KEY_E))    camnode->translate({0,.3f,0});
         if(engine->getKeyContinuousPress(GLFW_KEY_R))    camnode->translate({0,-.3f,0});
-
         if(engine->getKeyContinuousPress(GLFW_KEY_T))    missile_launcher->rotate({0,3,0});
-
 
         if(engine->getKeySinglePress(GLFW_KEY_1))
         {
             auto pos = hyper::util::glmVec3TobtVec3(icosphere->getTranslation());
-
             engine->createPhysicPropertiesCollisionObject(
                     icosphere
-                ,   new btSphereShape(2)
+                ,   new btSphereShape(1.2f)
+                ,   Flags_t::f0
+                ,   Flags_t::f1
             );
-
-            // engine->createPhysicProperties(
+            // engine->createPhysicPropertiesStaticBody(
             //         icosphere
-            //     ,   new btSphereShape(1)
-            //     ,   0
-            //     ,   btVector3(pos.x, pos.y, pos.z)
+            //     ,   new btSphereShape(1.2f)
+            // );
+
+        }
+
+        if(engine->getKeySinglePress(GLFW_KEY_2))
+        {
+            auto pos = hyper::util::glmVec3TobtVec3(missile_launcher->getTranslation());
+            engine->createPhysicPropertiesCollisionObject(
+                    missile_launcher
+                ,   new btBoxShape({.5,.8,1.5})
+                ,   Flags_t::f1
+                ,   Flags_t::f0
+            );
+            // engine->createPhysicPropertiesKinematicBody(
+            //         missile_launcher
+            //     ,   new btBoxShape({.5,.8,1.5})
             // );
         }
 
-        if(engine->getKeySinglePress(GLFW_KEY_2))    
+        if(engine->getKeySinglePress(GLFW_KEY_3))
         {
-            // Test de objetos dinámicos
-
-            auto pos = hyper::util::glmVec3TobtVec3(cubito_rosa->getTranslation());
-            // engine->createPhysicProperties(
-            //         cubito_rosa
-            //     ,   new btBoxShape({1,1,1})
-            //     ,   0
-            //     ,   btVector3(pos.x, pos.y, pos.z)
-            // );
             engine->createPhysicPropertiesDynamicBody(
                     cubito_rosa
                 ,   new btBoxShape({1,1,1})
-                ,   1
-                ,   pos
             );
         }
 
         if(engine->getKeySinglePress(GLFW_KEY_4))
         {
-            auto pos = plane->getTranslation();
+            auto pos = hyper::util::glmVec3TobtVec3(plane->getTranslation());
             engine->createPhysicPropertiesTriangleMeshShape(
-                    plane
-                ,   0
-                ,   hyper::util::glmVec3TobtVec3(pos)
-            );
-
-        }
-
-        if(engine->getKeySinglePress(GLFW_KEY_5))
-            engine->getDebugDrawer()->toggleDebugFlag(2);
-
-        if(engine->getKeySinglePress(GLFW_KEY_6))
-            engine->createRigidBodyDynamic();
-
-
-        if(engine->getKeyContinuousPress(GLFW_KEY_7))
-        {
-            static int dir = 1;
-            static int const threshold = 7;
-            missile_launcher->translate({.1*dir,0,0});
-
-            auto translation = missile_launcher->getTranslation();
-            if(translation.z > threshold)
-                dir=-1;
-            else if(translation.z < -threshold)
-                dir=1;
-        }    
-        if(engine->getKeyContinuousPress(GLFW_KEY_8))
-        {
-            auto pos = hyper::util::glmVec3TobtVec3(missile_launcher->getTranslation());
-            engine->createPhysicPropertiesKinematicBody(
-                    missile_launcher
-                ,   new btBoxShape({.5,.8,1.5})
-                // ,   new btCylinderShape({1,5,1})
-                ,   pos
+                plane
             );
         }
-
-        if(engine->getKeyContinuousPress(GLFW_KEY_9))
-        {
-            auto prop = cubito_rosa->getPhysicProperties();
-            prop->m_data.body->applyCentralForce({0,20,0});
-        }
-
-        if(engine->getKeyContinuousPress(GLFW_KEY_H)) 
-        {
-            missile_launcher->rotate({1,0,0});
-        }
-        if(engine->getKeyContinuousPress(GLFW_KEY_J)) 
-        {
-            missile_launcher->rotate({0,1,0});
-        }
-        if(engine->getKeyContinuousPress(GLFW_KEY_K)) 
-        {
-            missile_launcher->rotate({0,0,1});
-        }
-
-        // if(engine->getKeyContinuousPress(GLFW_KEY_L))
-        // {
-        //     auto target = camnode->getCameraTarget();
-        //     target.y += 0;
-        //     camnode->setCameraTarget(target);
-        // }
-
+        
+        // Cámara siempre apunta a 0,0,0
         camnode->setCameraTarget({0,0,0});
-
-
-
         // Update de las físicas
         engine->updatePhysics();
     }
 }
+
 
 int main(void) {
 	// test_models_and_imgui();
@@ -1049,5 +1168,7 @@ int main(void) {
 
     // test_physics();
 
-    test_physics_2();
+    // test_physics_2();
+
+    test_physics_3();
 }

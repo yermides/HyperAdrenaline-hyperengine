@@ -80,6 +80,8 @@ Node::scale(glm::vec3 const& accumulation)
 void 
 Node::traverse(glm::mat4 const& accumulatedTrans) 
 {
+    // Falta considerar el escalado en el traspaso de situación del objeto gráfico/físico
+
     if
     ( 
         m_physicProperties 

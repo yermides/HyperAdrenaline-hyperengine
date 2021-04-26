@@ -259,13 +259,12 @@ struct HyperEngine
     void updatePhysics(float const deltatime = 1.0f / 60.0f);
 
     // Las crea como objeto estático, TODO:: hacer una función para objetos estáticos, cinemáticos y dinámicos
-    void createPhysicProperties(
+
+    // Función llamada por todas las que crean rigidbody, sea static, kinematic o dynamic
+    void createPhysicPropertiesRigidBody(
             Node* const node
         ,   btCollisionShape* pShape
-        ,   float const mass
-        ,   PhysicProperties::PhysicDatatype collisionObjectType
-        ,   btVector3 const& initialPosition = btVector3(0.0f,0.0f,0.0f)
-        ,   btQuaternion const& initialRotation = btQuaternion(0,0,0,1)
+        ,   float mass
         ,   int collisionGroupFlags = 0
         ,   int collisionMaskFlags  = 0
     );
@@ -273,17 +272,13 @@ struct HyperEngine
     void createPhysicPropertiesCollisionObject(
             Node* const node
         ,   btCollisionShape* pShape
-        ,   btVector3 const& initialPosition = btVector3(0.0f,0.0f,0.0f)
-        ,   btQuaternion const& initialRotation = btQuaternion(0,0,0,1)
-        ,   int collisionGroupFlags = 0
-        ,   int collisionMaskFlags  = 0
+        ,   int collisionGroupFlags = 2
+        ,   int collisionMaskFlags  = -3
     );
 
     void createPhysicPropertiesStaticBody(
             Node* const node
         ,   btCollisionShape* pShape
-        ,   btVector3 const& initialPosition = btVector3(0.0f,0.0f,0.0f)
-        ,   btQuaternion const& initialRotation = btQuaternion(0,0,0,1)
         ,   int collisionGroupFlags = 0
         ,   int collisionMaskFlags  = 0
     );
@@ -291,8 +286,6 @@ struct HyperEngine
     void createPhysicPropertiesKinematicBody(
             Node* const node
         ,   btCollisionShape* pShape
-        ,   btVector3 const& initialPosition = btVector3(0.0f,0.0f,0.0f)
-        ,   btQuaternion const& initialRotation = btQuaternion(0,0,0,1)
         ,   int collisionGroupFlags = 0
         ,   int collisionMaskFlags  = 0
     );
@@ -301,8 +294,6 @@ struct HyperEngine
             Node* const node
         ,   btCollisionShape* pShape
         ,   float mass = 1
-        ,   btVector3 const& initialPosition = btVector3(0.0f,0.0f,0.0f)
-        ,   btQuaternion const& initialRotation = btQuaternion(0,0,0,1)
         ,   int collisionGroupFlags = 0
         ,   int collisionMaskFlags  = 0
     );
@@ -310,9 +301,7 @@ struct HyperEngine
     // Las colisiones que usarán los mapas, WARNING, solo funciona con meshes totalmente trianguladas, also, debería ser estatic o cinematic (no dynamic)
     void createPhysicPropertiesTriangleMeshShape(
             Node* const node
-        ,   float const mass = 0
-        ,   btVector3 const& initialPosition = btVector3(0.0f,0.0f,0.0f)
-        ,   btQuaternion const& initialRotation = btQuaternion(0,0,0,1)
+        ,   float mass = 0
         ,   int collisionGroupFlags = 0
         ,   int collisionMaskFlags  = 0
     );

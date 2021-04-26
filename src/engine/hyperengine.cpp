@@ -489,33 +489,30 @@ HyperEngine::updatePhysics(float const deltatime)
 }
 
 void 
-HyperEngine::createPhysicProperties(
+HyperEngine::createPhysicPropertiesRigidBody(
 	Node* const node
 , 	btCollisionShape* pShape
-, 	float const mass
-,   PhysicProperties::PhysicDatatype collisionObjectType
-, 	btVector3 const& initialPosition
-, 	btQuaternion const& initialRotation
+, 	float mass
 ,   int collisionGroupFlags
 ,   int collisionMaskFlags
 )
 {
 	if(!node || node->getPhysicProperties()) return;
 
+	// Translación y rotación iguales a las del nodo
+	auto nodetrans = util::glmVec3TobtVec3(node->getTranslation());
 	btTransform transform;
 	transform.setIdentity();
-	transform.setOrigin(initialPosition);
+	transform.setOrigin(nodetrans);
 
-	// Test, meter la rotación puntual del nodo
-	// transform.setRotation(initialRotation);
 	auto noderot = node->getRotation();
-	
 	btQuaternion btquatx( {1.0,0.0,0.0}, glm::radians( noderot.x ) );
 	btQuaternion btquaty( {0.0,1.0,0.0}, glm::radians( noderot.y ) );
 	btQuaternion btquatz( {0.0,0.0,1.0}, glm::radians( noderot.z ) );
 	btQuaternion btquat = btquatx * btquaty * btquatz;
 	transform.setRotation(btquat);
 
+	// Construcción del rigid body
 	auto collisionShape = pShape;
 	auto motionState = new OpenGLMotionState(transform);
 	btVector3 localInertia(0,0,0);
@@ -527,6 +524,7 @@ HyperEngine::createPhysicProperties(
 	auto rigidBody = new btRigidBody(cInfo);
 	rigidBody->setUserPointer( static_cast<void*>(node) );	// Contiene al nodo para facilitar el coste de la búsqueda
 
+	// Construcción de las propiedades físicas del nodo
 	auto properties = new PhysicProperties;
 	properties->m_type = PhysicProperties::PhysicDatatype::RIGID_BODY;
 	properties->m_data.body			= rigidBody;
@@ -545,51 +543,46 @@ void
 HyperEngine::createPhysicPropertiesCollisionObject(
 	Node* const node
 ,   btCollisionShape* pShape
-,   btVector3 const& initialPosition
-,   btQuaternion const& initialRotation
 ,   int collisionGroupFlags
 ,   int collisionMaskFlags
 )
 {
-	INFOLOG("Llego");
+	if(!node || node->getPhysicProperties()) return;
 
 	btCollisionObject* collisionObject = new btCollisionObject;
+	collisionObject->setUserPointer( static_cast<void*>(node) );
 	collisionObject->setCollisionShape(pShape);
 
-	INFOLOG("Llego2");
-
-	// auto bodyUpcast = btRigidBody::upcast(collisionObject);
-	INFOLOG("Llego3");
+	auto nodetrans = util::glmVec3TobtVec3(node->getTranslation());
 	btTransform trans;
-	trans.setOrigin(util::glmVec3TobtVec3(node->getTranslation()));
+	trans.setOrigin(nodetrans);
+
 	auto noderot = node->getRotation();
 	btQuaternion btquatx( {1.0,0.0,0.0}, glm::radians( noderot.x ) );
 	btQuaternion btquaty( {0.0,1.0,0.0}, glm::radians( noderot.y ) );
 	btQuaternion btquatz( {0.0,0.0,1.0}, glm::radians( noderot.z ) );
 	btQuaternion btquat = btquatx * btquaty * btquatz;
 	trans.setRotation(btquat);
-	collisionObject->setWorldTransform(trans); // peta aquí
-	INFOLOG("Llego4");
 
-	// TODO:: meter los datos del colObj y guardarlo en node
+	// Sustituto de meter el motionState inicial (directamente meter la transformación inicial)
+	collisionObject->setWorldTransform(trans);
+
+	// Meter los datos del colObj y guardarlo en node
 	auto prop = new PhysicProperties;
 	prop->m_type = PhysicProperties::PhysicDatatype::COLLISION_OBJECT;
 	prop->m_data.collObj = collisionObject;
 	node->setPhysicProperties(prop);
 
-	m_world->addCollisionObject(collisionObject);
-
+	// m_world->addCollisionObject(collisionObject);
 
 	// TODO:: Para cuando se pongan las flags bien
-	// m_world->addCollisionObject(collisionObject, collisionGroupFlags, collisionMaskFlags);
+	m_world->addCollisionObject(collisionObject, collisionGroupFlags, collisionMaskFlags);
 }
 
 void 
 HyperEngine::createPhysicPropertiesStaticBody(
 	Node* const node
 ,   btCollisionShape* pShape
-,   btVector3 const& initialPosition
-,   btQuaternion const& initialRotation
 ,   int collisionGroupFlags
 ,   int collisionMaskFlags
 )
@@ -597,13 +590,10 @@ HyperEngine::createPhysicPropertiesStaticBody(
 	if(!node || node->getPhysicProperties()) return;
 
 	// No afectado por las fuerzas por tener masa cero
-	this->createPhysicProperties(
+	this->createPhysicPropertiesRigidBody(
 			node
 		,	pShape
 		,	0
-		, 	PhysicProperties::PhysicDatatype::RIGID_BODY
-		,	initialPosition
-		,	initialRotation
 		,	collisionGroupFlags
 		,	collisionMaskFlags
 	);
@@ -619,8 +609,6 @@ void
 HyperEngine::createPhysicPropertiesKinematicBody(
 	Node* const node
 ,   btCollisionShape* pShape
-,   btVector3 const& initialPosition
-,   btQuaternion const& initialRotation
 ,   int collisionGroupFlags
 ,   int collisionMaskFlags
 )
@@ -628,13 +616,10 @@ HyperEngine::createPhysicPropertiesKinematicBody(
 	if(!node || node->getPhysicProperties()) return;
 
 	// No afectado por las fuerzas por tener masa cero
-	this->createPhysicProperties(
+	this->createPhysicPropertiesRigidBody(
 			node
 		,	pShape
 		,	0
-		, 	PhysicProperties::PhysicDatatype::RIGID_BODY
-		,	initialPosition
-		,	initialRotation
 		,	collisionGroupFlags
 		,	collisionMaskFlags
 	);
@@ -654,8 +639,6 @@ HyperEngine::createPhysicPropertiesDynamicBody(
 	Node* const node
 ,   btCollisionShape* pShape
 ,   float mass
-,   btVector3 const& initialPosition
-,   btQuaternion const& initialRotation
 ,   int collisionGroupFlags
 ,   int collisionMaskFlags
 )
@@ -666,13 +649,10 @@ HyperEngine::createPhysicPropertiesDynamicBody(
 	mass = std::max(mass, 1.0f);
 
 	// No afectado por las fuerzas por tener masa cero
-	this->createPhysicProperties(
+	this->createPhysicPropertiesRigidBody(
 			node
 		,	pShape
 		,	mass
-		, 	PhysicProperties::PhysicDatatype::RIGID_BODY
-		,	initialPosition
-		,	initialRotation
 		,	collisionGroupFlags
 		,	collisionMaskFlags
 	);
@@ -688,8 +668,6 @@ void
 HyperEngine::createPhysicPropertiesTriangleMeshShape(
 	Node* const node
 ,   float const mass
-,   btVector3 const& initialPosition
-,   btQuaternion const& initialRotation
 ,   int collisionGroupFlags
 ,   int collisionMaskFlags
 )
@@ -719,13 +697,11 @@ HyperEngine::createPhysicPropertiesTriangleMeshShape(
 
 	auto shape	= new btBvhTriangleMeshShape(trianglemesh, false);
 
-	this->createPhysicProperties(
+	// Realmente sería "this->createPhysicPropertiesStaticBody"
+	this->createPhysicPropertiesRigidBody(
 			node
 		,	shape
 		,	mass
-		, 	PhysicProperties::PhysicDatatype::RIGID_BODY
-		,	initialPosition
-		,	initialRotation
 		,   collisionGroupFlags
 		,   collisionMaskFlags
 	);
@@ -1128,10 +1104,14 @@ HyperEngine::initializePhysics(void)
 	m_debugDrawer->setDebugMode(DBG::DBG_DrawWireframe | DBG::DBG_DrawAabb | DBG::DBG_DrawContactPoints);
 	m_world->setDebugDrawer(m_debugDrawer);
 	// debug de cuántos contactos hay entre objetos
-	m_world->setInternalTickCallback([](btDynamicsWorld *world, btScalar timeStep){
+	m_world->setInternalTickCallback([](btDynamicsWorld *world, btScalar timeStep) {
+		auto engine = static_cast<HyperEngine*>(world->getWorldUserInfo());
 		int numManifolds = world->getDispatcher()->getNumManifolds();
+
+		// TODO:: ver cómo interpretar los contactos de colisiones
+
 		INFOLOG( "numManifolds = " VAR(numManifolds) )
-	});
+	}, this);
 
 	// poner gravedad
 	m_world->setGravity( btVector3(0, -9.81f, 0) );

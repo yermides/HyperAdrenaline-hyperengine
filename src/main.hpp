@@ -25,3 +25,15 @@ using namespace glm;
 
 // Esto es para una prueba, print matrix
 #include <glm/gtx/string_cast.hpp>
+
+// Flags para testeo
+enum Flags_t {
+        f0 = 1 << 0
+    ,   f1 = 1 << 1
+    ,   f2 = 1 << 2
+    ,   f3 = 1 << 3
+    ,   f4 = 1 << 4
+    ,   f5 = 1 << 5
+    ,   f6 = 1 << 6
+    ,   f7 = 1 << 7
+};
