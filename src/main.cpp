@@ -1191,6 +1191,75 @@ void test_physics_3(void) {
     }
 }
 
+void camera_child_test(void) {
+    std::unique_ptr<hyper::HyperEngine> engine = std::make_unique<hyper::HyperEngine>(true);
+    engine->setWindowTitle("test_physics_3");
+    engine->setWindowIcon("assets/logo.jpg");
+
+    [[maybe_unused]] 
+    hyper::Node* lightnode          = engine->createLight(default_createnode_params);
+    
+    hyper::Node* camnode            = engine->createCamera(default_createnode_params); // tendrá la proyección por defecto
+    
+    hyper::Node* missile_launcher   = engine->createModel(nullptr, {3,-1.5,-4}, default_rot_and_scale, "assets/missile-launcher.obj");
+
+    // glm::vec3{-1.5f, -0.8f, 2.0f}
+    // glm::vec3{1.5,-.8,-2}
+    hyper::Node* missile_launcher2   = engine->createModel(
+            camnode
+        ,   camnode->getTranslation() + glm::vec3{1.5,-.8,-2}
+        ,   {0,180,0}
+        ,   default_scale
+        ,   "assets/missile-launcher.obj"
+    );
+
+    hyper::Node* cubito_rosa        = engine->createModel(nullptr, {-4,4,-4},{10,10,10}, default_scale, "assets/cubito_rosa.obj");
+    hyper::Node* icosphere          = engine->createModel(nullptr, {4,-1.5,-4}, default_rot_and_scale, "assets/icosphere.obj");
+    
+    [[maybe_unused]] 
+    hyper::Node* plane              = engine->createModel(nullptr, {0,-2,0}, {0,0,0}, default_scale, "assets/planes/plano3-2.obj");
+
+    plane->setNameID(1);
+    icosphere->setNameID(2);
+    missile_launcher->setNameID(3);
+    cubito_rosa->setNameID(4);
+
+    while(engine->isWindowActive() && !engine->getKeyContinuousPress(GLFW_KEY_ESCAPE))
+    {
+        // Render
+        engine->beginRender();
+        engine->drawScene();
+        engine->endRender();
+
+        // Input
+        if(engine->getKeyContinuousPress(GLFW_KEY_A))       
+            camnode->rotate({0,3,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_D))       
+            camnode->rotate({0,-3,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_W))       
+            camnode->rotate({3,0,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_S))       
+            camnode->rotate({-3,0,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_LEFT))    
+            camnode->translate({-.3,0,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_RIGHT))   
+            camnode->translate({.3,0,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_UP))      
+            camnode->translate({0,0,-.3f});
+        if(engine->getKeyContinuousPress(GLFW_KEY_DOWN))    
+            camnode->translate({0,0,.3f});
+        if(engine->getKeyContinuousPress(GLFW_KEY_SPACE))       
+            camnode->translate({0,.3f,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_LEFT_CONTROL))       
+            camnode->translate({0,-.3f,0});
+
+        // Cámara siempre apunta a 0,0,0
+        camnode->setCameraTarget({0,0,0});
+        // Update de las físicas
+        engine->updatePhysics();
+    }
+}
+
 
 int main(void) {
 	// test_models_and_imgui();
@@ -1213,5 +1282,7 @@ int main(void) {
 
     // test_physics_2();
 
-    test_physics_3();
+    // test_physics_3();
+
+    camera_child_test();
 }

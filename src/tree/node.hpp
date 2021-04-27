@@ -5,7 +5,10 @@
 // GLM
 #include <glm/glm.hpp>
 #include <glm/gtx/transform.hpp>
+#include <glm/gtx/quaternion.hpp>
+#include <glm/gtx/euler_angles.hpp>
 #include <glm/detail/type_quat.hpp>
+#include <glm/gtx/matrix_decompose.hpp>
 // Bullet physics
 #include <bullet/btBulletDynamicsCommon.h>
 #include <bullet/btBulletCollisionCommon.h>
@@ -13,6 +16,7 @@
 #include <util/physics.hpp>
 #include <util/functions.hpp>
 #include "entities/entity.hpp"
+#include "entities/e_camera.hpp"
 
 #define default_node_id -1
 

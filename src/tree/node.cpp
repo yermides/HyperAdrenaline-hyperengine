@@ -115,8 +115,7 @@ Node::traverse(glm::mat4 const& accumulatedTrans)
     // TODO:: comprobar esto
     bool wantsUpdate = m_wantsUpdate;
 
-    if(m_isCamera)
-        goto cameraskip;
+    // if(m_isCamera) goto cameraskip;
 
     // Cambiar la comprobación final por !isStatic para que los static no puedan ser modificados, los dynamichay que controlar que no se modifiquen desde fuera
     if( wantsUpdate /* && ( !m_physicProperties || ( m_physicProperties && m_physicProperties->m_body->isKinematicObject() ) ) */ ) {
@@ -159,7 +158,7 @@ Node::traverse(glm::mat4 const& accumulatedTrans)
                 // Recordar que se puede hacer cast a mat3 desde mat4 y directamente crear un btTransform((casteada)mat3, transfrom->getOrigin());
 
                 body->getMotionState()->getWorldTransform(transform);
-                
+
                 // Translación
                 auto trans = util::glmVec3TobtVec3(this->getTranslation());
                 transform.setOrigin( trans );
@@ -235,7 +234,53 @@ Node::setCameraTarget(glm::vec3 const& target)
         ,   glm::vec3(0,1,0)
     );
 
-    setMatrixTransform(forcedViewMatrix);
+    // auto position = glm::vec4(0,0,0,1) * forcedViewMatrix ;
+    // auto pos = glm::vec3(position);
+    // setTranslation(position);
+
+    auto camera = static_cast<ECamera*>(m_entity);
+    camera->setViewMatrix(forcedViewMatrix);
+
+    
+    // glm::quat orientation = glm::toQuat(forcedViewMatrix);
+    glm::quat orientation = glm::conjugate(glm::toQuat(forcedViewMatrix));
+    // auto newrot = glm::eulerAngleXYZ(orientation);
+    // glm::vec3 newrot = glm::eulerAngles(orientation) * 3.14159f / 180.f;
+    auto newrot = glm::eulerAngles(orientation);
+
+    setRotation
+    ( 
+        // newrot
+        glm::vec3
+        (
+                glm::degrees(newrot.x) 
+            ,   glm::degrees(newrot.y)
+            ,   glm::degrees(newrot.z) 
+        )
+    );
+
+    // trasladar la rotación, test de descomponer la matriz
+    // glm::mat4 transformation; // your transformation matrix.
+    // glm::vec3 scale;
+    // glm::quat rotation;
+    // glm::vec3 translation;
+    // glm::vec3 skew;
+    // glm::vec4 perspective;
+    // glm::decompose(transformation, scale, rotation, translation, skew, perspective);
+    // rotation = glm::conjugate(rotation);
+    // auto newrot = glm::eulerAngles(rotation);
+    // newrot.x *=1.0f;
+    // newrot.y *=1.0f;
+    // newrot.z *=1.0f;
+    // setRotation( 
+    //     glm::degrees(
+    //         glm::vec3{newrot.z, newrot.y, newrot.x}
+    //         ) 
+    //     );
+
+    // setRotation( {69,69,69} );
+
+    // setMatrixTransform(forcedViewMatrix);
 }
 
 }

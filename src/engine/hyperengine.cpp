@@ -123,12 +123,13 @@ HyperEngine::drawScene(void)
 	auto projection = camentity->getProjectionMatrix();
 	camerashader->setMat4("projection", projection);
 
-	auto cameraMatrix = camnode->getMatrixTransform();
 
 	// Ya no es así porque setCameraTarget machaca toda la transformación necesariamente
+	// auto cameraMatrix = camnode->getMatrixTransform();
 	// auto view = glm::inverse(cameraMatrix);
-	auto view = cameraMatrix;
 
+	auto cameraMatrix = camentity->getViewMatrix();
+	auto view = cameraMatrix;
 
 	camerashader->setMat4("view", view);
 
