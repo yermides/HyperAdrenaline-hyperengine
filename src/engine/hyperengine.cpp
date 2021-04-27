@@ -18,6 +18,7 @@ HyperEngine::~HyperEngine()
 	gui::DestroyContext();
 	glfwDestroyWindow(m_window);
 	glfwTerminate();
+	m_collisionPairs.clear();
 	delete m_world;
 }
 
@@ -707,20 +708,38 @@ HyperEngine::createPhysicPropertiesTriangleMeshShape(
 	);
 }
 
-void 
-HyperEngine::getPhysicsContactPairInfo(Node* const nodeA, Node* const nodeB)
+bool 
+HyperEngine::getCollisionBetweenNodes(Node* const nodeA, Node* const nodeB)
 {
-	auto propA = nodeA->getPhysicProperties();
-	auto propB = nodeB->getPhysicProperties();
+	if(!nodeA || !nodeB) return false;
 
-	if(!propA || !propB) return;
+	auto& cp = m_collisionPairs;
+	auto it = 
+		std::find_if(cp.begin(), cp.end(), 
+			[&nodeA, &nodeB](std::pair<Node::NodeID, Node::NodeID> const& p)
+			{
+				return ( p.first == nodeA->getNameID() && p.second == nodeB->getNameID() ) 
+					|| ( p.first == nodeB->getNameID() && p.second == nodeA->getNameID() );
+			}
+		);
 
-	auto collObjA = propA->m_data.body;
-	auto collObjB = propB->m_data.body;
+	if(it != cp.end())
+		return true;
+	else 
+		return false;
+}
 
-	// auto resultCallback = new MyBulletContactResult;
-	// m_world->contactPairTest(collObjA, collObjB, );
+void 
+HyperEngine::deletePhysicProperties(Node* const node)
+{
+	if(!node) return;
+	auto prop = node->getPhysicProperties();
+	if(!prop) return;
 
+	// COLLISION_OBJECT, RIGID_BODY
+	m_world->removeCollisionObject(prop->m_data.collObj);
+	delete prop;
+	node->setPhysicProperties(nullptr);
 }
 
 // Old functions for physics
@@ -1106,11 +1125,48 @@ HyperEngine::initializePhysics(void)
 	// debug de cuántos contactos hay entre objetos
 	m_world->setInternalTickCallback([](btDynamicsWorld *world, btScalar timeStep) {
 		auto engine = static_cast<HyperEngine*>(world->getWorldUserInfo());
-		int numManifolds = world->getDispatcher()->getNumManifolds();
+		auto& collisionPairs = engine->m_collisionPairs;
+		collisionPairs.clear();
 
 		// TODO:: ver cómo interpretar los contactos de colisiones
 
-		INFOLOG( "numManifolds = " VAR(numManifolds) )
+		int numManifolds = world->getDispatcher()->getNumManifolds();
+		// INFOLOG( "TickCallback: numManifolds = " VAR(numManifolds) )
+		for (int i {0}; i < numManifolds; ++i)
+		{
+			auto* contactManifold = world->getDispatcher()->getManifoldByIndexInternal(i);
+			auto* obA = contactManifold->getBody0();
+			auto* obB = contactManifold->getBody1();
+
+			auto* nodeA = static_cast<Node*>(obA->getUserPointer());
+			auto* nodeB = static_cast<Node*>(obB->getUserPointer());
+
+			auto pair = std::make_pair(nodeA->getNameID(), nodeB->getNameID());
+			collisionPairs.push_back(pair);
+
+			// INFOLOG( "TickCallback: nodeA->getNameID() = " VAR( nodeA->getNameID() ) )
+			// INFOLOG( "TickCallback: nodeB->getNameID() = " VAR( nodeB->getNameID() ) )
+
+			// TODO:: recordar que pt.getDistance() < 0.0f nos dice si la colisión es interna y no solo el AABB
+			// y así conseguiríamos una detección de colisión más precisa
+
+			// int numContacts = contactManifold->getNumContacts();
+			// for (int j {0}; j < numContacts; ++j)
+			// {
+			// 	auto pt = contactManifold->getContactPoint(j);
+
+				// INFOLOG( "TickCallback: pt.getDistance() = " VAR(pt.getDistance()) )
+				
+				// if (pt.getDistance() < 0.0f)
+				// {
+				// 	Vector3 ptA = pt.PositionWorldOnA;
+				// 	Vector3 ptB = pt.PositionWorldOnB;
+				// 	Vector3 normalOnB = pt.NormalWorldOnB;
+				// }
+			// }
+		}
+
+		// INFOLOG( "TickCallback: collisionPairs.size() = " VAR( collisionPairs.size() ) )
 	}, this);
 
 	// poner gravedad

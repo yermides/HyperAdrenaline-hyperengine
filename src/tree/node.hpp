@@ -75,6 +75,12 @@ struct Node
     constexpr void                setNameID(NodeID const& name)                         noexcept
         { m_name = name;                    }
 
+    constexpr void                setVisible(bool const visible)                        noexcept
+        { m_isVisible = visible;            }
+
+    constexpr bool                getVisible(void)                                      noexcept
+        { return m_isVisible;               }
+
     constexpr NodeID const        getIsCamera(void)                                     const noexcept
         { return m_isCamera;                }
 
@@ -106,10 +112,11 @@ private:
     glm::vec3 m_rotation    { 0.0f };   // Vector de tres floats que informa de la rotación
     glm::vec3 m_scale       { 1.0f };   // Vector de tres floats que informa del escalado 
     bool m_wantsUpdate      { true };   // Booleano que informa de si hay que actualizar la matriz en la iteración
+    bool m_isVisible        { true };   // Si se va a hacer un draw
 
     // Específicos de la cámara
     bool m_isCamera         { false };
-    glm::vec3 m_target      { 0.0f };  
+    glm::vec3 m_target      { 0.0f };
 
     // Datos importantes relacionados del nodo
     NodeList m_childs;                                      // Lista de hijos del nodo

@@ -1046,6 +1046,11 @@ void test_physics_3(void) {
     [[maybe_unused]] 
     hyper::Node* plane              = engine->createModel(nullptr, {0,-2,0}, {0,0,0}, default_scale, "assets/planes/plano3-2.obj");
 
+    plane->setNameID(1);
+    icosphere->setNameID(2);
+    missile_launcher->setNameID(3);
+    cubito_rosa->setNameID(4);
+
     engine->enableDebugDraw();
 
     while(engine->isWindowActive() && !engine->getKeyContinuousPress(GLFW_KEY_ESCAPE))
@@ -1117,7 +1122,7 @@ void test_physics_3(void) {
                     missile_launcher
                 ,   new btBoxShape({.5,.8,1.5})
                 ,   Flags_t::f1
-                ,   Flags_t::f0
+                ,   Flags_t::f0 | Flags_t::f1
             );
             // engine->createPhysicPropertiesKinematicBody(
             //         missile_launcher
@@ -1140,6 +1145,24 @@ void test_physics_3(void) {
                 plane
             );
         }
+
+        if(engine->getKeySinglePress(GLFW_KEY_5))
+        {
+            bool collides = engine->getCollisionBetweenNodes(missile_launcher, icosphere);
+            INFOLOG("¿Colisionan? " << VAR(collides) )
+        }
+
+        if(engine->getKeySinglePress(GLFW_KEY_6))
+        {
+            engine->deletePhysicProperties(missile_launcher);
+        }
+
+        if(engine->getKeySinglePress(GLFW_KEY_7))
+            cubito_rosa->setVisible(false);
+
+        if(engine->getKeySinglePress(GLFW_KEY_8))
+            cubito_rosa->setVisible(true);
+
         
         // Cámara siempre apunta a 0,0,0
         camnode->setCameraTarget({0,0,0});

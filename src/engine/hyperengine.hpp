@@ -306,7 +306,9 @@ struct HyperEngine
         ,   int collisionMaskFlags  = 0
     );
 
-    void getPhysicsContactPairInfo(Node* const nodeA, Node* const nodeB);
+    bool getCollisionBetweenNodes(Node* const nodeA, Node* const nodeB);
+
+    void deletePhysicProperties(Node* const node);
 
     // Funciones patateras, mejoradas arriba
     void createRigidbody(Node * const node);
@@ -371,6 +373,7 @@ private:
     btDiscreteDynamicsWorld* m_world    { nullptr };
     DebugDrawer* m_debugDrawer          { nullptr };
     bool m_useDebugDrawer               { false   };
+    std::vector<std::pair<Node::NodeID, Node::NodeID>> m_collisionPairs;
 
     // imgui
     ImGuiIO* m_io;

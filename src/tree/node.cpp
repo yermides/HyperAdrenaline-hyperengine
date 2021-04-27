@@ -163,7 +163,7 @@ Node::traverse(glm::mat4 const& accumulatedTrans)
     }
 
 cameraskip:
-    if(m_entity)
+    if(m_entity && m_isVisible)
         m_entity->draw(m_transform);
 
     for(auto* child : m_childs) { 
