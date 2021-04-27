@@ -1099,6 +1099,26 @@ void test_physics_3(void) {
         if(engine->getKeyContinuousPress(GLFW_KEY_R))    camnode->translate({0,-.3f,0});
         if(engine->getKeyContinuousPress(GLFW_KEY_T))    missile_launcher->rotate({0,3,0});
 
+        if(engine->getKeyContinuousPress(GLFW_KEY_H)) 
+            missile_launcher->rotate({1,0,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_J)) 
+            missile_launcher->rotate({0,1,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_K)) 
+            missile_launcher->rotate({0,0,1});
+
+        if(engine->getKeyContinuousPress(GLFW_KEY_X)) 
+            missile_launcher->translate({0,0,-.1});
+        if(engine->getKeyContinuousPress(GLFW_KEY_C)) 
+            missile_launcher->translate({0,-.1,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_V)) 
+            missile_launcher->translate({-.1,0,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_B)) 
+            missile_launcher->translate({0,0,.1});
+        if(engine->getKeyContinuousPress(GLFW_KEY_N)) 
+            missile_launcher->translate({0,.1,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_M)) 
+            missile_launcher->translate({.1,0,0});
+
         if(engine->getKeySinglePress(GLFW_KEY_1))
         {
             auto pos = hyper::util::glmVec3TobtVec3(icosphere->getTranslation());

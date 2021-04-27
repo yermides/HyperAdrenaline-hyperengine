@@ -129,36 +129,51 @@ Node::traverse(glm::mat4 const& accumulatedTrans)
         
         m_wantsUpdate = false;
 
-        if(
-            m_physicProperties 
-            && m_physicProperties->m_type == PhysicProperties::PhysicDatatype::RIGID_BODY
-            && m_physicProperties->m_data.body->isKinematicObject()
-        )
+        if(m_physicProperties)
         {
-            INFOLOG("Soy kinematic");
+            if(m_physicProperties->m_type == PhysicProperties::PhysicDatatype::COLLISION_OBJECT)
+            {
+                auto collisionObject = m_physicProperties->m_data.collObj;
+                btTransform transform;
 
-            auto body = m_physicProperties->m_data.body;
-            auto motionState = m_physicProperties->m_motionState;
+                // Translación
+                auto trans = util::glmVec3TobtVec3(m_translation);
+                transform.setOrigin(trans);
 
-            // Aplicar transformaciones al objeto de bullet (obviando el escalado)
-            btTransform transform;
-            body->getMotionState()->getWorldTransform(transform);
-            // TODO:: realmente no es la translación, sino m_transform, la columna de la translación (para tener en cuenta la translación heredada) 
-            // Y lo mismo para la rotación
-            // Recordar que se puede hacer cast a mat3 desde mat4 y directamente crear un btTransform((casteada)mat3, transfrom->getOrigin());
+                // Rotación
+                btQuaternion btquatx( {1.0,0.0,0.0}, glm::radians( m_rotation.x ) );
+                btQuaternion btquaty( {0.0,1.0,0.0}, glm::radians( m_rotation.y ) );
+                btQuaternion btquatz( {0.0,0.0,1.0}, glm::radians( m_rotation.z ) );
+                btQuaternion btquat = btquatx * btquaty * btquatz;
+                transform.setRotation(btquat);
 
-            // Translación
-            auto trans = util::glmVec3TobtVec3(this->getTranslation());
-            transform.setOrigin( trans );
+                collisionObject->setWorldTransform(transform);
+            }
+            else if(m_physicProperties->m_type == PhysicProperties::PhysicDatatype::RIGID_BODY && m_physicProperties->m_data.body->isKinematicObject())
+            {
+                auto body = m_physicProperties->m_data.body;
+                auto motionState = m_physicProperties->m_motionState;
+                btTransform transform;
 
-            // Rotación
-            btQuaternion btquatx( {1.0,0.0,0.0}, glm::radians( m_rotation.x ) );
-            btQuaternion btquaty( {0.0,1.0,0.0}, glm::radians( m_rotation.y ) );
-            btQuaternion btquatz( {0.0,0.0,1.0}, glm::radians( m_rotation.z ) );
-            btQuaternion btquat = btquatx * btquaty * btquatz;
-            transform.setRotation(btquat);
+                // TODO:: realmente no es la translación, sino m_transform, la columna de la translación (para tener en cuenta la translación heredada) y lo mismo para la rotación
+                // Recordar que se puede hacer cast a mat3 desde mat4 y directamente crear un btTransform((casteada)mat3, transfrom->getOrigin());
 
-            body->getMotionState()->setWorldTransform(transform);
+                body->getMotionState()->getWorldTransform(transform);
+                
+                // Translación
+                auto trans = util::glmVec3TobtVec3(this->getTranslation());
+                transform.setOrigin( trans );
+
+                // Rotación
+                btQuaternion btquatx( {1.0,0.0,0.0}, glm::radians( m_rotation.x ) );
+                btQuaternion btquaty( {0.0,1.0,0.0}, glm::radians( m_rotation.y ) );
+                btQuaternion btquatz( {0.0,0.0,1.0}, glm::radians( m_rotation.z ) );
+                btQuaternion btquat = btquatx * btquaty * btquatz;
+                transform.setRotation(btquat);
+
+                // Aplicar transformaciones al objeto de bullet (obviando el escalado)
+                body->getMotionState()->setWorldTransform(transform);
+            }
         }
     }
 
