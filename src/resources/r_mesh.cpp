@@ -77,6 +77,8 @@ RMesh::loadMesh(std::string const& filepath)
         auto* normalsarray      = amesh->mNormals;
         auto* texcoordsarray    = amesh->mTextureCoords[0];
 
+        bool hasTextureCoords = amesh->HasTextureCoords(0);
+
         for(uint32_t j {0}; j < amesh->mNumVertices; ++j)
         {
             // Almacenar posiciones de vértices
@@ -84,18 +86,25 @@ RMesh::loadMesh(std::string const& filepath)
             mesh->m_vertices.push_back(vertexarray->y);
             mesh->m_vertices.push_back(vertexarray->z);
             ++vertexarray;
+            LOG("-- [STILL] loadMesh() --");
             
             // Almacenar normales de los vértices
             mesh->m_normals.push_back(normalsarray->x);
             mesh->m_normals.push_back(normalsarray->y);
             mesh->m_normals.push_back(normalsarray->z);
             ++normalsarray;
+            LOG("-- [STILL2] loadMesh() --");
             
             // Almacenar coordenadas de textura
+            if(!hasTextureCoords) continue;
+            
             mesh->m_texture_coords.push_back(texcoordsarray->x);
             mesh->m_texture_coords.push_back(texcoordsarray->y);
             ++texcoordsarray;
+            LOG("-- [STILL3] loadMesh() --");
+
         }
+        
 
         // Almacenar los índices de las caras
         auto* indexarray        = amesh->mFaces;
