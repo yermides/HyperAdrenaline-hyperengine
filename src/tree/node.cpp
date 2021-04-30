@@ -90,7 +90,7 @@ Node::traverse(glm::mat4 const& accumulatedTrans)
     &&  !m_physicProperties->m_data.body->isStaticObject() 
     )
     {
-        INFOLOG("Soy dynamic");
+        // INFOLOG("Soy dynamic");
 
         auto body = m_physicProperties->m_data.body;
         auto motionState = m_physicProperties->m_motionState;

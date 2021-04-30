@@ -55,8 +55,9 @@ enum class OpenGLShader {
 };
 
 // Declaración de estructuras
-struct RayResult    { btRigidBody* pBody; btVector3 hitPoint; Node* node;   };
-struct Viewport     { int x, y, width, height;                              };
+struct RayResult    { btCollisionObject* pObj; btVector3 hitPoint; Node* node;     };
+// struct RayResult    { btRigidBody* pBody; btVector3 hitPoint; Node* node;           };
+struct Viewport     { int x, y, width, height;                                      };
 
 struct HyperEngine
 {
@@ -323,7 +324,21 @@ struct HyperEngine
     void createTriangleMeshShape(Node * const node);
 
     // Funciones necesarias para el raycast (2/2)
-    bool throwRaycast(const btVector3 &startPosition, const btVector3 &direction, RayResult &output);
+    bool throwRaycast(
+            const btVector3 &startPosition
+        ,   const btVector3 &direction
+        ,   RayResult &output
+        ,   int collisionGroupMask = 2147483647
+        ,   int collisionFilterMask = 2147483647
+    );
+
+    bool throwRaycastAllHits(
+            const btVector3 &startPosition
+        ,   const btVector3 &direction
+        ,   std::vector<RayResult>& output
+        ,   int collisionGroupMask = 2147483647
+        ,   int collisionFilterMask = 2147483647
+    );
 
     bool checkRaycastCollisionWithNode(const btVector3 &startPosition, const btVector3 &direction);
 

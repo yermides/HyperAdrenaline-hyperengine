@@ -1039,7 +1039,8 @@ void test_physics_3(void) {
     
     hyper::Node* camnode            = engine->createCamera(default_createnode_params); // tendrá la proyección por defecto
     
-    hyper::Node* missile_launcher   = engine->createModel(nullptr, {3,-1.5,-4}, default_rot_and_scale, "assets/missile-launcher.obj");
+    // hyper::Node* missile_launcher   = engine->createModel(nullptr, {3,-1.5,-4}, default_rot_and_scale, "assets/missile-launcher.obj");
+    hyper::Node* missile_launcher   = engine->createModel(nullptr, {4,-1.5,-4}, default_rot_and_scale, "assets/missile-launcher.obj");
     hyper::Node* cubito_rosa        = engine->createModel(nullptr, {-4,4,-4},{10,10,10}, default_scale, "assets/cubito_rosa.obj");
     hyper::Node* icosphere          = engine->createModel(nullptr, {4,-1.5,-4}, default_rot_and_scale, "assets/icosphere.obj");
     
@@ -1064,9 +1065,16 @@ void test_physics_3(void) {
             // Nota, el raycast no se puede ver si no se hace entre begin y end del render
             // Arreglar para tener una stack de rayos o algo así
             auto pos = icosphere->getTranslation();
-            hyper::RayResult result;
+            // hyper::RayResult result;
+            std::vector<hyper::RayResult> result;
 
-            auto hasHit = engine->throwRaycast(
+            // auto hasHit = engine->throwRaycast(
+            //         {pos.x, -20, pos.z}
+            //     ,   {pos.x, pos.y+100, pos.z}
+            //     ,   result
+            // );
+
+            auto hasHit = engine->throwRaycastAllHits(
                     {pos.x, -20, pos.z}
                 ,   {pos.x, pos.y+100, pos.z}
                 ,   result
@@ -1074,8 +1082,11 @@ void test_physics_3(void) {
 
             if(hasHit)
             {
-                INFOLOG("He dado!" << VAR(result.hitPoint.getX()) << VAR(result.hitPoint.getY()) << VAR(result.hitPoint.getZ()))
-                INFOLOG("El nodo tiene índice: " << VAR(result.node->getNameID()) );
+                INFOLOG("He dado!" << VAR(result.at(0).hitPoint.getX()) << VAR(result.at(0).hitPoint.getY()) << VAR(result.at(0).hitPoint.getZ())
+                        << "\n" << "El nodo tiene índice: " << VAR(result.at(0).node->getNameID()) << "y el array size = " VAR(result.size()) )
+
+                // INFOLOG("He dado!" << VAR(result.hitPoint.getX()) << VAR(result.hitPoint.getY()) << VAR(result.hitPoint.getZ()) 
+                //         << "\n" << "El nodo tiene índice: " << VAR(result.node->getNameID()))
             }
             else
             {
@@ -1095,8 +1106,9 @@ void test_physics_3(void) {
         if(engine->getKeyContinuousPress(GLFW_KEY_UP))      camnode->translate({0,0,-.3f});
         if(engine->getKeyContinuousPress(GLFW_KEY_DOWN))    camnode->translate({0,0,.3f});
 
-        if(engine->getKeyContinuousPress(GLFW_KEY_E))    camnode->translate({0,.3f,0});
-        if(engine->getKeyContinuousPress(GLFW_KEY_R))    camnode->translate({0,-.3f,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_SPACE))    camnode->translate({0,.3f,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_LEFT_CONTROL))    camnode->translate({0,-.3f,0});
+
         if(engine->getKeyContinuousPress(GLFW_KEY_T))    missile_launcher->rotate({0,3,0});
 
         if(engine->getKeyContinuousPress(GLFW_KEY_H)) 
@@ -1282,7 +1294,7 @@ int main(void) {
 
     // test_physics_2();
 
-    // test_physics_3();
+    test_physics_3();
 
-    camera_child_test();
+    // camera_child_test();
 }

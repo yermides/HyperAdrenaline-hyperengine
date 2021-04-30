@@ -935,45 +935,107 @@ HyperEngine::createTriangleMeshShape(Node * const node)
 }
 
 bool 
-HyperEngine::throwRaycast(const btVector3 &startPosition, const btVector3 &direction, RayResult &output)
+HyperEngine::throwRaycast(
+	const btVector3 &startPosition
+, 	const btVector3 &direction
+, 	RayResult &output
+, 	int collisionGroupMask
+, 	int collisionFilterMask
+)
 {
-		if (!m_world) return false;
-		
-		// get the picking ray from where we clicked
-		btVector3 rayTo = direction;
-		btVector3 rayFrom = startPosition;
-		
-		// create our raycast callback object
-		btCollisionWorld::ClosestRayResultCallback rayCallback(rayFrom,rayTo);
-		
-		// perform the raycast
-		m_world->rayTest(rayFrom, rayTo, rayCallback);
-
-		m_debugDrawer->drawLine(rayFrom, rayTo, btVector3(0,1,0));
-		
-		// did we hit something?
-		if (rayCallback.hasHit())
-		{
-			// if so, get the rigid body we hit
-			btRigidBody* pBody = (btRigidBody*)btRigidBody::upcast(rayCallback.m_collisionObject);
-			if (!pBody)
-				return false;
-		
-			// prevent us from picking objects like the ground plane
-
-			// TODO:: descomentar
-			// if (pBody->isStaticObject() || pBody->isKinematicObject()) 
-			// 	return false;
-	    
-			// set the result data
-			output.pBody = pBody;
-			output.hitPoint = rayCallback.m_hitPointWorld;
-			output.node = static_cast<Node*>(pBody->getUserPointer());
-			return true;
-		}
+	if (!m_world) return false;
 	
-		// we didn't hit anything
-		return false;
+	// get the picking ray from where we clicked
+	btVector3 rayTo = direction;
+	btVector3 rayFrom = startPosition;
+	
+	// create our raycast callback object
+	btCollisionWorld::ClosestRayResultCallback rayCallback(rayFrom, rayTo);
+	rayCallback.m_collisionFilterGroup = collisionGroupMask;
+	rayCallback.m_collisionFilterMask = collisionFilterMask;
+	
+	// perform the raycast
+	m_world->rayTest(rayFrom, rayTo, rayCallback);
+
+	if(m_useDebugDrawer)
+		m_debugDrawer->drawLine(rayFrom, rayTo, btVector3(0,1,0));
+	
+	// did we hit something?
+	if (rayCallback.hasHit())
+	{
+		// if so, get the rigid body we hit
+		// TODO:: aplicar el mismo union o dejarlo como collisionObject en el result (done, pero maybe revisar)
+		// auto* pBody = (btRigidBody*)btRigidBody::upcast(rayCallback.m_collisionObject);
+		auto* pObj =  const_cast<btCollisionObject*>(rayCallback.m_collisionObject);
+
+		// btCollisionObject* pBody =  const_cast<btCollisionObject*>(rayCallback.m_collisionObject);
+		// btCollisionObject* pBody =  rayCallback.m_collisionObject;
+
+		// if (!pBody) return false;
+	
+		// prevent us from picking objects like the ground plane
+
+		// TODO:: descomentar
+		// if (pBody->isStaticObject() || pBody->isKinematicObject()) 
+		// 	return false;
+	
+		// set the result data
+		output.pObj = pObj;
+		output.hitPoint = rayCallback.m_hitPointWorld;
+		output.node = static_cast<Node*>(pObj->getUserPointer());
+		return true;
+	}
+
+	// we didn't hit anything
+	return false;
+}
+
+bool 
+HyperEngine::throwRaycastAllHits(
+	const btVector3 &startPosition
+, 	const btVector3 &direction
+, 	std::vector<RayResult>& output
+, 	int collisionGroupMask
+, 	int collisionFilterMask
+)
+{
+	if (!m_world) return false;
+	
+	btVector3 rayTo = direction;
+	btVector3 rayFrom = startPosition;
+	
+	btCollisionWorld::AllHitsRayResultCallback rayCallback(rayFrom, rayTo);
+	rayCallback.m_collisionFilterGroup = collisionGroupMask;
+	rayCallback.m_collisionFilterMask = collisionFilterMask;
+	
+	// perform the raycast
+	m_world->rayTest(rayFrom, rayTo, rayCallback);
+
+	if(m_useDebugDrawer)
+		m_debugDrawer->drawLine(rayFrom, rayTo, btVector3(0,1,0));
+	
+	if (rayCallback.hasHit())
+	{
+		auto& pObjs = rayCallback.m_collisionObjects;
+		auto& pCollPoints = rayCallback.m_hitPointWorld;
+	
+		for(uint32_t i {0}; i < pObjs.size(); ++i)
+		{
+			RayResult res;
+			auto object = pObjs.at(i);
+			res.pObj = const_cast<btCollisionObject*>(object);
+			res.hitPoint = pCollPoints.at(i*3);
+			res.node = static_cast<Node*>(object->getUserPointer());
+			output.push_back(res);
+		}
+
+		// set the result data
+
+		return true;
+	}
+
+	// we didn't hit anything
+	return false;
 }
 
 bool 
