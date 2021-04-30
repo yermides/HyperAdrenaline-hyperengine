@@ -43,6 +43,9 @@
 #define SHADER_SKYBOX_PATH                  "src/shaders/skybox"
 #define SHADER_DEBUGDRAWER_PATH             "src/shaders/debugdrawer"
 
+template<typename T1, typename T2>
+using Hashmap = std::unordered_map<T1, T2>;
+
 namespace hyper {
 
 namespace gui = ImGui;
@@ -55,9 +58,11 @@ enum class OpenGLShader {
 };
 
 // Declaración de estructuras
-struct RayResult    { btCollisionObject* pObj; btVector3 hitPoint; Node* node;     };
 // struct RayResult    { btRigidBody* pBody; btVector3 hitPoint; Node* node;           };
-struct Viewport     { int x, y, width, height;                                      };
+
+struct RayResult        { btCollisionObject* pObj; btVector3 hitPoint; Node* node;      };
+struct Viewport         { int x, y, width, height;                                      };
+struct MouseWheelStatus { float offsetX {0.0f}, offsetY {0.0f};                         };
 
 struct HyperEngine
 {
@@ -209,6 +214,16 @@ struct HyperEngine
 
     bool const getKeyRelease(int const key) noexcept;
 
+    bool const getMouseKeySinglePress(int const key) noexcept;
+
+    bool const getMouseKeyContinuousPress(int const key) noexcept;
+
+    bool const getMouseKeyKeyboardPress(int const key) noexcept;
+
+    bool const getMouseKeyRelease(int const key) noexcept;
+
+    MouseWheelStatus const& getMouseWheelStatus(void);
+
     glm::dvec2 getMousePositionAbsolute(void) const noexcept;
 
     void setMousePositionAbsolute(float x, float y);
@@ -353,6 +368,8 @@ struct HyperEngine
     void setDebugDrawer(DebugDrawer* debugDrawer);
 
     void resetKeyStates(void);
+    void resetMouseKeyStates(void);
+    void resetMouseWheelStatus(void);
 private:
     // Inicializadores, solo se llaman en el constructor
     void initializeGraphics(void);
@@ -360,16 +377,20 @@ private:
 
     // Funciones auxiliares
     void setKeyState(int const key, int const action);
+    void setMouseKeyState(int const key, int const action);
+    void setMouseWheelStatus(float const offsetX, float const offsetY);
 
     // No se necesita el resource manager por su naturaleza singleton
 
     Node* const     m_rootnode      { new Node   };
 
     // Administrador de shaders
-    std::unordered_map<OpenGLShader, RShader*> m_shaders;
+    Hashmap<OpenGLShader, RShader*> m_shaders;
 
     // Administración del input de teclado
-    std::unordered_map<int, int> m_keystates;
+    Hashmap<int, int> m_keystates;
+    Hashmap<int, int> m_mousekeystates;
+    MouseWheelStatus m_mouseWheelStatus;
 
     // Atributos para mantenimiento de las cámaras, luces y viewports  (y ahora skybox)
     GLFWwindow*             m_window   { nullptr };

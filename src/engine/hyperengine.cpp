@@ -76,9 +76,12 @@ HyperEngine::clearScreen(void) const
 
 void 
 HyperEngine::beginRender(void)
-{ 
+{
+	// Clear screen and reset keys
 	this->clearScreen();
 	this->resetKeyStates();
+	this->resetMouseKeyStates();
+	this->resetMouseWheelStatus();
 
 	// Imgui
 	ImGui_ImplOpenGL3_NewFrame();
@@ -309,6 +312,40 @@ HyperEngine::getKeyRelease(int const key) noexcept
 {
 	return isWindowActive() && m_keystates[key] == GLFW_RELEASE;
 }
+
+/*****/
+bool const 
+HyperEngine::getMouseKeySinglePress(int const key) noexcept
+{
+	return isWindowActive() && m_mousekeystates[key] == GLFW_PRESS;
+}
+
+bool const 
+HyperEngine::getMouseKeyContinuousPress(int const key) noexcept
+{
+	return isWindowActive() && glfwGetMouseButton(m_window, key) == GLFW_PRESS; 
+}
+
+bool const 
+HyperEngine::getMouseKeyKeyboardPress(int const key) noexcept
+{
+	// No funciona, hace lo mismo que el single press
+	return isWindowActive() && (m_mousekeystates[key] == GLFW_REPEAT || m_mousekeystates[key] == GLFW_PRESS); 
+}
+
+bool const 
+HyperEngine::getMouseKeyRelease(int const key) noexcept
+{
+	return isWindowActive() && m_mousekeystates[key] == GLFW_RELEASE;
+}
+
+MouseWheelStatus const& 
+HyperEngine::getMouseWheelStatus(void)
+{
+	return m_mouseWheelStatus;
+}
+
+/*****/
 
 glm::dvec2
 HyperEngine::getMousePositionAbsolute(void) const noexcept
@@ -1138,16 +1175,23 @@ HyperEngine::initializeGraphics(void)
 
 	// glfwSwapInterval(1);	// VSync
 
-	// Callbacks, guardar el puntero a window porque es necesario modificar dónde apunta
-	// GLFWwindow* currentwindow = m_window;
-
+	// Callbacks, guardar el puntero a la engine en el user pointer de window
 	glfwSetWindowUserPointer( m_window, this );
+
 	glfwSetKeyCallback(m_window, [](GLFWwindow* window, int key, int scancode, int action, int mods){
 		HyperEngine* engine = static_cast<HyperEngine*>( glfwGetWindowUserPointer( window ) );
 		engine->setKeyState(key, action);
 	});
 
-	// glfwSetWindowUserPointer( m_window, currentwindow );
+	glfwSetMouseButtonCallback(m_window, [](GLFWwindow* window, int button, int action, int mods){
+		HyperEngine* engine = static_cast<HyperEngine*>( glfwGetWindowUserPointer( window ) );
+		engine->setMouseKeyState(button, action);
+	});
+
+	glfwSetScrollCallback(m_window, [](GLFWwindow* window, double xoffset, double yoffset){
+		HyperEngine* engine = static_cast<HyperEngine*>( glfwGetWindowUserPointer( window ) );
+		engine->setMouseWheelStatus(xoffset, yoffset);
+	});
 
 	glfwSetWindowSizeCallback(m_window, [](GLFWwindow* window, int width, int height) {
 		glViewport(0, 0, width, height);
@@ -1243,11 +1287,38 @@ HyperEngine::setKeyState(int const key, int const action)
 }
 
 void 
+HyperEngine::setMouseKeyState(int const key, int const action)
+{
+	m_mousekeystates[key] = action;
+}
+
+void 
+HyperEngine::setMouseWheelStatus(float const offsetX, float const offsetY)
+{
+	m_mouseWheelStatus.offsetX = offsetX;
+	m_mouseWheelStatus.offsetY = offsetY;
+}
+
+void 
 HyperEngine::resetKeyStates(void)
 {
 	// Para cada tecla reconocida en el mapa, setea a invalid (Estados: -1 invalid, 0 release, 1 press, 2 hold)
 	for(auto iter = m_keystates.begin(); iter != m_keystates.end(); ++iter)
 		iter->second = -1;
+}
+
+void 
+HyperEngine::resetMouseKeyStates(void)
+{
+	for(auto iter = m_mousekeystates.begin(); iter != m_mousekeystates.end(); ++iter)
+		iter->second = -1;
+}
+
+void
+HyperEngine::resetMouseWheelStatus(void)
+{
+	m_mouseWheelStatus.offsetX = 0.0f;
+	m_mouseWheelStatus.offsetY = 0.0f;
 }
 
 }

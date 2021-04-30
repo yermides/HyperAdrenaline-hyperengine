@@ -1274,7 +1274,7 @@ void camera_child_test(void) {
 }
 
 void test_pad_loading_error(void) {
-std::unique_ptr<hyper::HyperEngine> engine = std::make_unique<hyper::HyperEngine>(true);
+    std::unique_ptr<hyper::HyperEngine> engine = std::make_unique<hyper::HyperEngine>(true);
     engine->setWindowTitle("test_pad_loading_error");
     engine->setWindowIcon("assets/logo.jpg");
 
@@ -1347,6 +1347,77 @@ std::unique_ptr<hyper::HyperEngine> engine = std::make_unique<hyper::HyperEngine
     }
 }
 
+void test_mouse_input(void) {
+    std::unique_ptr<hyper::HyperEngine> engine = std::make_unique<hyper::HyperEngine>(true);
+    engine->setWindowTitle("test_pad_loading_error");
+    engine->setWindowIcon("assets/logo.jpg");
+
+    [[maybe_unused]] 
+    hyper::Node* camnode            = engine->createCamera(default_createnode_params); // tendrá la proyección por defecto    
+    [[maybe_unused]] 
+    hyper::Node* lightnode          = engine->createLight(default_createnode_params);
+    [[maybe_unused]] 
+    hyper::Node* plane              = engine->createModel(nullptr, {0,-2,0}, {0,0,0}, default_scale, "assets/planes/plano3-2.obj");
+    plane->setNameID(1);
+        
+    while(engine->isWindowActive() && !engine->getKeyContinuousPress(GLFW_KEY_ESCAPE))
+    {
+        // Render
+        engine->beginRender();
+        engine->drawScene();
+        engine->endRender();
+
+        // Input
+        if(engine->getKeyContinuousPress(GLFW_KEY_A))       
+            camnode->rotate({0,3,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_D))       
+            camnode->rotate({0,-3,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_W))       
+            camnode->rotate({3,0,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_S))       
+            camnode->rotate({-3,0,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_LEFT))    
+            camnode->translate({-.3,0,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_RIGHT))   
+            camnode->translate({.3,0,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_UP))      
+            camnode->translate({0,0,-.3f});
+        if(engine->getKeyContinuousPress(GLFW_KEY_DOWN))    
+            camnode->translate({0,0,.3f});
+        if(engine->getKeyContinuousPress(GLFW_KEY_SPACE))       
+            camnode->translate({0,.3f,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_LEFT_CONTROL))       
+            camnode->translate({0,-.3f,0});
+
+        // Mouse Input, uncomment to see logs
+        // if(engine->getMouseKeySinglePress(GLFW_MOUSE_BUTTON_MIDDLE))
+        // {
+        //     INFOLOG("Left single press")
+        // }
+        // if(engine->getMouseKeyContinuousPress(GLFW_MOUSE_BUTTON_MIDDLE))
+        // {
+        //     INFOLOG("Left continuous press")
+        // }
+        // if(engine->getMouseKeyKeyboardPress(GLFW_MOUSE_BUTTON_MIDDLE))
+        // {
+        //     INFOLOG("Left keyboard-like press")
+        // }
+        // if(engine->getMouseKeyRelease(GLFW_MOUSE_BUTTON_MIDDLE))
+        // {
+        //     INFOLOG("Left release")
+        // }
+
+        // auto wheel = engine->getMouseWheelStatus();
+        // INFOLOG( "wheel.offsetX" << VAR(wheel.offsetX) )
+        // INFOLOG( "wheel.offsetY" << VAR(wheel.offsetY) )
+
+        // Cámara siempre apunta a 0,0,0
+        camnode->setCameraTarget({0,0,0});
+        // Update de las físicas
+        engine->updatePhysics();
+    }
+}
+
 int main(void) {
 	// test_models_and_imgui();
 	// test_basic_lights();
@@ -1372,5 +1443,7 @@ int main(void) {
 
     // camera_child_test();
 
-    test_pad_loading_error();
+    // test_pad_loading_error();
+    
+    test_mouse_input();
 }
