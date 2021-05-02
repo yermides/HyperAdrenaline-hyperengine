@@ -18,10 +18,12 @@ struct DirLight {
 struct PointLight {
     vec3 position;
     
+    // Atenuaciones
     float constant;
     float linear;
     float quadratic;
 	
+	// Intensidades
     vec3 ambient;
     vec3 diffuse;
     vec3 specular;
@@ -30,6 +32,8 @@ struct PointLight {
 struct SpotLight {
     vec3 position;
     vec3 direction;
+    
+    // Apertura en dos pasos
     float cutOff;
     float outerCutOff;
   
