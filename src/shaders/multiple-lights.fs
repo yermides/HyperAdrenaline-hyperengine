@@ -2,9 +2,18 @@
 out vec4 FragColor;
 
 struct Material {
+    vec3 ambientColor;
+    vec3 diffuseColor;
+    vec3 specularColor;
+
+    int usesDiffuseTexture;
     sampler2D diffuse;
+    
+    int usesSpecularTexture;
     sampler2D specular;
+    
     float shininess;
+    float opacity;
 }; 
 
 struct DirLight {
@@ -46,7 +55,7 @@ struct SpotLight {
     vec3 specular;       
 };
 
-#define NR_POINT_LIGHTS 4
+#define NR_POINT_LIGHTS 1
 
 in vec3 FragPos;
 in vec3 Normal;
@@ -81,17 +90,29 @@ void main()
     // this fragment's final color.
     // == =====================================================
 
-
-
+    // vec3 result(0,0,0);
     // phase 1: directional lighting
-    vec3 result = CalcDirLight(dirLight, norm, viewDir);
+    // Comentada hasta tener luces dirigidas
+    // vec3 result = CalcDirLight(dirLight, norm, viewDir);
+    
     // phase 2: point lights
-    for(int i = 0; i < NR_POINT_LIGHTS; i++)
-        result += CalcPointLight(pointLights[i], norm, FragPos, viewDir);    
+    // for(int i = 0; i < NR_POINT_LIGHTS; i++)
+        // result += CalcPointLight(pointLights[i], norm, FragPos, viewDir);    
+        
+    vec3 result = CalcPointLight(pointLights[0], norm, FragPos, viewDir); 
+        
     // phase 3: spot light
-    result += CalcSpotLight(spotLight, norm, FragPos, viewDir);    
+    // Comentada hasta tener luces focales
+    // result += CalcSpotLight(spotLight, norm, FragPos, viewDir);    
     
     FragColor = vec4(result, 1.0);
+    
+    // *********************************************************
+    
+    // Lo anterior funcionaba, se ha cambiado el nombre de las variables del uniform del material
+    // FragColor = texture(material.diffuse, TexCoords);
+    
+    
 }
 
 // calculates the color when using a directional light.
@@ -129,7 +150,9 @@ vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir)
     ambient *= attenuation;
     diffuse *= attenuation;
     specular *= attenuation;
-    return (ambient + diffuse + specular);
+    // return (ambient + diffuse + specular);
+    
+    return diffuse;
 }
 
 // calculates the color when using a spot light.

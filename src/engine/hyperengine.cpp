@@ -102,22 +102,42 @@ HyperEngine::drawScene(void)
 
 	// TODO:: luces
 	for(auto light : m_lights) {
-		auto lightshader 	= light->getEntity()->getShader();
-		auto lightPos 		= light->getTranslation();
-		auto viewPos		= camnode->getTranslation();
-		auto lightColor 	= glm::vec3(1,1,1); 		// Color blanco
+		auto lightentity = light->getEntityAsLight();
 
-		// esto debería de pasarse en Emodel
-		// para saber por cada modelo si debe usar la luz o la textura difusa
-		lightshader->bind();
-		lightshader->setInt("usesLightning", 1);
-		lightshader->setVec3("lightPos", lightPos);
-		lightshader->setVec3("viewPos", viewPos);
-		lightshader->setVec3("lightColor", lightColor);
-		
-		// esto ni se llama así, TODO:: implementar bien el pasar el dato a opengl
-		// lightshader->setMat4("lightmatrix", lightmatrix);
-		lightshader->unbind();
+		switch(lightentity->getType())
+		{
+			case LightType::Point: 
+			{
+				INFOLOG("Luz puntual!");
+				auto lightshader 	= lightentity->getShader();
+				auto lightPos 		= light->getTranslation();
+				auto viewPos		= camnode->getTranslation();
+				auto lightColor 	= glm::vec3(1,1,1); 		// Color blanco
+
+				// esto debería de pasarse en Emodel
+				// para saber por cada modelo si debe usar la luz o la textura difusa
+				lightshader->bind();
+				lightshader->setInt("usesLightning", 1);
+				lightshader->setVec3("lightPos", lightPos);
+				lightshader->setVec3("viewPos", viewPos);
+				lightshader->setVec3("lightColor", lightColor);
+
+				lightshader->setVec3("pointLights[0].position", lightPos);
+				lightshader->setVec3("pointLights[0].ambient", lightentity->getIntensity().ambient);
+				lightshader->setVec3("pointLights[0].diffuse", lightentity->getIntensity().diffuse);
+				lightshader->setVec3("pointLights[0].specular", lightentity->getIntensity().specular);
+				lightshader->setFloat("pointLights[0].constant", lightentity->getAttenuation().constant);
+				lightshader->setFloat("pointLights[0].linear", lightentity->getAttenuation().linear);
+				lightshader->setFloat("pointLights[0].quadratic", lightentity->getAttenuation().quadratic);
+				
+				// esto ni se llama así, TODO:: implementar bien el pasar el dato a opengl
+				// lightshader->setMat4("lightmatrix", lightmatrix);
+				lightshader->unbind();
+
+				break;
+			}
+				
+		}
 	}
 
 	// Pasar matrices a opengl 

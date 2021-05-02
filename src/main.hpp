@@ -3,7 +3,7 @@
 #include <memory>
 #include <util/macros.hpp>
 #include <engine/hyperengine.hpp>
-#include <entities/e_light.hpp>
+// #include <entities/e_light.hpp>
 #include <entities/e_model.hpp>
 #include <tree/node.hpp>
 #include <util/functions.hpp>

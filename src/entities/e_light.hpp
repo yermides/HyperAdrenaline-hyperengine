@@ -15,15 +15,15 @@ struct LightIntensity {
     glm::vec3 specular  {0};
 };
 
-struct LightAperture {
-    float innerCutoff   {0.0f};
-    float outerCutoff   {0.0f};
-};
-
 struct LightAttenuation {
     float constant  {0.0f};
     float linear    {0.0f};
     float quadratic {0.0f};
+};
+
+struct LightAperture {
+    float innerCutoff   {0.0f};
+    float outerCutoff   {0.0f};
 };
 
 using LightDirection =  glm::vec3;
@@ -31,9 +31,12 @@ using LightDirection =  glm::vec3;
 struct ELight : public Entity
 {
     explicit ELight();
+    explicit ELight(LightType type, LightIntensity intensity, LightAttenuation attenuation, LightAperture aperture, LightDirection direction);
     ~ELight();
 
     void draw(glm::mat4 const& tranform) final;
+
+    // void drawFromHyperengine(RShader* const shader);
 
     constexpr void setType(LightType const& type) noexcept 
         { m_type = type; 			    }

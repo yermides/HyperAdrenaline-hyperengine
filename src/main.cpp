@@ -1430,20 +1430,36 @@ void test_multiple_lights(void) {
         ,   default_rot_and_scale
     ); // tendrá la proyección por defecto    
 
+
+    // [[maybe_unused]] 
+    // hyper::Node* lightnode = engine->createLight(
+    //     default_createnode_params
+    // );
+
+    hyper::Node* lightnode = engine->createLight(
+            default_createnode_params
+        ,   hyper::LightType::Point
+        ,   hyper::LightIntensity   { .ambient{0.05f, 0.05f, 0.05f}, .diffuse{0.8f, 0.8f, 0.8f}, .specular{1.0f, 1.0f, 1.0f} }
+        ,   hyper::LightAttenuation { .constant{1.0f}, .linear{0.09}, .quadratic{0.032} }
+        ,   hyper::LightAperture    { .innerCutoff{0.0f}, .outerCutoff{0.0f} }
+        ,   hyper::LightDirection   { 0,0,0 }
+    );
+
     [[maybe_unused]] 
-    hyper::Node* lightnode = engine->createLight(default_createnode_params);
+    hyper::Node* missile_launcher   = engine->createModel(nullptr, {2,-1,0}, default_rot_and_scale, "assets/missile-launcher.obj");
+
 
     [[maybe_unused]] 
     hyper::Node* plane = engine->createModel(
             nullptr
-        ,   {0,-1,0}
+        ,   {0,-0.2,0}
         ,   {0,0,0}
         ,   default_scale
         ,   "assets/planes/semicube.obj"
     );
 
     plane->setNameID(1);
-        
+
     while(engine->isWindowActive() && !engine->getKeyContinuousPress(GLFW_KEY_ESCAPE))
     {
         // Render
@@ -1472,6 +1488,9 @@ void test_multiple_lights(void) {
             camnode->translate({0,.3f,0});
         if(engine->getKeyContinuousPress(GLFW_KEY_LEFT_CONTROL))       
             camnode->translate({0,-.3f,0});
+
+        auto lightentity = lightnode->getEntityAsLight();
+        INFOLOG("attenuation constant: " << VAR(lightentity->getAttenuation().constant))
 
         // Cámara siempre apunta a 0,0,0
         camnode->setCameraTarget({0,0,0});
