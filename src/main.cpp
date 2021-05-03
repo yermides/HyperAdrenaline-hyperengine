@@ -1436,14 +1436,14 @@ void test_multiple_lights(void) {
     //     default_createnode_params
     // );
 
-    // hyper::Node* lightnode = engine->createLight(
-    //         default_createnode_params
-    //     ,   hyper::LightType::Point
-    //     ,   hyper::LightIntensity   { .ambient{0.05f, 0.05f, 0.05f}, .diffuse{0.8f, 0.8f, 0.8f}, .specular{1.0f, 1.0f, 1.0f} }
-    //     ,   hyper::LightAttenuation { .constant{1.0f}, .linear{0.09}, .quadratic{0.032} }
-    //     ,   hyper::LightAperture    { .innerCutoff{0.0f}, .outerCutoff{0.0f} }
-    //     ,   hyper::LightDirection   { 0,0,0 }
-    // );
+    hyper::Node* lightnode = engine->createLight(
+            default_createnode_params
+        ,   hyper::LightType::Point
+        ,   hyper::LightIntensity   { .ambient{0.05f, 0.05f, 0.05f}, .diffuse{0.8f, 0.8f, 0.8f}, .specular{1.0f, 1.0f, 1.0f} }
+        ,   hyper::LightAttenuation { .constant{1.0f}, .linear{0.09}, .quadratic{0.032} }
+        ,   hyper::LightAperture    { .innerCutoff{0.0f}, .outerCutoff{0.0f} }
+        ,   hyper::LightDirection   { 0,0,0 }
+    );
 
     hyper::Node* lightnode3 = engine->createLight(
             nullptr
@@ -1456,14 +1456,14 @@ void test_multiple_lights(void) {
         ,   hyper::LightDirection   { 0,0,0 }
     );
 
-    // hyper::Node* lightnode2 = engine->createLight(
-    //         default_createnode_params
-    //     ,   hyper::LightType::Directional
-    //     ,   hyper::LightIntensity   { .ambient{0.05f, 0.05f, 0.05f}, .diffuse{0.4f, 0.4f, 0.4f}, .specular{0.5f, 0.5f, 0.5f} }
-    //     ,   hyper::LightAttenuation { .constant{0.0f}, .linear{0.0f}, .quadratic{0.0f} }
-    //     ,   hyper::LightAperture    { .innerCutoff{0.0f}, .outerCutoff{0.0f} }
-    //     ,   hyper::LightDirection   { -0.2f, -1.0f, -0.3f }
-    // );
+    hyper::Node* lightnode2 = engine->createLight(
+            default_createnode_params
+        ,   hyper::LightType::Directional
+        ,   hyper::LightIntensity   { .ambient{0.05f, 0.05f, 0.05f}, .diffuse{0.4f, 0.4f, 0.4f}, .specular{0.5f, 0.5f, 0.5f} }
+        ,   hyper::LightAttenuation { .constant{0.0f}, .linear{0.0f}, .quadratic{0.0f} }
+        ,   hyper::LightAperture    { .innerCutoff{0.0f}, .outerCutoff{0.0f} }
+        ,   hyper::LightDirection   { -0.2f, -1.0f, -0.3f }
+    );
 
 
     [[maybe_unused]] 
@@ -1478,6 +1478,10 @@ void test_multiple_lights(void) {
         ,   default_scale
         ,   "assets/planes/semicube.obj"
     );
+
+    [[maybe_unused]] 
+    hyper::Node* cubito_rosa = engine->createModel(default_createnode_params, "assets/cubito_rosa.obj");
+
 
     plane->setNameID(1);
 
