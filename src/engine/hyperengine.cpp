@@ -101,42 +101,113 @@ HyperEngine::drawScene(void)
 	auto camerashader = camentity->getShader();
 
 	// TODO:: luces
+	int count {0};			// Para no cambiar el range-for loop
+	int numDirLights {0};
+	int numPointLights {0};
+	int numSpotLights {0};
+
 	for(auto light : m_lights) {
+
 		auto lightentity = light->getEntityAsLight();
+
+		// Cuidado con el range equis dé
+		if(!m_active_lights.at(count)) 
+		{
+			++count;
+			continue; 
+		}
+		else {
+			++count;
+		}
+
+		INFOLOG("count!" << VAR(count))
+
+		auto lightshader 	= lightentity->getShader();
+		auto lightPos 		= light->getTranslation();
+		auto viewPos		= camnode->getTranslation();
+		auto lightColor 	= glm::vec3(1,1,1); 		// Color blanco
 
 		switch(lightentity->getType())
 		{
-			case LightType::Point: 
+			case LightType::Point:
 			{
 				INFOLOG("Luz puntual!");
-				auto lightshader 	= lightentity->getShader();
-				auto lightPos 		= light->getTranslation();
-				auto viewPos		= camnode->getTranslation();
-				auto lightColor 	= glm::vec3(1,1,1); 		// Color blanco
 
 				// esto debería de pasarse en Emodel
 				// para saber por cada modelo si debe usar la luz o la textura difusa
 				lightshader->bind();
-				lightshader->setInt("usesLightning", 1);
-				lightshader->setVec3("lightPos", lightPos);
-				lightshader->setVec3("viewPos", viewPos);
-				lightshader->setVec3("lightColor", lightColor);
 
-				lightshader->setVec3("pointLights[0].position", lightPos);
-				lightshader->setVec3("pointLights[0].ambient", lightentity->getIntensity().ambient);
-				lightshader->setVec3("pointLights[0].diffuse", lightentity->getIntensity().diffuse);
-				lightshader->setVec3("pointLights[0].specular", lightentity->getIntensity().specular);
-				lightshader->setFloat("pointLights[0].constant", lightentity->getAttenuation().constant);
-				lightshader->setFloat("pointLights[0].linear", lightentity->getAttenuation().linear);
-				lightshader->setFloat("pointLights[0].quadratic", lightentity->getAttenuation().quadratic);
+				lightshader->setInt("numPointLights", numPointLights + 1);
+				lightshader->setVec3("viewPos", viewPos);
+
+				// Estos ya no se usan, pero por si acaso quiero volver al shader de materiales
+				// lightshader->setInt("usesLightning", 1);
+				// lightshader->setVec3("lightColor", lightColor);
+
+				lightshader->setVec3("pointLights["+ std::to_string(numPointLights) +"].position", lightPos);
+				lightshader->setVec3("pointLights["+ std::to_string(numPointLights) +"].ambient", lightentity->getIntensity().ambient);
+				lightshader->setVec3("pointLights["+ std::to_string(numPointLights) +"].diffuse", lightentity->getIntensity().diffuse);
+				lightshader->setVec3("pointLights["+ std::to_string(numPointLights) +"].specular", lightentity->getIntensity().specular);
+				lightshader->setFloat("pointLights["+ std::to_string(numPointLights) +"].constant", lightentity->getAttenuation().constant);
+				lightshader->setFloat("pointLights["+ std::to_string(numPointLights) +"].linear", lightentity->getAttenuation().linear);
+				lightshader->setFloat("pointLights["+ std::to_string(numPointLights) +"].quadratic", lightentity->getAttenuation().quadratic);
 				
 				// esto ni se llama así, TODO:: implementar bien el pasar el dato a opengl
 				// lightshader->setMat4("lightmatrix", lightmatrix);
 				lightshader->unbind();
 
+				++numPointLights;
 				break;
 			}
+
+			case LightType::Directional: 
+			{
+				INFOLOG("Luz direccional!");
+
+				lightshader->bind();
+
+				lightshader->setInt("numDirLights", numDirLights + 1);
+				lightshader->setVec3("viewPos", viewPos);
+
+				lightshader->setVec3("dirLights["+ std::to_string(numDirLights) +"].direction", lightentity->getDirection());
+				lightshader->setVec3("dirLights["+ std::to_string(numDirLights) +"].ambient", lightentity->getIntensity().ambient);
+				lightshader->setVec3("dirLights["+ std::to_string(numDirLights) +"].diffuse", lightentity->getIntensity().diffuse);
+				lightshader->setVec3("dirLights["+ std::to_string(numDirLights) +"].specular", lightentity->getIntensity().specular);
 				
+				lightshader->unbind();
+
+				++numDirLights;
+				break;
+			}
+
+			case LightType::Spot: 
+			{
+				INFOLOG("Luz focal!");
+
+				lightshader->bind();
+
+				lightshader->setInt("numSpotLights", numSpotLights + 1);
+				lightshader->setVec3("viewPos", viewPos);
+
+				lightshader->setVec3("spotLights["+ std::to_string(numSpotLights) +"].position", lightPos);
+				lightshader->setVec3("spotLights["+ std::to_string(numSpotLights) +"].direction", lightentity->getDirection());
+				lightshader->setVec3("spotLights["+ std::to_string(numSpotLights) +"].ambient", lightentity->getIntensity().ambient);
+				lightshader->setVec3("spotLights["+ std::to_string(numSpotLights) +"].diffuse", lightentity->getIntensity().diffuse);
+				lightshader->setVec3("spotLights["+ std::to_string(numSpotLights) +"].specular", lightentity->getIntensity().specular);
+				lightshader->setFloat("spotLights["+ std::to_string(numSpotLights) +"].constant", lightentity->getAttenuation().constant);
+				lightshader->setFloat("spotLights["+ std::to_string(numSpotLights) +"].linear", lightentity->getAttenuation().linear);
+				lightshader->setFloat("spotLights["+ std::to_string(numSpotLights) +"].quadratic", lightentity->getAttenuation().quadratic);
+				lightshader->setFloat("spotLights["+ std::to_string(numSpotLights) +"].cutOff", glm::cos(glm::radians(lightentity->getAperture().innerCutoff)));
+				lightshader->setFloat("spotLights["+ std::to_string(numSpotLights) +"].outerCutOff", glm::cos(glm::radians(lightentity->getAperture().outerCutoff)));
+				
+				lightshader->unbind();
+
+				++numSpotLights;
+				break;
+			}
+
+			default: 
+				break;
 		}
 	}
 

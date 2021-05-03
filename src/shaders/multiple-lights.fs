@@ -55,7 +55,10 @@ struct SpotLight {
     vec3 specular;       
 };
 
-#define NR_POINT_LIGHTS 1
+// #define NR_POINT_LIGHTS 1
+#define MAX_DIR_LIGHTS 10
+#define MAX_POINT_LIGHTS 50
+#define MAX_SPOT_LIGHTS 20
 
 in vec3 FragPos;
 in vec3 Normal;
@@ -67,9 +70,14 @@ uniform int numPointLights;
 uniform int numSpotLights;
 
 uniform vec3 viewPos;
-uniform DirLight dirLight;
-uniform PointLight pointLights[NR_POINT_LIGHTS];
-uniform SpotLight spotLight;
+
+// Estos de abajo realmente son arrays
+// uniform DirLight dirLight;
+// uniform SpotLight spotLight;
+
+uniform DirLight dirLights[MAX_DIR_LIGHTS];
+uniform PointLight pointLights[MAX_POINT_LIGHTS];
+uniform SpotLight spotLights[MAX_SPOT_LIGHTS];
 uniform Material material;
 
 // function prototypes
@@ -90,21 +98,37 @@ void main()
     // this fragment's final color.
     // == =====================================================
 
-    // vec3 result(0,0,0);
+    vec3 result = vec3(0.0, 0.0, 0.0);
+
     // phase 1: directional lighting
     // Comentada hasta tener luces dirigidas
     // vec3 result = CalcDirLight(dirLight, norm, viewDir);
+
+    for (int i = 0; i < numDirLights; i++)
+    {
+        result += CalcDirLight(dirLights[i], norm, viewDir);
+    }
     
     // phase 2: point lights
     // for(int i = 0; i < NR_POINT_LIGHTS; i++)
         // result += CalcPointLight(pointLights[i], norm, FragPos, viewDir);    
-        
-    vec3 result = CalcPointLight(pointLights[0], norm, FragPos, viewDir); 
+
+    for(int i = 0; i < numPointLights; i++)
+    {
+        result += CalcPointLight(pointLights[i], norm, FragPos, viewDir);
+    }
+
+    // vec3 result = CalcPointLight(pointLights[0], norm, FragPos, viewDir); 
         
     // phase 3: spot light
     // Comentada hasta tener luces focales
-    // result += CalcSpotLight(spotLight, norm, FragPos, viewDir);    
-    
+    // result += CalcSpotLight(spotLight, norm, FragPos, viewDir);  
+
+    for (int i = 0; i < numSpotLights; i++)
+    {
+        result += CalcSpotLight(spotLights[i], norm, FragPos, viewDir);  
+    }
+
     FragColor = vec4(result, 1.0);
     
     // *********************************************************
@@ -150,9 +174,9 @@ vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir)
     ambient *= attenuation;
     diffuse *= attenuation;
     specular *= attenuation;
-    // return (ambient + diffuse + specular);
     
-    return diffuse;
+    return (ambient + diffuse + specular);
+    // return diffuse;
 }
 
 // calculates the color when using a spot light.

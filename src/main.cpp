@@ -1436,14 +1436,35 @@ void test_multiple_lights(void) {
     //     default_createnode_params
     // );
 
-    hyper::Node* lightnode = engine->createLight(
-            default_createnode_params
+    // hyper::Node* lightnode = engine->createLight(
+    //         default_createnode_params
+    //     ,   hyper::LightType::Point
+    //     ,   hyper::LightIntensity   { .ambient{0.05f, 0.05f, 0.05f}, .diffuse{0.8f, 0.8f, 0.8f}, .specular{1.0f, 1.0f, 1.0f} }
+    //     ,   hyper::LightAttenuation { .constant{1.0f}, .linear{0.09}, .quadratic{0.032} }
+    //     ,   hyper::LightAperture    { .innerCutoff{0.0f}, .outerCutoff{0.0f} }
+    //     ,   hyper::LightDirection   { 0,0,0 }
+    // );
+
+    hyper::Node* lightnode3 = engine->createLight(
+            nullptr
+        ,   glm::vec3(2.0f,-3.5f,0.0f)
+        ,   default_rot_and_scale   
         ,   hyper::LightType::Point
-        ,   hyper::LightIntensity   { .ambient{0.05f, 0.05f, 0.05f}, .diffuse{0.8f, 0.8f, 0.8f}, .specular{1.0f, 1.0f, 1.0f} }
-        ,   hyper::LightAttenuation { .constant{1.0f}, .linear{0.09}, .quadratic{0.032} }
+        ,   hyper::LightIntensity   { .ambient{0.02f, 0.02f, 0.2f}, .diffuse{0.8f, 0.8f, 0.8f}, .specular{1.0f, 1.0f, 1.0f} }
+        ,   hyper::LightAttenuation { .constant{1.0f}, .linear{0.009f}, .quadratic{0.00032f} }
         ,   hyper::LightAperture    { .innerCutoff{0.0f}, .outerCutoff{0.0f} }
         ,   hyper::LightDirection   { 0,0,0 }
     );
+
+    // hyper::Node* lightnode2 = engine->createLight(
+    //         default_createnode_params
+    //     ,   hyper::LightType::Directional
+    //     ,   hyper::LightIntensity   { .ambient{0.05f, 0.05f, 0.05f}, .diffuse{0.4f, 0.4f, 0.4f}, .specular{0.5f, 0.5f, 0.5f} }
+    //     ,   hyper::LightAttenuation { .constant{0.0f}, .linear{0.0f}, .quadratic{0.0f} }
+    //     ,   hyper::LightAperture    { .innerCutoff{0.0f}, .outerCutoff{0.0f} }
+    //     ,   hyper::LightDirection   { -0.2f, -1.0f, -0.3f }
+    // );
+
 
     [[maybe_unused]] 
     hyper::Node* missile_launcher   = engine->createModel(nullptr, {2,-1,0}, default_rot_and_scale, "assets/missile-launcher.obj");
@@ -1489,8 +1510,8 @@ void test_multiple_lights(void) {
         if(engine->getKeyContinuousPress(GLFW_KEY_LEFT_CONTROL))       
             camnode->translate({0,-.3f,0});
 
-        auto lightentity = lightnode->getEntityAsLight();
-        INFOLOG("attenuation constant: " << VAR(lightentity->getAttenuation().constant))
+        // auto lightentity = lightnode->getEntityAsLight();
+        // INFOLOG("attenuation constant: " << VAR(lightentity->getAttenuation().constant))
 
         // Cámara siempre apunta a 0,0,0
         camnode->setCameraTarget({0,0,0});
