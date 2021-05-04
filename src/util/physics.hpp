@@ -34,6 +34,15 @@ struct PhysicProperties {
     OpenGLMotionState*  m_motionState       { nullptr };
 };
 
+// using CollisionPoint = btManifoldPoint;
+struct CollisionPoint {
+    btVector3 pointA, pointB, normalOnB;
+};
+struct CollisionPairResult {
+    std::pair<int, int> IDs;
+    std::vector<CollisionPoint> points;
+};
+
 // struct MyBulletContactResult : public btCollisionWorld::ContactResultCallback
 // {
 //     virtual btScalar addSingleResult(

@@ -837,42 +837,66 @@ HyperEngine::createPhysicPropertiesTriangleMeshShape(
 	);
 }
 
+
 bool 
-HyperEngine::getCollisionBetweenNodes(Node* const nodeA, Node* const nodeB)
+HyperEngine::getAABBCollisionBetweenNodes(Node* const nodeA, Node* const nodeB)
 {
 	if(!nodeA || !nodeB) return false;
 
-	auto& cp = m_collisionPairs;
-	auto it = 
-		std::find_if(cp.begin(), cp.end(), 
-			[&nodeA, &nodeB](std::pair<Node::NodeID, Node::NodeID> const& p)
-			{
-				return ( p.first == nodeA->getNameID() && p.second == nodeB->getNameID() ) 
-					|| ( p.first == nodeB->getNameID() && p.second == nodeA->getNameID() );
-			}
-		);
+	auto it = std::find_if(m_collisionPairs.begin(), m_collisionPairs.end(), [nodeA, nodeB](CollisionPairResult& collPair){
+		return ( collPair.IDs.first == nodeA->getNameID() && collPair.IDs.second == nodeB->getNameID() ) 
+			|| ( collPair.IDs.first == nodeB->getNameID() && collPair.IDs.second == nodeA->getNameID() );
+	});
 
-	if(it != cp.end())
-		return true;
-	else 
-		return false;
+	if(it == m_collisionPairs.end()) return false;
+
+	return true;
 }
 
 bool 
-HyperEngine::getCollisionBetweenNodes(Node* const nodeA, Node* const nodeB, PhysicContactResult& result)
+HyperEngine::getCollisionBetweenNodes(Node* const nodeA, Node* const nodeB, CollisionPairResult& collPairResult)
 {
 	if(!nodeA || !nodeB) return false;
 
-	auto propA = nodeA->getPhysicProperties();
-	auto propB = nodeA->getPhysicProperties();
-	auto collObjA = propA->m_data.collObj;
-	auto collObjB = propB->m_data.collObj;
+	auto it = std::find_if(m_collisionPairs.begin(), m_collisionPairs.end(), [nodeA, nodeB](CollisionPairResult& collPair){
+		return ( collPair.IDs.first == nodeA->getNameID() && collPair.IDs.second == nodeB->getNameID() ) 
+			|| ( collPair.IDs.first == nodeB->getNameID() && collPair.IDs.second == nodeA->getNameID() );
+	});
 
-	// m_world->contactPairTest(collObjA, collObjB, callback);
+	if(it == m_collisionPairs.end()) return false;
 
-	// m_world->contactTest();
-	// m_world->contactPairTest();
+	collPairResult = *it;
+
+	return !it->points.empty();
+
+
+	// if(!nodeA || !nodeB) return false;
+
+	// auto& cp = m_collisionPairs;
+	// auto it = 
+	// 	std::find_if(cp.begin(), cp.end(), 
+	// 		[&nodeA, &nodeB](std::pair<Node::NodeID, Node::NodeID> const& p)
+	// 		{
+	// 			return ( p.first == nodeA->getNameID() && p.second == nodeB->getNameID() ) 
+	// 				|| ( p.first == nodeB->getNameID() && p.second == nodeA->getNameID() );
+	// 		}
+	// 	);
+
+	// if(it != cp.end())
+	// 	return true;
+	// else 
+	// 	return false;
 }
+
+// bool 
+// HyperEngine::getCollisionBetweenNodes(Node* const nodeA, Node* const nodeB, PhysicContactResult& result)
+// {
+// 	// Patata, no funciona, no mires
+
+// 	// m_world->contactPairTest(collObjA, collObjB, callback);
+// 	// m_world->contactTest();
+// 	// m_world->contactPairTest();
+// }
 
 void 
 HyperEngine::deletePhysicProperties(Node* const node)
@@ -1334,7 +1358,11 @@ HyperEngine::initializePhysics(void)
 	// setear su debug drawer y opciones por defecto
 	m_debugDrawer = new DebugDrawer;
 	using DBG = DebugDrawer;
-	m_debugDrawer->setDebugMode(DBG::DBG_DrawWireframe | DBG::DBG_DrawAabb | DBG::DBG_DrawContactPoints);
+	m_debugDrawer->setDebugMode(
+			DBG::DBG_DrawWireframe 
+		| 	DBG::DBG_DrawAabb 
+		| 	DBG::DBG_DrawContactPoints
+	);
 	m_world->setDebugDrawer(m_debugDrawer);
 	// debug de cuántos contactos hay entre objetos
 	m_world->setInternalTickCallback([](btDynamicsWorld *world, btScalar timeStep) {
@@ -1345,54 +1373,57 @@ HyperEngine::initializePhysics(void)
 		// TODO:: ver cómo interpretar los contactos de colisiones
 
 		int numManifolds = world->getDispatcher()->getNumManifolds();
-		INFOLOG( "TickCallback: numManifolds = " VAR(numManifolds) )
+		// INFOLOG( "TickCallback: numManifolds = " VAR(numManifolds) )
 		for (int i {0}; i < numManifolds; ++i)
 		{
 			auto* contactManifold = world->getDispatcher()->getManifoldByIndexInternal(i);
 			auto* obA = contactManifold->getBody0();
 			auto* obB = contactManifold->getBody1();
-
 			auto* nodeA = static_cast<Node*>(obA->getUserPointer());
 			auto* nodeB = static_cast<Node*>(obB->getUserPointer());
 
-			auto pair = std::make_pair(nodeA->getNameID(), nodeB->getNameID());
-			collisionPairs.push_back(pair);
-
-			// INFOLOG( "TickCallback: nodeA->getNameID() = " VAR( nodeA->getNameID() ) )
-			// INFOLOG( "TickCallback: nodeB->getNameID() = " VAR( nodeB->getNameID() ) )
+			CollisionPairResult pair;
+			pair.IDs = std::make_pair(nodeA->getNameID(), nodeB->getNameID());
 
 			// TODO:: recordar que pt.getDistance() < 0.0f nos dice si la colisión es interna y no solo el AABB
 			// y así conseguiríamos una detección de colisión más precisa
 
 			int numContacts = contactManifold->getNumContacts();
-			int deepcontacts {0};
-			INFOLOG("numContacts" << VAR(numContacts) )
+			// int deepcontacts {0};
+
+			// INFOLOG("numContacts" << VAR(numContacts) )
+
 			for (int j {0}; j < numContacts; ++j)
 			{
-				auto pt = contactManifold->getContactPoint(j);
+				auto& pt = contactManifold->getContactPoint(j);
+				CollisionPoint point { .pointA{pt.getPositionWorldOnA()}, .pointB{pt.getPositionWorldOnB()}, .normalOnB{pt.m_normalWorldOnB} };
+				pair.points.push_back(std::move(point));
 
-				INFOLOG( "TickCallback: pt.getDistance() = " VAR(pt.getDistance()) )
+				// INFOLOG( "TickCallback: pt.getDistance() = " VAR(pt.getDistance()) )
 				
-				auto ptA = pt.getPositionWorldOnA();
-				auto ptB = pt.getPositionWorldOnB();
-				auto normalOnB = pt.m_normalWorldOnB;
-				INFOLOG( "ptA = " << VAR( ptA.getX() ) << VAR( ptA.getY() )<< VAR( ptA.getZ() ) )
-				INFOLOG( "ptB = " << VAR( ptB.getX() ) << VAR( ptB.getY() )<< VAR( ptB.getZ() ) )
-				INFOLOG( "normalOnB = " << VAR( normalOnB.getX() ) << VAR( normalOnB.getY() )<< VAR( normalOnB.getZ() ) )
+				// auto ptA = pt.getPositionWorldOnA();
+				// auto ptB = pt.getPositionWorldOnB();
+				// auto normalOnB = pt.m_normalWorldOnB;
+				// INFOLOG( "ptA = " << VAR( ptA.getX() ) << VAR( ptA.getY() )<< VAR( ptA.getZ() ) )
+				// INFOLOG( "ptB = " << VAR( ptB.getX() ) << VAR( ptB.getY() )<< VAR( ptB.getZ() ) )
+				// INFOLOG( "normalOnB = " << VAR( normalOnB.getX() ) << VAR( normalOnB.getY() )<< VAR( normalOnB.getZ() ) )
 
 
-				if (pt.getDistance() < 0.0f)
-				{
-					++deepcontacts;
+				// if (pt.getDistance() < 0.0f)
+				// {
+				// 	++deepcontacts;
 				// 	Vector3 ptA = pt.PositionWorldOnA;
 				// 	Vector3 ptB = pt.PositionWorldOnB;
 				// 	Vector3 normalOnB = pt.NormalWorldOnB;
-				}
+				// }
 			}
 
-			INFOLOG("deepcontacts" << VAR(deepcontacts) )
+			// INFOLOG("deepcontacts" << VAR(deepcontacts) )
 
+			collisionPairs.push_back(std::move(pair));
+			contactManifold->clearManifold();
 		}
+
 
 		// INFOLOG( "TickCallback: collisionPairs.size() = " VAR( collisionPairs.size() ) )
 	}, this);

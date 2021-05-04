@@ -326,10 +326,12 @@ struct HyperEngine
         ,   int collisionMaskFlags  = 0
     );
 
-    bool getCollisionBetweenNodes(Node* const nodeA, Node* const nodeB);
+    // Solo comprueba el AABB, seguramente ni se use
+    bool getAABBCollisionBetweenNodes(Node* const nodeA, Node* const nodeB);
+    bool getCollisionBetweenNodes(Node* const nodeA, Node* const nodeB, CollisionPairResult& collPairResult);
 
     // No devuelve void pero es de momento
-    bool getCollisionBetweenNodes(Node* const nodeA, Node* const nodeB, PhysicContactResult& result);
+    // bool getCollisionBetweenNodes(Node* const nodeA, Node* const nodeB, PhysicContactResult& result);
 
     void deletePhysicProperties(Node* const node);
 
@@ -416,7 +418,9 @@ private:
     btDiscreteDynamicsWorld* m_world    { nullptr };
     DebugDrawer* m_debugDrawer          { nullptr };
     bool m_useDebugDrawer               { false   };
-    std::vector<std::pair<Node::NodeID, Node::NodeID>> m_collisionPairs;
+    std::vector<CollisionPairResult> m_collisionPairs;
+
+    // std::vector<std::pair<Node::NodeID, Node::NodeID>> m_collisionPairs;
 
     // imgui
     ImGuiIO* m_io;

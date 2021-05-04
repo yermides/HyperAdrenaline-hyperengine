@@ -1180,7 +1180,7 @@ void test_physics_3(void) {
 
         if(engine->getKeySinglePress(GLFW_KEY_5))
         {
-            bool collides = engine->getCollisionBetweenNodes(missile_launcher, icosphere);
+            bool collides = engine->getAABBCollisionBetweenNodes(missile_launcher, icosphere);
             INFOLOG("¿Colisionan? " << VAR(collides) )
         }
 
@@ -1644,10 +1644,14 @@ std::unique_ptr<hyper::HyperEngine> engine = std::make_unique<hyper::HyperEngine
         // Check collision
         if(engine->getKeySinglePress(GLFW_KEY_ENTER))
         {
-            bool collides = engine->getCollisionBetweenNodes(plane, cubito_rosa);
+            CollisionPairResult res;
+            bool collides = engine->getCollisionBetweenNodes(plane, cubito_rosa, res);
+
             INFOLOG( "collides: " << VAR(collides) )
+
+            if(collides)
+                INFOLOG( "id's: " << VAR(res.IDs.first) << VAR(res.IDs.second) )
         }
-        
 
         // Move the cube
         if(engine->getKeySinglePress(GLFW_KEY_KP_8))
