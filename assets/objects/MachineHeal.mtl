@@ -1,98 +1,82 @@
-# Blender MTL File: 'MachineHeal.blend'
-# Material Count: 8
+# Blender MTL File: 'maquinahealth.blend'
+# Material Count: 7
 
 newmtl Boton
-Ns 27.000000
-Ka 1.000000 1.000000 1.000000
+Ns 30.000009
+Ka 0.418440 0.418440 0.418440
 Kd 0.800000 0.022455 0.007598
 Ks 0.500000 0.500000 0.500000
-Ke 0.0 0.0 0.0
+Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
-illum 2
-map_Ns texture\\MaquinaHealth\\Boton_roughness.jpg
+illum 3
 map_Kd texture\\MaquinaHealth\\Boton_baseColor.jpg
-refl texture\\MaquinaHealth\\Boton_metallic.jpg
+map_Ns texture\\MaquinaHealth\\Boton_roughness.jpg
 
 newmtl Cable
-Ns 27.000000
+Ns 30.000009
 Ka 1.000000 1.000000 1.000000
 Kd 0.005236 0.800000 0.009391
 Ks 0.500000 0.500000 0.500000
-Ke 0.0 0.0 0.0
+Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 2
 map_Kd texture\\MaquinaHealth\\Cable_baseColor.jpg
 
 newmtl Cristal
-Ns 27.000000
-Ka 1.000000 1.000000 1.000000
+Ns 727.196863
+Ka 0.382979 0.382979 0.382979
 Kd 0.800000 0.800000 0.800000
 Ks 0.500000 0.500000 0.500000
-Ke 0.0 0.0 0.0
+Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
-illum 2
+illum 3
 map_Bump texture\\MaquinaHealth\\Pantalla_normal.png
-map_Ns texture\\MaquinaHealth\\Pantalla_roughness.jpg
 map_Kd texture\\MaquinaHealth\\Pantalla_baseColor.jpg
-refl texture\\MaquinaHealth\\Pantalla_metallic.jpg
 
 newmtl Maquina
-Ns 27.000000
+Ns 30.000009
 Ka 1.000000 1.000000 1.000000
 Kd 0.800000 0.214895 0.006997
 Ks 0.500000 0.500000 0.500000
-Ke 0.0 0.0 0.0
+Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 2
 map_Bump texture\\MaquinaHealth\\Maquina_normal.png
-map_Ns texture\\MaquinaHealth\\Maquina_roughness.jpg
 map_Kd texture\\MaquinaHealth\\Maquina_baseColor.jpg
-refl texture\\MaquinaHealth\\Maquina_metallic.jpg
-
-newmtl NewShop
-Ns 27.000000
-Ka 1.000000 1.000000 1.000000
-Kd 0.800000 0.800000 0.800000
-Ks 0.500000 0.500000 0.500000
-Ke 0.0 0.0 0.0
-Ni 1.450000
-d 1.000000
-illum 2
-map_Ns texture\\MaquinaHealth\\Shop_roughness.jpg
-map_Kd texture\\MaquinaHealth\\Shop_baseColor.jpg
+map_Ns texture\\MaquinaHealth\\Maquina_roughness.jpg
 
 newmtl Numeros
-Ns 27.000000
+Ns 30.000009
 Ka 1.000000 1.000000 1.000000
 Kd 0.800000 0.800000 0.800000
 Ks 0.500000 0.500000 0.500000
-Ke 0.0 0.0 0.0
+Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 2
-map_Kd texture\\MaquinaHealth\\numpad-specular.png
+map_Kd texture\\MaquinaAmmo\\numpad-specular.png
 
 newmtl Power
-Ns 27.000000
+Ns 30.000009
 Ka 1.000000 1.000000 1.000000
 Kd 0.800000 0.544722 0.035120
 Ks 0.500000 0.500000 0.500000
-Ke 0.0 0.0 0.0
+Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 2
-map_Kd -s 1.000000 1.100000 1.000000 texture\\MaquinaHealth\\Power_baseColor.jpg
+map_Kd texture\\MaquinaAmmo\\Conector_baseColor.jpg
 
 newmtl Shop
-Ns 27.000000
+Ns 30.000009
 Ka 1.000000 1.000000 1.000000
 Kd 0.788218 0.800000 0.029471
 Ks 0.500000 0.500000 0.500000
-Ke 0.0 0.0 0.0
+Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 2

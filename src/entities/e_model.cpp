@@ -40,4 +40,40 @@ EModel::loadFromFile(std::string const& path)
     m_rmesh = ResourceManager::getResource_t<RMesh>(path);
 }
 
+std::vector<float> const
+EModel::getVertexPositions(void)
+{
+    std::vector<float> vertices;
+
+    for(auto mesh : m_rmesh->m_meshes) { 
+        vertices.insert( vertices.end(), mesh->m_vertices.begin(), mesh->m_vertices.end() );
+    }
+
+    return vertices;
+}
+
+std::vector<float> const 
+EModel::getVertexNormals(void)
+{
+    std::vector<float> normals;
+
+    for(auto mesh : m_rmesh->m_meshes) { 
+        normals.insert( normals.end(), mesh->m_normals.begin(), mesh->m_normals.end() );
+    }
+
+    return normals;
+}
+
+std::vector<float> const 
+EModel::getVertexIndices(void)
+{
+    std::vector<float> indices;
+
+    for(auto mesh : m_rmesh->m_meshes) { 
+        indices.insert( indices.end(), mesh->m_indices.begin(), mesh->m_indices.end() );
+    }
+
+    return indices;
+}
+
 }

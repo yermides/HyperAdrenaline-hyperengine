@@ -259,7 +259,7 @@ void test_hyperengine_traverse(void) {
     auto engine = new HyperEngine(true);
 
     auto shader = ResourceManager::getResource_t<RShader>("src/shaders/1.model_loading");
-	auto shaderID = shader->getProgramID();
+	[[maybe_unused]] auto shaderID = shader->getProgramID();
 
     Node* node = engine->createModel(default_createnode_params, "assets/missile-launcher.obj");
     Node* node2 = engine->createModel(nullptr, {2.0f, 0.0f, 0.0f}, default_rot, default_scale, "assets/HA_funador_pesado.obj");
@@ -280,7 +280,7 @@ void test_hyperengine_traverse(void) {
 
 void printMat4(glm::mat4 const& m)
 {
-    LOG(glm::to_string(m));
+    INFOLOG("Matriz entera de transformación: " << glm::to_string(m));
 }
 
 void test_view_matrix_inverse(void) {
@@ -337,13 +337,13 @@ void test_full_tree_traverse() {
     auto camnode = engine->createCamera(default_createnode_params); // tendrá la proyección por defecto
 
     hyper::Node* missile_launcher = engine->createModel(default_createnode_params, "assets/missile-launcher.obj");
-    hyper::Node* funador_pesado = engine->createModel(nullptr, {2.0f, 0.0f, 0.0f}, default_rot, default_scale, "assets/HA_funador_pesado.obj");
+    [[maybe_unused]] hyper::Node* funador_pesado = engine->createModel(nullptr, {2.0f, 0.0f, 0.0f}, default_rot, default_scale, "assets/HA_funador_pesado.obj");
 
     camnode->translate({0,0,4});
     missile_launcher->translate({0.0f,0.0f,-3.0f});
 
-    glm::vec3* camtrans = { new glm::vec3( camnode->getTranslation() )};
-    glm::vec3* camrot = { new glm::vec3( camnode->getRotation() )};
+    glm::vec3* misiletrans  = { new glm::vec3( missile_launcher->getTranslation() )};
+    glm::vec3* misilerot    = { new glm::vec3( missile_launcher->getRotation() )};
 
     while(engine->isWindowActive() && !engine->getKeyContinuousPress(GLFW_KEY_ESCAPE))
     {
@@ -357,8 +357,8 @@ void test_full_tree_traverse() {
         hyper::gui::Begin("Ventana temporal2 - HyperEngine::drawExampleWindowGUI()", 0,
             ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove);
 	    hyper::gui::Button("Hola mundo2!");
-        ImGui::SliderFloat3("Translación de la cámara", (float*)camtrans, -10.0f, 10.0f);
-        ImGui::SliderFloat3("Rotación de la cámara", (float*)camrot, -180.0f, 180.0f);
+        ImGui::SliderFloat3("Lanzamisiles - Translación", (float*)misiletrans, -10.0f, 10.0f);
+        ImGui::SliderFloat3("Lanzamisiles - Rotación   ", (float*)misilerot, -180.0f, 180.0f);
 	    hyper::gui::End();
 
         engine->endRender();
@@ -381,8 +381,8 @@ void test_full_tree_traverse() {
         if(engine->getKeyContinuousPress(GLFW_KEY_RIGHT))
             camnode->translate({0.1f,0,0});
 
-        camnode->setTranslation( *(glm::vec3*)camtrans );
-        camnode->setRotation( *(glm::vec3*)camrot );
+        missile_launcher->setTranslation( *(glm::vec3*)misiletrans );
+        missile_launcher->setRotation( *(glm::vec3*)misilerot );
     }
 
 }
@@ -479,7 +479,7 @@ void test_matrices_data_lights(void) {
     engine->setWindowTitle("test_matrices_data_lights");
     engine->setWindowIcon("assets/logo.jpg");
 
-    hyper::Node* lightnode = engine->createLight(default_createnode_params);
+    [[maybe_unused]] hyper::Node* lightnode = engine->createLight(default_createnode_params);
     hyper::Node* camnode = engine->createCamera(nullptr,{1.0f,0.0f,4.0f},{0,15,0} , default_scale); // tendrá la proyección por defecto
     hyper::Node* missile_launcher = engine->createModel(default_createnode_params, "assets/missile-launcher.obj");
     // hyper::Node* funador_pesado2 = engine->createModel(nullptr, {-1.0f, 0.0f, 1.0f}, default_rot_and_scale, "assets/newmachinegun/HA_funador_pesado.obj");
@@ -528,63 +528,63 @@ void test_matrices_data_lights(void) {
 }
 
 void test_collisions_bullet(void) {
-    std::unique_ptr<hyper::HyperEngine> engine = std::make_unique<hyper::HyperEngine>(true);
-    engine->setWindowTitle("test_collisions_bullet");
-    engine->setWindowIcon("assets/logo.jpg");
+    // std::unique_ptr<hyper::HyperEngine> engine = std::make_unique<hyper::HyperEngine>(true);
+    // engine->setWindowTitle("test_collisions_bullet");
+    // engine->setWindowIcon("assets/logo.jpg");
 
-    hyper::Node* camnode = engine->createCamera(nullptr, {0.0f,0.0f,5.0f}, default_rot_and_scale); // tendrá la proyección por defecto
-    hyper::Node* missile_launcher = engine->createModel(nullptr, {0,1,0}, default_rot_and_scale, "assets/missile-launcher.obj");
-    hyper::Node* floor = engine->createModel(nullptr, {0, -1, 0}, default_rot_and_scale, "assets/planes/plano1.obj");
+    // hyper::Node* camnode = engine->createCamera(nullptr, {0.0f,0.0f,5.0f}, default_rot_and_scale); // tendrá la proyección por defecto
+    // hyper::Node* missile_launcher = engine->createModel(nullptr, {0,1,0}, default_rot_and_scale, "assets/missile-launcher.obj");
+    // hyper::Node* floor = engine->createModel(nullptr, {0, -1, 0}, default_rot_and_scale, "assets/planes/plano1.obj");
 
-    CollisionManager* collisionManager { new CollisionManager };
-	btBoxShape* groundShape = new btBoxShape(btVector3(btScalar(50.),btScalar(50.),btScalar(50.)));
-	collisionManager->m_collisionShapes.push_back(groundShape);
+    // CollisionManager* collisionManager { new CollisionManager };
+	// btBoxShape* groundShape = new btBoxShape(btVector3(btScalar(50.),btScalar(50.),btScalar(50.)));
+	// collisionManager->m_collisionShapes.push_back(groundShape);
 
 
-    btVector3 floorPosition = { floor->getTranslation().x, floor->getTranslation().y, floor->getTranslation().z };
-	btTransform groundTransform;
-	groundTransform.setIdentity();
-	groundTransform.setOrigin(floorPosition);      // btVector3(0,-50,0)
+    // btVector3 floorPosition = { floor->getTranslation().x, floor->getTranslation().y, floor->getTranslation().z };
+	// btTransform groundTransform;
+	// groundTransform.setIdentity();
+	// groundTransform.setOrigin(floorPosition);      // btVector3(0,-50,0)
 
-    {
-		btScalar mass(0.);
+    // {
+	// 	btScalar mass(0.);
 
-		//rigidbody is dynamic if and only if mass is non zero, otherwise static
-		bool isDynamic = (mass != 0.f);
+	// 	//rigidbody is dynamic if and only if mass is non zero, otherwise static
+	// 	bool isDynamic = (mass != 0.f);
 
-		btVector3 localInertia(0,0,0);
-		if (isDynamic)
-			groundShape->calculateLocalInertia(mass,localInertia);
+	// 	btVector3 localInertia(0,0,0);
+	// 	if (isDynamic)
+	// 		groundShape->calculateLocalInertia(mass,localInertia);
 
-		//using motionstate is recommended, it provides interpolation capabilities, and only synchronizes 'active' objects
-		btDefaultMotionState* myMotionState = new btDefaultMotionState(groundTransform);
-		btRigidBody::btRigidBodyConstructionInfo rbInfo(mass,myMotionState,groundShape,localInertia);
-		btRigidBody* body = new btRigidBody(rbInfo);
+	// 	//using motionstate is recommended, it provides interpolation capabilities, and only synchronizes 'active' objects
+	// 	btDefaultMotionState* myMotionState = new btDefaultMotionState(groundTransform);
+	// 	btRigidBody::btRigidBodyConstructionInfo rbInfo(mass,myMotionState,groundShape,localInertia);
+	// 	btRigidBody* body = new btRigidBody(rbInfo);
 
-		//add the body to the dynamics world
-		collisionManager->m_dynamicsWorld->addRigidBody(body);
-	}
+	// 	//add the body to the dynamics world
+	// 	collisionManager->m_dynamicsWorld->addRigidBody(body);
+	// }
 
-    while(engine->isWindowActive() && !engine->getKeyContinuousPress(GLFW_KEY_ESCAPE))
-    {
-        engine->beginRender();
-        engine->drawScene();
+    // while(engine->isWindowActive() && !engine->getKeyContinuousPress(GLFW_KEY_ESCAPE))
+    // {
+    //     engine->beginRender();
+    //     engine->drawScene();
 
-        collisionManager->m_dynamicsWorld->debugDrawWorld();
+    //     collisionManager->m_dynamicsWorld->debugDrawWorld();
 
-        engine->endRender();
+    //     engine->endRender();
 
-        missile_launcher->rotate({0,2,0});
+    //     missile_launcher->rotate({0,2,0});
 
-        if(engine->getKeyContinuousPress(GLFW_KEY_A))       camnode->rotate({0,3,0});
-        if(engine->getKeyContinuousPress(GLFW_KEY_D))       camnode->rotate({0,-3,0});
-        if(engine->getKeyContinuousPress(GLFW_KEY_W))       camnode->rotate({3,0,0});
-        if(engine->getKeyContinuousPress(GLFW_KEY_S))       camnode->rotate({-3,0,0});
-        if(engine->getKeyContinuousPress(GLFW_KEY_LEFT))    camnode->translate({-.3,0,0});
-        if(engine->getKeyContinuousPress(GLFW_KEY_RIGHT))   camnode->translate({.3,0,0});
-        if(engine->getKeyContinuousPress(GLFW_KEY_UP))      camnode->translate({0,0,-.3f});
-        if(engine->getKeyContinuousPress(GLFW_KEY_DOWN))    camnode->translate({0,0,.3f});
-    }
+    //     if(engine->getKeyContinuousPress(GLFW_KEY_A))       camnode->rotate({0,3,0});
+    //     if(engine->getKeyContinuousPress(GLFW_KEY_D))       camnode->rotate({0,-3,0});
+    //     if(engine->getKeyContinuousPress(GLFW_KEY_W))       camnode->rotate({3,0,0});
+    //     if(engine->getKeyContinuousPress(GLFW_KEY_S))       camnode->rotate({-3,0,0});
+    //     if(engine->getKeyContinuousPress(GLFW_KEY_LEFT))    camnode->translate({-.3,0,0});
+    //     if(engine->getKeyContinuousPress(GLFW_KEY_RIGHT))   camnode->translate({.3,0,0});
+    //     if(engine->getKeyContinuousPress(GLFW_KEY_UP))      camnode->translate({0,0,-.3f});
+    //     if(engine->getKeyContinuousPress(GLFW_KEY_DOWN))    camnode->translate({0,0,.3f});
+    // }
 }
 
 void test_skybox_and_mouse_input() {
@@ -592,31 +592,25 @@ void test_skybox_and_mouse_input() {
     engine->setWindowTitle("test_skybox_and_mouse_input");
     engine->setWindowIcon("assets/logo.jpg");
 
-    hyper::Node* lightnode = engine->createLight(default_createnode_params);
-    hyper::Node* camnode = engine->createCamera(nullptr,{1.0f,0.0f,4.0f},{0,15,0} , default_scale); // tendrá la proyección por defecto
-    hyper::Node* missile_launcher = engine->createModel(default_createnode_params, "assets/missile-launcher.obj");
-    // hyper::Node* funador_pesado2 = engine->createModel(nullptr, {-1.0f, 0.0f, 1.0f}, default_rot_and_scale, "assets/newmachinegun/HA_funador_pesado.obj");
-    hyper::Node* cubito_rosa = engine->createModel(default_createnode_params, "assets/cubito_rosa.obj");
-    hyper::Node* icosphere = engine->createModel(default_createnode_params, "assets/icosphere.obj");
+    [[maybe_unused]] hyper::Node* lightnode = engine->createLight(default_createnode_params);
+    hyper::Node* camnode = engine->createCamera(default_createnode_params); // tendrá la proyección por defecto
 
-    cubito_rosa->setTranslation({-2.0f,0.0f,0.0f});
-    cubito_rosa->setScale({0.3f,0.3f,0.3f});
-    icosphere->setTranslation({2,0,0});
+    hyper::Node* missile_launcher = engine->createModel(nullptr, {0,0,-4}, default_rot_and_scale, "assets/missile-launcher.obj");
+    [[maybe_unused]] hyper::Node* cubito_rosa = engine->createModel(nullptr, {-2,0,-4}, default_rot_and_scale, "assets/cubito_rosa.obj");
+    [[maybe_unused]] hyper::Node* icosphere = engine->createModel(nullptr, {2,0,-4}, default_rot_and_scale, "assets/icosphere.obj");
 
-    // a medias de esto, hacer lo de los shaders y acordarse de cambiar la depth function (Z buffer) para que siempre se vea al fondo
-    // hyper::RSkybox* skybox { hyper::ResourceManager::getResource_t<hyper::RSkybox>("xd") };
-
-    hyper::Node* skyboxnode = engine->createSkybox(
-            default_createnode_params
-        ,   SkyboxNamelist 
-            { 
-                "assets/skybox/top.jpg"
-            ,   "assets/skybox/bottom.jpg"
-            ,   "assets/skybox/left.jpg"
-            ,   "assets/skybox/right.jpg"
-            ,   "assets/skybox/front.jpg"
-            ,   "assets/skybox/back.jpg" 
-            }
+    // a medias de la skybox, hacer lo de los shaders y acordarse de cambiar la depth function (Z buffer) para que siempre se vea al fondo
+    [[maybe_unused]] hyper::Node* skyboxnode = engine->createSkybox(
+        default_createnode_params
+    ,   SkyboxNamelist 
+        { 
+            "assets/skybox/space/lightblue/top.png"
+        ,   "assets/skybox/space/lightblue/bot.png"
+        ,   "assets/skybox/space/lightblue/left.png"
+        ,   "assets/skybox/space/lightblue/right.png"
+        ,   "assets/skybox/space/lightblue/front.png"
+        ,   "assets/skybox/space/lightblue/back.png" 
+        }
     );
 
     while(engine->isWindowActive() && !engine->getKeyContinuousPress(GLFW_KEY_ESCAPE))
@@ -686,6 +680,850 @@ void test_skybox_and_mouse_input() {
     }
 }
 
+void test_physics(void) {
+    std::unique_ptr<hyper::HyperEngine> engine = std::make_unique<hyper::HyperEngine>(true);
+    engine->setWindowTitle("test_physics");
+    engine->setWindowIcon("assets/logo.jpg");
+
+    [[maybe_unused]] hyper::Node* lightnode          = engine->createLight(default_createnode_params);
+    hyper::Node* camnode            = engine->createCamera(default_createnode_params); // tendrá la proyección por defecto
+
+    hyper::Node* missile_launcher   = engine->createModel(nullptr, {0,0,-4}, default_rot_and_scale, "assets/missile-launcher.obj");
+    hyper::Node* cubito_rosa        = engine->createModel(nullptr, {-4,0,-4}, default_rot_and_scale, "assets/cubito_rosa.obj");
+    hyper::Node* icosphere          = engine->createModel(nullptr, {4,0,-4}, default_rot_and_scale, "assets/icosphere.obj");
+    hyper::Node* plane              = engine->createModel(nullptr, {0,-2.0f,0}, {0,0,0}, default_scale, "assets/planes/plano3.obj");
+    // hyper::Node* plane              = nullptr;
+
+    {
+    // a medias de la skybox, hacer lo de los shaders y acordarse de cambiar la depth function (Z buffer) para que siempre se vea al fondo
+    // hyper::Node* skyboxnode = engine->createSkybox(
+    //     default_createnode_params
+    // ,   SkyboxNamelist 
+    //     { 
+    //         "assets/skybox/space/lightblue/top.png"
+    //     ,   "assets/skybox/space/lightblue/bot.png"
+    //     ,   "assets/skybox/space/lightblue/left.png"
+    //     ,   "assets/skybox/space/lightblue/right.png"
+    //     ,   "assets/skybox/space/lightblue/front.png"
+    //     ,   "assets/skybox/space/lightblue/back.png" 
+    //     }
+    // );
+
+    // hyper::Node* skyboxnode = engine->createSkybox(
+    //     default_createnode_params
+    // ,   SkyboxNamelist 
+    //     { 
+    //         "assets/skybox/space/red/bkg1_top3.png"
+    //     ,   "assets/skybox/space/red/bkg1_bottom4.png"
+    //     ,   "assets/skybox/space/red/bkg1_left2.png"
+    //     ,   "assets/skybox/space/red/bkg1_right1.png"
+    //     ,   "assets/skybox/space/red/bkg1_front5.png"
+    //     ,   "assets/skybox/space/red/bkg1_back6.png" 
+    //     }
+    // );
+
+    // hyper::Node* skyboxnode = engine->createSkybox(
+    //     default_createnode_params
+    // ,   SkyboxNamelist 
+    //     { 
+    //         "assets/skybox/space/blue/bkg1_top.png"
+    //     ,   "assets/skybox/space/blue/bkg1_bot.png"
+    //     ,   "assets/skybox/space/blue/bkg1_left.png"
+    //     ,   "assets/skybox/space/blue/bkg1_right.png"
+    //     ,   "assets/skybox/space/blue/bkg1_front.png"
+    //     ,   "assets/skybox/space/blue/bkg1_back.png" 
+    //     }
+    // );
+    };
+
+    // auto dbgdrw = engine->getDebugDrawer();
+    // dbgdrw->setDebugMode( btIDebugDraw::DBG_DrawWireframe | btIDebugDraw::DBG_DrawAabb);
+    // INFOLOG("debug mode:" VAR(dbgdrw->getDebugMode()))
+
+    while(engine->isWindowActive() && !engine->getKeyContinuousPress(GLFW_KEY_ESCAPE))
+    {
+        // Render
+        engine->beginRender();
+        engine->drawScene();
+        engine->endRender();
+
+        // Fancy rotation
+        missile_launcher->rotate({0,3,0});
+        cubito_rosa->rotate({3,0,0});
+        icosphere->rotate({0,0,3});
+
+        // Input
+        if(engine->getKeyContinuousPress(GLFW_KEY_A))       camnode->rotate({0,3,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_D))       camnode->rotate({0,-3,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_W))       camnode->rotate({3,0,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_S))       camnode->rotate({-3,0,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_LEFT))    camnode->translate({-.3,0,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_RIGHT))   camnode->translate({.3,0,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_UP))      camnode->translate({0,0,-.3f});
+        if(engine->getKeyContinuousPress(GLFW_KEY_DOWN))    camnode->translate({0,0,.3f});
+
+        if(engine->getKeySinglePress(GLFW_KEY_1))
+        {
+            INFOLOG("Tratando de añadir colisiones a nodo missile_launcher");
+            engine->createRigidbody(missile_launcher);
+        }
+
+        if(engine->getKeySinglePress(GLFW_KEY_2))
+        {
+            missile_launcher->translate({0,0,-2});
+            auto rigidbody = missile_launcher->getPhysicProperties()->m_data.body;
+            // Debug, TODO:: borrar
+            INFOLOG("llego" );
+
+            btTransform nodetransform;
+            rigidbody->getMotionState()->getWorldTransform(nodetransform);
+            auto pos = nodetransform.getOrigin();
+            INFOLOG("Posición del nodo: " << VAR(pos.x()) << VAR(pos.y()) << VAR(pos.z()) );
+        }
+
+        if(engine->getKeySinglePress(GLFW_KEY_3))
+            engine->enableDebugDraw();
+        if(engine->getKeySinglePress(GLFW_KEY_4))
+            engine->disableDebugDraw();
+
+        if(engine->getKeySinglePress(GLFW_KEY_5))
+        {
+            // INFOLOG("Tratando de añadir colisiones a nodo missile_launcher");
+            engine->createRigidBodyConvexHull(missile_launcher);
+        }
+
+        if(engine->getKeySinglePress(GLFW_KEY_6))
+        {
+            engine->createTriangleMeshShape(plane);
+        }
+
+        if(engine->getKeySinglePress(GLFW_KEY_7))
+            engine->getDebugDrawer()->toggleDebugFlag(2);
+
+        if(engine->getKeySinglePress(GLFW_KEY_8))
+            engine->createRigidBodyDynamic();
+
+        if(engine->getKeyContinuousPress(GLFW_KEY_9))
+        {
+            hyper::RayResult result;
+            bool hashit = engine->throwRaycast({0,1,-10}, {0, 1, 25}, result);
+
+            if(hashit)
+            {
+                auto point = result.hitPoint;
+                INFOLOG("Sí le he dado con el raycast: " VAR(point.getX()) << VAR(point.getY()) << VAR(point.getZ()) )
+            }
+            else
+            {
+                INFOLOG("No le he dado con el raycast")
+            }
+
+        }
+
+        if(engine->getKeySinglePress(GLFW_KEY_F))
+        {
+            [[maybe_unused]] hyper::Node* skyboxnode = engine->createSkybox(
+                default_createnode_params
+            ,   SkyboxNamelist 
+                { 
+                    "assets/skybox/space/lightblue/top.png"
+                ,   "assets/skybox/space/lightblue/bot.png"
+                ,   "assets/skybox/space/lightblue/left.png"
+                ,   "assets/skybox/space/lightblue/right.png"
+                ,   "assets/skybox/space/lightblue/front.png"
+                ,   "assets/skybox/space/lightblue/back.png" 
+                }
+            );
+        }
+
+        // Update de las físicas
+        engine->updatePhysics();
+    }
+}
+
+// void test_physics_2(void) {
+//     std::unique_ptr<hyper::HyperEngine> engine = std::make_unique<hyper::HyperEngine>(true);
+//     engine->setWindowTitle("test_physics_2");
+//     engine->setWindowIcon("assets/logo.jpg");
+
+//     [[maybe_unused]] 
+//     hyper::Node* lightnode          = engine->createLight(default_createnode_params);
+    
+//     hyper::Node* camnode            = engine->createCamera(default_createnode_params); // tendrá la proyección por defecto
+    
+//     hyper::Node* missile_launcher   = engine->createModel(nullptr, {0,0,-4}, default_rot_and_scale, "assets/missile-launcher.obj");
+//     hyper::Node* cubito_rosa        = engine->createModel(nullptr, {-4,4,-4},{10,10,10}, default_scale, "assets/cubito_rosa.obj");
+//     hyper::Node* icosphere          = engine->createModel(nullptr, {4,0,-4}, default_rot_and_scale, "assets/icosphere.obj");
+    
+//     [[maybe_unused]] 
+//     hyper::Node* plane              = engine->createModel(nullptr, {0,-2.0f,0}, {0,0,0}, default_scale, "assets/planes/plano3-2.obj");
+
+//     cubito_rosa->setNameID(13);
+//     engine->enableDebugDraw();
+
+//     while(engine->isWindowActive() && !engine->getKeyContinuousPress(GLFW_KEY_ESCAPE))
+//     {
+//         // Render
+//         engine->beginRender();
+//         engine->drawScene();
+
+//         if(engine->getKeyContinuousPress(GLFW_KEY_3)) 
+//         {
+//             // Nota, el raycast no se puede ver si no se hace entre begin y end del render
+//             // Arreglar para tener una stack de rayos o algo así
+//             auto pos = cubito_rosa->getTranslation();
+//             hyper::RayResult result;
+
+//             auto hasHit = engine->throwRaycast(
+//                     {pos.x, -20, pos.z}
+//                 ,   {pos.x, pos.y+100, pos.z}
+//                 ,   result
+//             );
+
+//             if(hasHit)
+//             {
+//                 INFOLOG("He dado!" << VAR(result.hitPoint.getX()) << VAR(result.hitPoint.getY()) << VAR(result.hitPoint.getZ()))
+//                 INFOLOG("El nodo tiene índice: " << VAR(result.node->getNameID()) );
+//             }
+//             else
+//             {
+//                 INFOLOG("No he dado?")
+//             }
+//         }
+
+//         engine->endRender();
+
+//         // Fancy rotation
+//         // missile_launcher->rotate({0,3,0});
+//         // cubito_rosa->rotate({3,0,0});
+//         icosphere->rotate({0,0,3});
+
+//         // Debug
+//         // auto& trans = missile_launcher->getMatrixTransform();
+//         // printMat4(trans);
+
+//         // Input
+//         if(engine->getKeyContinuousPress(GLFW_KEY_A))       camnode->rotate({0,3,0});
+//         if(engine->getKeyContinuousPress(GLFW_KEY_D))       camnode->rotate({0,-3,0});
+//         if(engine->getKeyContinuousPress(GLFW_KEY_W))       camnode->rotate({3,0,0});
+//         if(engine->getKeyContinuousPress(GLFW_KEY_S))       camnode->rotate({-3,0,0});
+//         if(engine->getKeyContinuousPress(GLFW_KEY_LEFT))    camnode->translate({-.3,0,0});
+//         if(engine->getKeyContinuousPress(GLFW_KEY_RIGHT))   camnode->translate({.3,0,0});
+//         if(engine->getKeyContinuousPress(GLFW_KEY_UP))      camnode->translate({0,0,-.3f});
+//         if(engine->getKeyContinuousPress(GLFW_KEY_DOWN))    camnode->translate({0,0,.3f});
+
+//         if(engine->getKeyContinuousPress(GLFW_KEY_E))    camnode->translate({0,.3f,0});
+//         if(engine->getKeyContinuousPress(GLFW_KEY_R))    camnode->translate({0,-.3f,0});
+
+//         if(engine->getKeyContinuousPress(GLFW_KEY_T))    missile_launcher->rotate({0,3,0});
+
+
+//         if(engine->getKeySinglePress(GLFW_KEY_1))
+//         {
+//             auto pos = hyper::util::glmVec3TobtVec3(icosphere->getTranslation());
+
+//             engine->createPhysicPropertiesCollisionObject(
+//                     icosphere
+//                 ,   new btSphereShape(2)
+//             );
+
+//             // engine->createPhysicPropertiesRigidBody(
+//             //         icosphere
+//             //     ,   new btSphereShape(1)
+//             //     ,   0
+//             //     ,   btVector3(pos.x, pos.y, pos.z)
+//             // );
+//         }
+
+//         if(engine->getKeySinglePress(GLFW_KEY_2))    
+//         {
+//             // Test de objetos dinámicos
+
+//             auto pos = hyper::util::glmVec3TobtVec3(cubito_rosa->getTranslation());
+//             // engine->createPhysicPropertiesRigidBody(
+//             //         cubito_rosa
+//             //     ,   new btBoxShape({1,1,1})
+//             //     ,   0
+//             //     ,   btVector3(pos.x, pos.y, pos.z)
+//             // );
+//             engine->createPhysicPropertiesDynamicBody(
+//                     cubito_rosa
+//                 ,   new btBoxShape({1,1,1})
+//                 ,   1
+//                 ,   pos
+//             );
+//         }
+
+//         if(engine->getKeySinglePress(GLFW_KEY_4))
+//         {
+//             auto pos = plane->getTranslation();
+//             engine->createPhysicPropertiesTriangleMeshShape(
+//                     plane
+//                 ,   0
+//                 ,   hyper::util::glmVec3TobtVec3(pos)
+//             );
+//         }
+
+//         if(engine->getKeySinglePress(GLFW_KEY_5))
+//             engine->getDebugDrawer()->toggleDebugFlag(2);
+
+//         if(engine->getKeySinglePress(GLFW_KEY_6))
+//             engine->createRigidBodyDynamic();
+
+
+//         if(engine->getKeyContinuousPress(GLFW_KEY_7))
+//         {
+//             static int dir = 1;
+//             static int const threshold = 7;
+//             missile_launcher->translate({.1*dir,0,0});
+
+//             auto translation = missile_launcher->getTranslation();
+//             if(translation.z > threshold)
+//                 dir=-1;
+//             else if(translation.z < -threshold)
+//                 dir=1;
+//         }    
+//         if(engine->getKeyContinuousPress(GLFW_KEY_8))
+//         {
+//             auto pos = hyper::util::glmVec3TobtVec3(missile_launcher->getTranslation());
+//             engine->createPhysicPropertiesKinematicBody(
+//                     missile_launcher
+//                 ,   new btBoxShape({.5,.8,1.5})
+//                 // ,   new btCylinderShape({1,5,1})
+//                 ,   pos
+//             );
+//         }
+
+//         if(engine->getKeyContinuousPress(GLFW_KEY_9))
+//         {
+//             auto prop = cubito_rosa->getPhysicProperties();
+//             prop->m_data.body->applyCentralForce({0,20,0});
+//         }
+
+//         if(engine->getKeyContinuousPress(GLFW_KEY_H)) 
+//         {
+//             missile_launcher->rotate({1,0,0});
+//         }
+//         if(engine->getKeyContinuousPress(GLFW_KEY_J)) 
+//         {
+//             missile_launcher->rotate({0,1,0});
+//         }
+//         if(engine->getKeyContinuousPress(GLFW_KEY_K)) 
+//         {
+//             missile_launcher->rotate({0,0,1});
+//         }
+
+//         // if(engine->getKeyContinuousPress(GLFW_KEY_L))
+//         // {
+//         //     auto target = camnode->getCameraTarget();
+//         //     target.y += 0;
+//         //     camnode->setCameraTarget(target);
+//         // }
+
+//         camnode->setCameraTarget({0,0,0});
+
+
+
+//         // Update de las físicas
+//         engine->updatePhysics();
+//     }
+// }
+
+void test_physics_3(void) {
+    std::unique_ptr<hyper::HyperEngine> engine = std::make_unique<hyper::HyperEngine>(true);
+    engine->setWindowTitle("test_physics_3");
+    engine->setWindowIcon("assets/logo.jpg");
+
+    [[maybe_unused]] 
+    hyper::Node* lightnode          = engine->createLight(default_createnode_params);
+    
+    hyper::Node* camnode            = engine->createCamera(default_createnode_params); // tendrá la proyección por defecto
+    
+    // hyper::Node* missile_launcher   = engine->createModel(nullptr, {3,-1.5,-4}, default_rot_and_scale, "assets/missile-launcher.obj");
+    hyper::Node* missile_launcher   = engine->createModel(nullptr, {4,-1.5,-4}, default_rot_and_scale, "assets/missile-launcher.obj");
+    hyper::Node* cubito_rosa        = engine->createModel(nullptr, {-4,4,-4},{10,10,10}, default_scale, "assets/cubito_rosa.obj");
+    hyper::Node* icosphere          = engine->createModel(nullptr, {4,-1.5,-4}, default_rot_and_scale, "assets/icosphere.obj");
+    
+    [[maybe_unused]] 
+    hyper::Node* plane              = engine->createModel(nullptr, {0,-2,0}, {0,0,0}, default_scale, "assets/planes/plano3-2.obj");
+
+    plane->setNameID(1);
+    icosphere->setNameID(2);
+    missile_launcher->setNameID(3);
+    cubito_rosa->setNameID(4);
+
+    engine->enableDebugDraw();
+
+    while(engine->isWindowActive() && !engine->getKeyContinuousPress(GLFW_KEY_ESCAPE))
+    {
+        // Render
+        engine->beginRender();
+        engine->drawScene();
+
+        if(engine->getKeyContinuousPress(GLFW_KEY_R)) 
+        {
+            // Nota, el raycast no se puede ver si no se hace entre begin y end del render
+            // Arreglar para tener una stack de rayos o algo así
+            auto pos = icosphere->getTranslation();
+            // hyper::RayResult result;
+            std::vector<hyper::RayResult> result;
+
+            // auto hasHit = engine->throwRaycast(
+            //         {pos.x, -20, pos.z}
+            //     ,   {pos.x, pos.y+100, pos.z}
+            //     ,   result
+            // );
+
+            auto hasHit = engine->throwRaycastAllHits(
+                    {pos.x, -20, pos.z}
+                ,   {pos.x, pos.y+100, pos.z}
+                ,   result
+            );
+
+            if(hasHit)
+            {
+                INFOLOG("He dado!" << VAR(result.at(0).hitPoint.getX()) << VAR(result.at(0).hitPoint.getY()) << VAR(result.at(0).hitPoint.getZ())
+                        << "\n" << "El nodo tiene índice: " << VAR(result.at(0).node->getNameID()) << "y el array size = " VAR(result.size()) )
+
+                // INFOLOG("He dado!" << VAR(result.hitPoint.getX()) << VAR(result.hitPoint.getY()) << VAR(result.hitPoint.getZ()) 
+                //         << "\n" << "El nodo tiene índice: " << VAR(result.node->getNameID()))
+            }
+            else
+            {
+                INFOLOG("No he dado?")
+            }
+        }
+
+        engine->endRender();
+
+        // Input
+        if(engine->getKeyContinuousPress(GLFW_KEY_A))       camnode->rotate({0,3,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_D))       camnode->rotate({0,-3,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_W))       camnode->rotate({3,0,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_S))       camnode->rotate({-3,0,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_LEFT))    camnode->translate({-.3,0,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_RIGHT))   camnode->translate({.3,0,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_UP))      camnode->translate({0,0,-.3f});
+        if(engine->getKeyContinuousPress(GLFW_KEY_DOWN))    camnode->translate({0,0,.3f});
+
+        if(engine->getKeyContinuousPress(GLFW_KEY_SPACE))    camnode->translate({0,.3f,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_LEFT_CONTROL))    camnode->translate({0,-.3f,0});
+
+        if(engine->getKeyContinuousPress(GLFW_KEY_T))    missile_launcher->rotate({0,3,0});
+
+        if(engine->getKeyContinuousPress(GLFW_KEY_H)) 
+            missile_launcher->rotate({1,0,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_J)) 
+            missile_launcher->rotate({0,1,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_K)) 
+            missile_launcher->rotate({0,0,1});
+
+        if(engine->getKeyContinuousPress(GLFW_KEY_X)) 
+            missile_launcher->translate({0,0,-.1});
+        if(engine->getKeyContinuousPress(GLFW_KEY_C)) 
+            missile_launcher->translate({0,-.1,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_V)) 
+            missile_launcher->translate({-.1,0,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_B)) 
+            missile_launcher->translate({0,0,.1});
+        if(engine->getKeyContinuousPress(GLFW_KEY_N)) 
+            missile_launcher->translate({0,.1,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_M)) 
+            missile_launcher->translate({.1,0,0});
+
+        if(engine->getKeySinglePress(GLFW_KEY_1))
+        {
+            auto pos = hyper::util::glmVec3TobtVec3(icosphere->getTranslation());
+            engine->createPhysicPropertiesCollisionObject(
+                    icosphere
+                ,   new btSphereShape(1.2f)
+                ,   Flags_t::f0
+                ,   Flags_t::f1
+            );
+            // engine->createPhysicPropertiesStaticBody(
+            //         icosphere
+            //     ,   new btSphereShape(1.2f)
+            // );
+
+        }
+
+        if(engine->getKeySinglePress(GLFW_KEY_2))
+        {
+            auto pos = hyper::util::glmVec3TobtVec3(missile_launcher->getTranslation());
+            engine->createPhysicPropertiesCollisionObject(
+                    missile_launcher
+                ,   new btBoxShape({.5,.8,1.5})
+                ,   Flags_t::f1
+                ,   Flags_t::f0 | Flags_t::f1
+            );
+            // engine->createPhysicPropertiesKinematicBody(
+            //         missile_launcher
+            //     ,   new btBoxShape({.5,.8,1.5})
+            // );
+        }
+
+        if(engine->getKeySinglePress(GLFW_KEY_3))
+        {
+            engine->createPhysicPropertiesDynamicBody(
+                    cubito_rosa
+                ,   new btBoxShape({1,1,1})
+            );
+        }
+
+        if(engine->getKeySinglePress(GLFW_KEY_4))
+        {
+            auto pos = hyper::util::glmVec3TobtVec3(plane->getTranslation());
+            engine->createPhysicPropertiesTriangleMeshShape(
+                plane
+            );
+        }
+
+        if(engine->getKeySinglePress(GLFW_KEY_5))
+        {
+            bool collides = engine->getCollisionBetweenNodes(missile_launcher, icosphere);
+            INFOLOG("¿Colisionan? " << VAR(collides) )
+        }
+
+        if(engine->getKeySinglePress(GLFW_KEY_6))
+        {
+            engine->deletePhysicProperties(missile_launcher);
+        }
+
+        if(engine->getKeySinglePress(GLFW_KEY_7))
+            cubito_rosa->setVisible(false);
+
+        if(engine->getKeySinglePress(GLFW_KEY_8))
+            cubito_rosa->setVisible(true);
+
+        
+        // Cámara siempre apunta a 0,0,0
+        camnode->setCameraTarget({0,0,0});
+        // Update de las físicas
+        engine->updatePhysics();
+    }
+}
+
+// kinda failed
+void camera_child_test(void) {
+    std::unique_ptr<hyper::HyperEngine> engine = std::make_unique<hyper::HyperEngine>(true);
+    engine->setWindowTitle("test_physics_3");
+    engine->setWindowIcon("assets/logo.jpg");
+
+    [[maybe_unused]] 
+    hyper::Node* lightnode          = engine->createLight(default_createnode_params);
+    
+    hyper::Node* camnode            = engine->createCamera(default_createnode_params); // tendrá la proyección por defecto
+    
+    hyper::Node* missile_launcher   = engine->createModel(nullptr, {3,-1.5,-4}, default_rot_and_scale, "assets/missile-launcher.obj");
+
+    // glm::vec3{-1.5f, -0.8f, 2.0f}
+    // glm::vec3{1.5,-.8,-2}
+    hyper::Node* missile_launcher2   = engine->createModel(
+            camnode
+        ,   camnode->getTranslation() + glm::vec3{1.5,-.8,-2}
+        ,   {0,180,0}
+        ,   default_scale
+        ,   "assets/missile-launcher.obj"
+    );
+
+    hyper::Node* cubito_rosa        = engine->createModel(nullptr, {-4,4,-4},{10,10,10}, default_scale, "assets/cubito_rosa.obj");
+    hyper::Node* icosphere          = engine->createModel(nullptr, {4,-1.5,-4}, default_rot_and_scale, "assets/icosphere.obj");
+    
+    [[maybe_unused]] 
+    hyper::Node* plane              = engine->createModel(nullptr, {0,-2,0}, {0,0,0}, default_scale, "assets/planes/plano3-2.obj");
+
+    plane->setNameID(1);
+    icosphere->setNameID(2);
+    missile_launcher->setNameID(3);
+    cubito_rosa->setNameID(4);
+
+    while(engine->isWindowActive() && !engine->getKeyContinuousPress(GLFW_KEY_ESCAPE))
+    {
+        // Render
+        engine->beginRender();
+        engine->drawScene();
+        engine->endRender();
+
+        // Input
+        if(engine->getKeyContinuousPress(GLFW_KEY_A))       
+            camnode->rotate({0,3,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_D))       
+            camnode->rotate({0,-3,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_W))       
+            camnode->rotate({3,0,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_S))       
+            camnode->rotate({-3,0,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_LEFT))    
+            camnode->translate({-.3,0,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_RIGHT))   
+            camnode->translate({.3,0,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_UP))      
+            camnode->translate({0,0,-.3f});
+        if(engine->getKeyContinuousPress(GLFW_KEY_DOWN))    
+            camnode->translate({0,0,.3f});
+        if(engine->getKeyContinuousPress(GLFW_KEY_SPACE))       
+            camnode->translate({0,.3f,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_LEFT_CONTROL))       
+            camnode->translate({0,-.3f,0});
+
+        // Cámara siempre apunta a 0,0,0
+        camnode->setCameraTarget({0,0,0});
+        // Update de las físicas
+        engine->updatePhysics();
+    }
+}
+
+void test_pad_loading_error(void) {
+    std::unique_ptr<hyper::HyperEngine> engine = std::make_unique<hyper::HyperEngine>(true);
+    engine->setWindowTitle("test_pad_loading_error");
+    engine->setWindowIcon("assets/logo.jpg");
+
+    [[maybe_unused]] 
+    hyper::Node* camnode            = engine->createCamera(default_createnode_params); // tendrá la proyección por defecto    
+    [[maybe_unused]] 
+    hyper::Node* lightnode          = engine->createLight(default_createnode_params);
+    [[maybe_unused]] 
+    hyper::Node* plane              = engine->createModel(nullptr, {0,-2,0}, {0,0,0}, default_scale, "assets/planes/plano3-2.obj");
+    plane->setNameID(1);
+
+    // hyper::Node* machineheal = engine->createModel(
+    //         nullptr
+    //     ,   {0,-2,0}
+    //     ,   {0,0,0}
+    //     ,   default_scale
+    //     ,   "assets/objects/MachineHeal.obj"
+    //     );
+
+    // hyper::Node* machineammo = engine->createModel(
+    //         nullptr
+    //     ,   {8,-2,0}
+    //     ,   {0,0,0}
+    //     ,   default_scale
+    //     ,   "assets/objects/AmmoMachine.obj"
+    //     );
+
+    hyper::Node* navmesh = engine->createModel(
+            nullptr
+        ,   {0,-6,0}
+        ,   {0,0,0}
+        ,   default_scale
+        ,   "assets/navmesh/navmesh-mapa1-defenitivo.obj"
+        );
+        
+
+    while(engine->isWindowActive() && !engine->getKeyContinuousPress(GLFW_KEY_ESCAPE))
+    {
+        // Render
+        engine->beginRender();
+        engine->drawScene();
+        engine->endRender();
+
+        // Input
+        if(engine->getKeyContinuousPress(GLFW_KEY_A))       
+            camnode->rotate({0,3,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_D))       
+            camnode->rotate({0,-3,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_W))       
+            camnode->rotate({3,0,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_S))       
+            camnode->rotate({-3,0,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_LEFT))    
+            camnode->translate({-.3,0,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_RIGHT))   
+            camnode->translate({.3,0,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_UP))      
+            camnode->translate({0,0,-.3f});
+        if(engine->getKeyContinuousPress(GLFW_KEY_DOWN))    
+            camnode->translate({0,0,.3f});
+        if(engine->getKeyContinuousPress(GLFW_KEY_SPACE))       
+            camnode->translate({0,.3f,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_LEFT_CONTROL))       
+            camnode->translate({0,-.3f,0});
+
+        // Cámara siempre apunta a 0,0,0
+        camnode->setCameraTarget({0,0,0});
+        // Update de las físicas
+        engine->updatePhysics();
+    }
+}
+
+void test_mouse_input(void) {
+    std::unique_ptr<hyper::HyperEngine> engine = std::make_unique<hyper::HyperEngine>(true);
+    engine->setWindowTitle("test_pad_loading_error");
+    engine->setWindowIcon("assets/logo.jpg");
+
+    [[maybe_unused]] 
+    hyper::Node* camnode            = engine->createCamera(default_createnode_params); // tendrá la proyección por defecto    
+    [[maybe_unused]] 
+    hyper::Node* lightnode          = engine->createLight(default_createnode_params);
+    [[maybe_unused]] 
+    hyper::Node* plane              = engine->createModel(nullptr, {0,-2,0}, {0,0,0}, default_scale, "assets/planes/plano3-2.obj");
+    plane->setNameID(1);
+        
+    while(engine->isWindowActive() && !engine->getKeyContinuousPress(GLFW_KEY_ESCAPE))
+    {
+        // Render
+        engine->beginRender();
+        engine->drawScene();
+        engine->endRender();
+
+        // Input
+        if(engine->getKeyContinuousPress(GLFW_KEY_A))       
+            camnode->rotate({0,3,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_D))       
+            camnode->rotate({0,-3,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_W))       
+            camnode->rotate({3,0,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_S))       
+            camnode->rotate({-3,0,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_LEFT))    
+            camnode->translate({-.3,0,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_RIGHT))   
+            camnode->translate({.3,0,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_UP))      
+            camnode->translate({0,0,-.3f});
+        if(engine->getKeyContinuousPress(GLFW_KEY_DOWN))    
+            camnode->translate({0,0,.3f});
+        if(engine->getKeyContinuousPress(GLFW_KEY_SPACE))       
+            camnode->translate({0,.3f,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_LEFT_CONTROL))       
+            camnode->translate({0,-.3f,0});
+
+        // Mouse Input, uncomment to see logs
+        // if(engine->getMouseKeySinglePress(GLFW_MOUSE_BUTTON_MIDDLE))
+        // {
+        //     INFOLOG("Left single press")
+        // }
+        // if(engine->getMouseKeyContinuousPress(GLFW_MOUSE_BUTTON_MIDDLE))
+        // {
+        //     INFOLOG("Left continuous press")
+        // }
+        // if(engine->getMouseKeyKeyboardPress(GLFW_MOUSE_BUTTON_MIDDLE))
+        // {
+        //     INFOLOG("Left keyboard-like press")
+        // }
+        // if(engine->getMouseKeyRelease(GLFW_MOUSE_BUTTON_MIDDLE))
+        // {
+        //     INFOLOG("Left release")
+        // }
+
+        // auto wheel = engine->getMouseWheelStatus();
+        // INFOLOG( "wheel.offsetX" << VAR(wheel.offsetX) )
+        // INFOLOG( "wheel.offsetY" << VAR(wheel.offsetY) )
+
+        // Cámara siempre apunta a 0,0,0
+        camnode->setCameraTarget({0,0,0});
+        // Update de las físicas
+        engine->updatePhysics();
+    }
+}
+
+void test_multiple_lights(void) {
+    std::unique_ptr<hyper::HyperEngine> engine = std::make_unique<hyper::HyperEngine>(true);
+    engine->setWindowTitle("test_multiple_lights");
+    engine->setWindowIcon("assets/logo.jpg");
+
+    [[maybe_unused]] 
+    hyper::Node* camnode = engine->createCamera(
+            nullptr
+        ,   {5,0,0}
+        ,   default_rot_and_scale
+    ); // tendrá la proyección por defecto    
+
+
+    // [[maybe_unused]] 
+    // hyper::Node* lightnode = engine->createLight(
+    //     default_createnode_params
+    // );
+
+    hyper::Node* lightnode = engine->createLight(
+            default_createnode_params
+        ,   hyper::LightType::Point
+        ,   hyper::LightIntensity   { .ambient{0.05f, 0.05f, 0.05f}, .diffuse{0.8f, 0.8f, 0.8f}, .specular{1.0f, 1.0f, 1.0f} }
+        ,   hyper::LightAttenuation { .constant{1.0f}, .linear{0.09}, .quadratic{0.032} }
+        ,   hyper::LightAperture    { .innerCutoff{0.0f}, .outerCutoff{0.0f} }
+        ,   hyper::LightDirection   { 0,0,0 }
+    );
+
+    hyper::Node* lightnode3 = engine->createLight(
+            nullptr
+        ,   glm::vec3(2.0f,-3.5f,0.0f)
+        ,   default_rot_and_scale   
+        ,   hyper::LightType::Point
+        ,   hyper::LightIntensity   { .ambient{0.02f, 0.02f, 0.2f}, .diffuse{0.8f, 0.8f, 0.8f}, .specular{1.0f, 1.0f, 1.0f} }
+        ,   hyper::LightAttenuation { .constant{1.0f}, .linear{0.009f}, .quadratic{0.00032f} }
+        ,   hyper::LightAperture    { .innerCutoff{0.0f}, .outerCutoff{0.0f} }
+        ,   hyper::LightDirection   { 0,0,0 }
+    );
+
+    hyper::Node* lightnode2 = engine->createLight(
+            default_createnode_params
+        ,   hyper::LightType::Directional
+        ,   hyper::LightIntensity   { .ambient{0.05f, 0.05f, 0.05f}, .diffuse{0.4f, 0.4f, 0.4f}, .specular{0.5f, 0.5f, 0.5f} }
+        ,   hyper::LightAttenuation { .constant{0.0f}, .linear{0.0f}, .quadratic{0.0f} }
+        ,   hyper::LightAperture    { .innerCutoff{0.0f}, .outerCutoff{0.0f} }
+        ,   hyper::LightDirection   { -0.2f, -1.0f, -0.3f }
+    );
+
+
+    [[maybe_unused]] 
+    hyper::Node* missile_launcher   = engine->createModel(nullptr, {2,-1,0}, default_rot_and_scale, "assets/missile-launcher.obj");
+
+
+    [[maybe_unused]] 
+    hyper::Node* plane = engine->createModel(
+            nullptr
+        ,   {0,-0.2,0}
+        ,   {0,0,0}
+        ,   default_scale
+        ,   "assets/planes/semicube.obj"
+    );
+
+    [[maybe_unused]] 
+    hyper::Node* cubito_rosa = engine->createModel(default_createnode_params, "assets/cubito_rosa.obj");
+
+
+    plane->setNameID(1);
+
+    while(engine->isWindowActive() && !engine->getKeyContinuousPress(GLFW_KEY_ESCAPE))
+    {
+        // Render
+        engine->beginRender();
+        engine->drawScene();
+        engine->endRender();
+
+        // Input
+        if(engine->getKeyContinuousPress(GLFW_KEY_A))       
+            camnode->rotate({0,3,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_D))       
+            camnode->rotate({0,-3,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_W))       
+            camnode->rotate({3,0,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_S))       
+            camnode->rotate({-3,0,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_LEFT))    
+            camnode->translate({-.3,0,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_RIGHT))   
+            camnode->translate({.3,0,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_UP))      
+            camnode->translate({0,0,-.3f});
+        if(engine->getKeyContinuousPress(GLFW_KEY_DOWN))    
+            camnode->translate({0,0,.3f});
+        if(engine->getKeyContinuousPress(GLFW_KEY_SPACE))       
+            camnode->translate({0,.3f,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_LEFT_CONTROL))       
+            camnode->translate({0,-.3f,0});
+
+        // auto lightentity = lightnode->getEntityAsLight();
+        // INFOLOG("attenuation constant: " << VAR(lightentity->getAttenuation().constant))
+
+        // Cámara siempre apunta a 0,0,0
+        camnode->setCameraTarget({0,0,0});
+        // Update de las físicas
+        engine->updatePhysics();
+    }
+}
+
 int main(void) {
 	// test_models_and_imgui();
 	// test_basic_lights();
@@ -701,5 +1539,19 @@ int main(void) {
 
     // test_collisions_bullet();
 
-    test_skybox_and_mouse_input();
+    // test_skybox_and_mouse_input();
+
+    // test_physics();
+
+    // test_physics_2();
+
+    // test_physics_3();
+
+    // camera_child_test();
+
+    // test_pad_loading_error();
+    
+    // test_mouse_input();
+
+    test_multiple_lights();
 }

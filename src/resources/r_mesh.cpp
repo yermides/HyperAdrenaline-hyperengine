@@ -39,7 +39,12 @@ RMesh::loadMesh(std::string const& filepath)
     |   aiProcess_Triangulate 
     |   aiProcess_FlipUVs 
     |   aiProcess_CalcTangentSpace
-    // |   aiProcess_GenSmoothNormals 
+    // |   aiProcess_OptimizeMeshes
+    // |   aiProcess_JoinIdenticalVertices
+    // |   aiProcess_ImproveCacheLocality
+    // |   aiProcess_OptimizeGraph
+    // |   aiProcess_SplitLargeMeshes 
+    // |   aiProcess_SortByPType
     ;
     auto scene = importer.ReadFile(filepath, flags);
 
@@ -72,6 +77,8 @@ RMesh::loadMesh(std::string const& filepath)
         auto* normalsarray      = amesh->mNormals;
         auto* texcoordsarray    = amesh->mTextureCoords[0];
 
+        bool hasTextureCoords = amesh->HasTextureCoords(0);
+
         for(uint32_t j {0}; j < amesh->mNumVertices; ++j)
         {
             // Almacenar posiciones de vértices
@@ -87,10 +94,13 @@ RMesh::loadMesh(std::string const& filepath)
             ++normalsarray;
             
             // Almacenar coordenadas de textura
+            if(!hasTextureCoords) continue;
+
             mesh->m_texture_coords.push_back(texcoordsarray->x);
             mesh->m_texture_coords.push_back(texcoordsarray->y);
             ++texcoordsarray;
         }
+        
 
         // Almacenar los índices de las caras
         auto* indexarray        = amesh->mFaces;

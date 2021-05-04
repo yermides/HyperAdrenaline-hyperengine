@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <bullet/LinearMath/btVector3.h>
 
 namespace hyper {
 
@@ -13,6 +14,16 @@ inline static void replaceCharacters(std::string& toformat, std::string const& o
         toformat.replace(pos, newcharacters.size()+1, newcharacters);
         pos = toformat.find(oldcharacters, pos);
     }
+}
+
+inline static btVector3 glmVec3TobtVec3(glm::vec3 const& vec3)
+{
+    return std::move( btVector3(vec3.x, vec3.y,vec3.z) );
+}
+
+inline static glm::vec3 btVec3ToGlmVec3(btVector3 const& vec3)
+{
+    return std::move( glm::vec3(vec3.getX(), vec3.getY(), vec3.getZ()) );
 }
 
 }

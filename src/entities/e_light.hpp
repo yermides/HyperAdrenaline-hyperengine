@@ -4,65 +4,80 @@
 namespace hyper {
 
 enum class LightType {
-    Directional,
-    Point,
-    Spot
+        Directional
+    ,   Point
+    ,   Spot
 };
+
+struct LightIntensity {
+    glm::vec3 ambient   {0};
+    glm::vec3 diffuse   {0};
+    glm::vec3 specular  {0};
+};
+
+struct LightAttenuation {
+    float constant  {0.0f};
+    float linear    {0.0f};
+    float quadratic {0.0f};
+};
+
+struct LightAperture {
+    float innerCutoff   {0.0f};
+    float outerCutoff   {0.0f};
+};
+
+using LightDirection =  glm::vec3;
 
 struct ELight : public Entity
 {
     explicit ELight();
+    explicit ELight(LightType type, LightIntensity intensity, LightAttenuation attenuation, LightAperture aperture, LightDirection direction);
     ~ELight();
 
     void draw(glm::mat4 const& tranform) final;
 
-    constexpr	void            	setIntensity(glm::vec4 const& newIntensity)     noexcept 
-        { m_intensity = newIntensity; 	}
+    // void drawFromHyperengine(RShader* const shader);
 
-    constexpr	glm::vec4 const&	getIntensity(void)                              const noexcept 
+    constexpr void setType(LightType const& type) noexcept 
+        { m_type = type; 			    }
+        
+    constexpr LightType const& getType(void) const noexcept 
+        { return m_type; 				}
+
+    constexpr void setIntensity(LightIntensity const& intensity) noexcept 
+        { m_intensity = intensity; 	    }
+
+    constexpr LightIntensity const& getIntensity(void) const noexcept 
         { return m_intensity; 			}
 
-    constexpr	void            	setType(const LightType& newType)               noexcept 
-        { m_type = newType; 			}
+    constexpr void setAttenuation(LightAttenuation const& attenuation) noexcept 
+        { m_attenuation = attenuation; 	}
         
-    constexpr	const LightType&	getType(void)                                   const noexcept 
-        { return m_type; 				}
-        
-    constexpr	void            	setAperture(const float& newfloat)              noexcept 
-        { m_aperture = newfloat; 		}
-        
-    constexpr	const float&    	getAperture(void)                               const noexcept 
-        { return m_aperture; 			}
-        
-    constexpr	void            	setAtenAngular(const float& newfloat)           noexcept 
-        { m_aten_angular = newfloat; 	}
-        
-    constexpr	const float&    	getAtenAngular(void)                            const noexcept 
-        { return m_aten_angular; 		}
-        
-    constexpr	void            	setAtenConst(const float& newfloat)             noexcept 
-        { m_aten_const = newfloat; 		}
-        
-    constexpr	const float&    	getAtenConst(void)                              const noexcept 
-        { return m_aten_const; 			}
-        
-    constexpr	void            	setAtenLinear(const float& newfloat)            noexcept 
-        { m_aten_linear = newfloat; 	}
-        
-    constexpr	const float&    	getAtenLinear(void)                             const noexcept 
-        { return m_aten_linear; 		}
-        
-    constexpr	void            	setAtenQuadratic(const float& newfloat)         noexcept 
-        { m_aten_quadratic = newfloat; 	}
-        
-    constexpr	const float&    	getAtenQuadratic(void)                         	const noexcept 
-        { return m_aten_quadratic; 		}
+    constexpr LightAttenuation const& getAttenuation(void) const noexcept 
+        { return m_attenuation; 		}
 
+    constexpr void setAperture(LightAperture const& aperture) noexcept 
+        { m_aperture = aperture; 		}
+        
+    constexpr LightAperture const& getAperture(void) const noexcept
+        { return m_aperture;            }
+
+    constexpr void setDirection(LightDirection const& direction) noexcept 
+        { m_direction = direction; 		}
+        
+    constexpr LightDirection const& getDirection(void) const noexcept
+        { return m_direction;           }
 private:
-    glm::vec4 m_intensity;
     LightType m_type;
-    float m_aperture, m_aten_angular;
-    float m_aten_const, m_aten_linear, m_aten_quadratic;
+    LightIntensity m_intensity;
+    LightAttenuation m_attenuation;
+    LightAperture m_aperture;
+    LightDirection m_direction;
+
+    // glm::vec4 m_intensity;
+    // LightType m_type;
+    // float m_aperture, m_aten_angular;
+    // float m_aten_const, m_aten_linear, m_aten_quadratic;
 };
 
 }

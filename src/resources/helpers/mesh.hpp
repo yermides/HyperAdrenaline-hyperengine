@@ -24,8 +24,6 @@ struct Mesh
     void initialize(void);
     void draw(RShader* const shader);
 
-    void oldDraw(ProgramIdentifier const shaderID = 0);
-
     // Size = vertex count * 3
     std::vector<GLfloat>    m_vertices          ;
     std::vector<GLfloat>    m_normals           ;

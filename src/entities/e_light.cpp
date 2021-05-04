@@ -8,6 +8,22 @@ ELight::ELight()
     INFOLOG("Constructing ELight");
 }
 
+ELight::ELight(
+    LightType type
+,   LightIntensity intensity
+,   LightAttenuation attenuation
+,   LightAperture aperture
+,   LightDirection direction
+)
+:	Entity{}
+,   m_type(type)
+,   m_intensity(intensity)
+,   m_attenuation(attenuation)
+,   m_aperture(aperture)
+,   m_direction(direction)
+{
+}
+
 ELight::~ELight()
 {
     INFOLOG("Deleting ELight");

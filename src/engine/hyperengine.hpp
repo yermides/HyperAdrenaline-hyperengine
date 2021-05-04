@@ -14,6 +14,9 @@
 #include <imgui/imgui.h>
 #include <imgui/imgui_impl_opengl3.h>
 #include <imgui/imgui_impl_glfw.h>
+// Bullet physics
+#include <bullet/btBulletDynamicsCommon.h>
+#include <bullet/btBulletCollisionCommon.h>
 // HyperEngine
 #include <tree/node.hpp>
 #include <resources/r_shader.hpp>
@@ -21,6 +24,7 @@
 #include <entities/e_light.hpp>
 #include <entities/e_model.hpp>
 #include <entities/e_skybox.hpp>
+#include <util/debugdrawer.hpp>
 
 // Create node params
 #define default_trans                       {0.0f,0.0f,0.0f}
@@ -33,10 +37,17 @@
 // Cameras, lights, etc
 #define engine_invalid_id                   -1
 // Shader paths
+
 // #define SHADER_DEFAULT_PATH                 "src/shaders/model-loading-m-v-p" 
 // #define SHADER_DEFAULT_PATH                 "src/shaders/materials" 
-#define SHADER_DEFAULT_PATH                 "src/shaders/materials-and-lights" 
+// #define SHADER_DEFAULT_PATH                 "src/shaders/materials-and-lights" 
+#define SHADER_DEFAULT_PATH                 "src/shaders/multiple-lights" 
+
 #define SHADER_SKYBOX_PATH                  "src/shaders/skybox"
+#define SHADER_DEBUGDRAWER_PATH             "src/shaders/debugdrawer"
+
+template<typename T1, typename T2>
+using Hashmap = std::unordered_map<T1, T2>;
 
 namespace hyper {
 
@@ -46,7 +57,15 @@ namespace gui = ImGui;
 enum class OpenGLShader {
         SHADER_DEFAULT
     ,   SHADER_SKYBOX
+    ,   SHADER_DEBUGDRAWER
 };
+
+// Declaración de estructuras
+// struct RayResult    { btRigidBody* pBody; btVector3 hitPoint; Node* node;           };
+
+struct RayResult        { btCollisionObject* pObj; btVector3 hitPoint; Node* node;      };
+struct Viewport         { int x, y, width, height;                                      };
+struct MouseWheelStatus { float offsetX {0.0f}, offsetY {0.0f};                         };
 
 struct HyperEngine
 {
@@ -79,6 +98,7 @@ struct HyperEngine
 
             node->setEntity(camera);
             registerCamera(node);
+            node->setIsCamera(true);
             return node;
         }
     
@@ -151,7 +171,7 @@ struct HyperEngine
 
     void beginRender(void);
 
-    void drawScene(void) const;
+    void drawScene(void);
 
     void drawExampleWindowGUI(void);    // TODO:: borrar, es solo un ejemplo
 
@@ -175,6 +195,10 @@ struct HyperEngine
 
     void setActiveSkybox(Node* const node);
 
+    bool isSkyboxActive(void) const noexcept;
+
+    void deleteSkybox(void);
+
     // Útiles
 
     // Ventana
@@ -192,6 +216,16 @@ struct HyperEngine
     bool const getKeyKeyboardPress(int const key) noexcept;
 
     bool const getKeyRelease(int const key) noexcept;
+
+    bool const getMouseKeySinglePress(int const key) noexcept;
+
+    bool const getMouseKeyContinuousPress(int const key) noexcept;
+
+    bool const getMouseKeyKeyboardPress(int const key) noexcept;
+
+    bool const getMouseKeyRelease(int const key) noexcept;
+
+    MouseWheelStatus const& getMouseWheelStatus(void);
 
     glm::dvec2 getMousePositionAbsolute(void) const noexcept;
 
@@ -239,27 +273,132 @@ struct HyperEngine
 
     void disableCulling(void);
 
-private:
-    void setKeyState(int const key, int const action);
+    // Físicas
+
+    void updatePhysics(float const deltatime = 1.0f / 60.0f);
+
+    // Las crea como objeto estático, TODO:: hacer una función para objetos estáticos, cinemáticos y dinámicos
+
+    // Función llamada por todas las que crean rigidbody, sea static, kinematic o dynamic
+    void createPhysicPropertiesRigidBody(
+            Node* const node
+        ,   btCollisionShape* pShape
+        ,   float mass
+        ,   int collisionGroupFlags = 0
+        ,   int collisionMaskFlags  = 0
+    );
+
+    void createPhysicPropertiesCollisionObject(
+            Node* const node
+        ,   btCollisionShape* pShape
+        ,   int collisionGroupFlags = 2
+        ,   int collisionMaskFlags  = -3
+    );
+
+    void createPhysicPropertiesStaticBody(
+            Node* const node
+        ,   btCollisionShape* pShape
+        ,   int collisionGroupFlags = 0
+        ,   int collisionMaskFlags  = 0
+    );
+
+    void createPhysicPropertiesKinematicBody(
+            Node* const node
+        ,   btCollisionShape* pShape
+        ,   int collisionGroupFlags = 0
+        ,   int collisionMaskFlags  = 0
+    );
+
+    void createPhysicPropertiesDynamicBody(
+            Node* const node
+        ,   btCollisionShape* pShape
+        ,   float mass = 1
+        ,   int collisionGroupFlags = 0
+        ,   int collisionMaskFlags  = 0
+    );
+
+    // Las colisiones que usarán los mapas, WARNING, solo funciona con meshes totalmente trianguladas, also, debería ser estatic o cinematic (no dynamic)
+    void createPhysicPropertiesTriangleMeshShape(
+            Node* const node
+        ,   float mass = 0
+        ,   int collisionGroupFlags = 0
+        ,   int collisionMaskFlags  = 0
+    );
+
+    bool getCollisionBetweenNodes(Node* const nodeA, Node* const nodeB);
+
+    void deletePhysicProperties(Node* const node);
+
+    // Funciones patateras, mejoradas arriba
+    void createRigidbody(Node * const node);
+
+    // Realmente no es convex hull, es la geometría pura (todo es por el testing)
+    void createRigidBodyConvexHull(Node * const node);
+
+    // habría que parametrizar, equis dé
+    void createRigidBodyDynamic(Node * const node = nullptr);
+
+    // Las colisiones que usarán los mapas
+    void createTriangleMeshShape(Node * const node);
+
+    // Funciones necesarias para el raycast (2/2)
+    bool throwRaycast(
+            const btVector3 &startPosition
+        ,   const btVector3 &direction
+        ,   RayResult &output
+        ,   int collisionGroupMask = 2147483647
+        ,   int collisionFilterMask = 2147483647
+    );
+
+    bool throwRaycastAllHits(
+            const btVector3 &startPosition
+        ,   const btVector3 &direction
+        ,   std::vector<RayResult>& output
+        ,   int collisionGroupMask = 2147483647
+        ,   int collisionFilterMask = 2147483647
+    );
+
+    bool checkRaycastCollisionWithNode(const btVector3 &startPosition, const btVector3 &direction);
+
+    void drawDebugPhysics(glm::mat4 const& view, glm::mat4 const& projection);
+
+    void enableDebugDraw(void);
+
+    void disableDebugDraw(void);
+
+    DebugDrawer* const getDebugDrawer(void);
+
+    void setDebugDrawer(DebugDrawer* debugDrawer);
+
     void resetKeyStates(void);
+    void resetMouseKeyStates(void);
+    void resetMouseWheelStatus(void);
+private:
+    // Inicializadores, solo se llaman en el constructor
+    void initializeGraphics(void);
+    void initializePhysics(void);
 
-    // Declaración de la estructura
-    struct Viewport { int x, y, width, height; };
-
-    Node* const     m_rootnode      { new Node   };
+    // Funciones auxiliares
+    void setKeyState(int const key, int const action);
+    void setMouseKeyState(int const key, int const action);
+    void setMouseWheelStatus(float const offsetX, float const offsetY);
 
     // No se necesita el resource manager por su naturaleza singleton
 
+    Node* const     m_rootnode      { new Node   };
+
     // Administrador de shaders
-    std::unordered_map<OpenGLShader, RShader*> m_shaders;
+    Hashmap<OpenGLShader, RShader*> m_shaders;
 
     // Administración del input de teclado
-    std::unordered_map<int, int> m_keystates;
+    Hashmap<int, int> m_keystates;
+    Hashmap<int, int> m_mousekeystates;
+    MouseWheelStatus m_mouseWheelStatus;
 
     // Atributos para mantenimiento de las cámaras, luces y viewports  (y ahora skybox)
-    GLFWwindow*     m_window   { nullptr    };
-    std::vector<Node*> m_cameras;
-    std::vector<Viewport> m_viewports;
+    GLFWwindow*             m_window   { nullptr };
+    std::vector<Node*>      m_cameras;
+    std::vector<Viewport>   m_viewports;
     int m_active_camera  {engine_invalid_id} 
     ,   m_active_viewport{engine_invalid_id};
 
@@ -268,6 +407,12 @@ private:
     // std::vector<LightData> m_lights;
     std::vector<Node*> m_lights;
     std::vector<bool> m_active_lights;
+
+    // Físicas (bullet)
+    btDiscreteDynamicsWorld* m_world    { nullptr };
+    DebugDrawer* m_debugDrawer          { nullptr };
+    bool m_useDebugDrawer               { false   };
+    std::vector<std::pair<Node::NodeID, Node::NodeID>> m_collisionPairs;
 
     // imgui
     ImGuiIO* m_io;
