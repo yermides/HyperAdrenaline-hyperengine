@@ -120,7 +120,7 @@ HyperEngine::drawScene(void)
 			++count;
 		}
 
-		INFOLOG("count!" << VAR(count))
+		// INFOLOG("count!" << VAR(count))
 
 		auto lightshader 	= lightentity->getShader();
 		auto lightPos 		= light->getTranslation();
@@ -131,7 +131,7 @@ HyperEngine::drawScene(void)
 		{
 			case LightType::Point:
 			{
-				INFOLOG("Luz puntual!");
+				// INFOLOG("Luz puntual!");
 
 				// esto debería de pasarse en Emodel
 				// para saber por cada modelo si debe usar la luz o la textura difusa
@@ -162,7 +162,7 @@ HyperEngine::drawScene(void)
 
 			case LightType::Directional: 
 			{
-				INFOLOG("Luz direccional!");
+				// INFOLOG("Luz direccional!");
 
 				lightshader->bind();
 
@@ -182,7 +182,7 @@ HyperEngine::drawScene(void)
 
 			case LightType::Spot: 
 			{
-				INFOLOG("Luz focal!");
+				// INFOLOG("Luz focal!");
 
 				lightshader->bind();
 
@@ -809,7 +809,7 @@ HyperEngine::createPhysicPropertiesTriangleMeshShape(
 	auto indices 		= model->getVertexIndices();
 	auto trianglemesh	= new btTriangleMesh;
 
-	for(uint32_t i {0}; i<vertices.size() && i<vertices.size()-9; i+=9 )
+	for(uint32_t i {0}; i < vertices.size(); i+=9 )
 	{
 		trianglemesh->addTriangle(
 				btVector3(vertices[i], vertices[i+1], vertices[i+2])
@@ -818,7 +818,7 @@ HyperEngine::createPhysicPropertiesTriangleMeshShape(
 		);
 	}
 
-	for(uint32_t i {0}; i<indices.size() && i+3 <indices.size(); i+=3 )
+	for(uint32_t i {0}; i < indices.size(); i+=3 )
 	{
 		trianglemesh->addTriangleIndices(
 			indices[i], indices[i+1], indices[i+2]
@@ -856,6 +856,22 @@ HyperEngine::getCollisionBetweenNodes(Node* const nodeA, Node* const nodeB)
 		return true;
 	else 
 		return false;
+}
+
+bool 
+HyperEngine::getCollisionBetweenNodes(Node* const nodeA, Node* const nodeB, PhysicContactResult& result)
+{
+	if(!nodeA || !nodeB) return false;
+
+	auto propA = nodeA->getPhysicProperties();
+	auto propB = nodeA->getPhysicProperties();
+	auto collObjA = propA->m_data.collObj;
+	auto collObjB = propB->m_data.collObj;
+
+	// m_world->contactPairTest(collObjA, collObjB, callback);
+
+	// m_world->contactTest();
+	// m_world->contactPairTest();
 }
 
 void 
@@ -1329,7 +1345,7 @@ HyperEngine::initializePhysics(void)
 		// TODO:: ver cómo interpretar los contactos de colisiones
 
 		int numManifolds = world->getDispatcher()->getNumManifolds();
-		// INFOLOG( "TickCallback: numManifolds = " VAR(numManifolds) )
+		INFOLOG( "TickCallback: numManifolds = " VAR(numManifolds) )
 		for (int i {0}; i < numManifolds; ++i)
 		{
 			auto* contactManifold = world->getDispatcher()->getManifoldByIndexInternal(i);
@@ -1348,20 +1364,34 @@ HyperEngine::initializePhysics(void)
 			// TODO:: recordar que pt.getDistance() < 0.0f nos dice si la colisión es interna y no solo el AABB
 			// y así conseguiríamos una detección de colisión más precisa
 
-			// int numContacts = contactManifold->getNumContacts();
-			// for (int j {0}; j < numContacts; ++j)
-			// {
-			// 	auto pt = contactManifold->getContactPoint(j);
+			int numContacts = contactManifold->getNumContacts();
+			int deepcontacts {0};
+			INFOLOG("numContacts" << VAR(numContacts) )
+			for (int j {0}; j < numContacts; ++j)
+			{
+				auto pt = contactManifold->getContactPoint(j);
 
-				// INFOLOG( "TickCallback: pt.getDistance() = " VAR(pt.getDistance()) )
+				INFOLOG( "TickCallback: pt.getDistance() = " VAR(pt.getDistance()) )
 				
-				// if (pt.getDistance() < 0.0f)
-				// {
+				auto ptA = pt.getPositionWorldOnA();
+				auto ptB = pt.getPositionWorldOnB();
+				auto normalOnB = pt.m_normalWorldOnB;
+				INFOLOG( "ptA = " << VAR( ptA.getX() ) << VAR( ptA.getY() )<< VAR( ptA.getZ() ) )
+				INFOLOG( "ptB = " << VAR( ptB.getX() ) << VAR( ptB.getY() )<< VAR( ptB.getZ() ) )
+				INFOLOG( "normalOnB = " << VAR( normalOnB.getX() ) << VAR( normalOnB.getY() )<< VAR( normalOnB.getZ() ) )
+
+
+				if (pt.getDistance() < 0.0f)
+				{
+					++deepcontacts;
 				// 	Vector3 ptA = pt.PositionWorldOnA;
 				// 	Vector3 ptB = pt.PositionWorldOnB;
 				// 	Vector3 normalOnB = pt.NormalWorldOnB;
-				// }
-			// }
+				}
+			}
+
+			INFOLOG("deepcontacts" << VAR(deepcontacts) )
+
 		}
 
 		// INFOLOG( "TickCallback: collisionPairs.size() = " VAR( collisionPairs.size() ) )

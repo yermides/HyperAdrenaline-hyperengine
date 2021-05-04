@@ -66,6 +66,7 @@ enum class OpenGLShader {
 struct RayResult        { btCollisionObject* pObj; btVector3 hitPoint; Node* node;      };
 struct Viewport         { int x, y, width, height;                                      };
 struct MouseWheelStatus { float offsetX {0.0f}, offsetY {0.0f};                         };
+struct PhysicContactResult {};
 
 struct HyperEngine
 {
@@ -326,6 +327,9 @@ struct HyperEngine
     );
 
     bool getCollisionBetweenNodes(Node* const nodeA, Node* const nodeB);
+
+    // No devuelve void pero es de momento
+    bool getCollisionBetweenNodes(Node* const nodeA, Node* const nodeB, PhysicContactResult& result);
 
     void deletePhysicProperties(Node* const node);
 
