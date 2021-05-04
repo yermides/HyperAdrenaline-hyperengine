@@ -1436,6 +1436,18 @@ void test_multiple_lights(void) {
     //     default_createnode_params
     // );
 
+    // Test, spotlight general
+    // hyper::Node* lightnode = engine->createLight(
+    //         nullptr
+    //     ,   glm::vec3(5.0f,2.5f,5.0f)
+    //     ,   default_rot_and_scale   
+    //     ,   hyper::LightType::Point
+    //     ,   hyper::LightIntensity   { .ambient{0.05f, 0.05f, 0.05f}, .diffuse{0.8f, 0.8f, 0.8f}, .specular{1.0f, 1.0f, 1.0f} }
+    //     ,   hyper::LightAttenuation { .constant{1.0f}, .linear{0.099f}, .quadratic{0.032f} }
+    //     ,   hyper::LightAperture    { .innerCutoff{0.0f}, .outerCutoff{0.0f} }
+    //     ,   hyper::LightDirection   { 0,0,0 }
+    // );
+
     hyper::Node* lightnode = engine->createLight(
             default_createnode_params
         ,   hyper::LightType::Point
