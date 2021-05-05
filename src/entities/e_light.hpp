@@ -27,6 +27,7 @@ struct LightAperture {
 };
 
 using LightDirection =  glm::vec3;
+using LightID = int;
 
 struct ELight : public Entity
 {
@@ -67,12 +68,19 @@ struct ELight : public Entity
         
     constexpr LightDirection const& getDirection(void) const noexcept
         { return m_direction;           }
+
+    constexpr void setID(LightID const& id) noexcept 
+        { m_id = id; 		            }
+        
+    constexpr LightID const& getID(void) const noexcept
+        { return m_id;                  }
 private:
     LightType m_type;
     LightIntensity m_intensity;
     LightAttenuation m_attenuation;
     LightAperture m_aperture;
     LightDirection m_direction;
+    LightID m_id {-1};
 
     // glm::vec4 m_intensity;
     // LightType m_type;

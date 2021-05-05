@@ -1,5 +1,6 @@
 #pragma once
 #include <bullet/btBulletCollisionCommon.h>
+#include <bullet/BulletDynamics/Character/btKinematicCharacterController.h>
 
 // Clase que hereda de la transformación del mundo de bullet para setear la info de bullet a los gráficos y viceversa
 struct OpenGLMotionState : public btDefaultMotionState {
@@ -20,11 +21,12 @@ struct OpenGLMotionState : public btDefaultMotionState {
 union PhysicsData {
     btRigidBody*        body;
     btCollisionObject*  collObj;
+    btPairCachingGhostObject * ghostObj;
 };
 
 // Estructura que almacena todos los datos físicos, contenida en cada nodo
 struct PhysicProperties {
-    enum PhysicDatatype { COLLISION_OBJECT, RIGID_BODY };
+    enum PhysicDatatype { COLLISION_OBJECT, RIGID_BODY, KINEMATIC_CHARACTER };
 
     PhysicDatatype      m_type;
     PhysicsData         m_data;
@@ -32,11 +34,13 @@ struct PhysicProperties {
     // btRigidBody*        m_body              { nullptr };
     btCollisionShape*   m_collisionShape    { nullptr };
     OpenGLMotionState*  m_motionState       { nullptr };
+    btKinematicCharacterController* charCon { nullptr };
 };
 
 // using CollisionPoint = btManifoldPoint;
 struct CollisionPoint {
     btVector3 pointA, pointB, normalOnB;
+    float distance;
 };
 struct CollisionPairResult {
     std::pair<int, int> IDs;

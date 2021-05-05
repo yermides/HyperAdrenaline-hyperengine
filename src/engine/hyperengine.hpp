@@ -17,6 +17,7 @@
 // Bullet physics
 #include <bullet/btBulletDynamicsCommon.h>
 #include <bullet/btBulletCollisionCommon.h>
+#include <bullet/BulletCollision/CollisionDispatch/btGhostObject.h>
 // HyperEngine
 #include <tree/node.hpp>
 #include <resources/r_shader.hpp>
@@ -119,7 +120,8 @@ struct HyperEngine
             light->setShader(m_shaders[OpenGLShader::SHADER_DEFAULT]);
 
             node->setEntity(light);
-            registerLight(node);
+            auto id = registerLight(node);
+            light->setID(id);
             return node;
         }
 
@@ -326,14 +328,23 @@ struct HyperEngine
         ,   int collisionMaskFlags  = 0
     );
 
+    void createPhysicPropertiesKinematicCharacterController(
+            Node* const node
+        ,   float capsuleRadius = 0.5f
+        ,   float capsuleHeight = 1.0f
+        ,   float jumpHeight = 2.0f
+        ,   float stepHeight = 0.05f
+        ,   int collisionMaskFlags = 0
+    );
+
     // Solo comprueba el AABB, seguramente ni se use
     bool getAABBCollisionBetweenNodes(Node* const nodeA, Node* const nodeB);
+
     bool getCollisionBetweenNodes(Node* const nodeA, Node* const nodeB, CollisionPairResult& collPairResult);
 
-    // No devuelve void pero es de momento
-    // bool getCollisionBetweenNodes(Node* const nodeA, Node* const nodeB, PhysicContactResult& result);
-
     void deletePhysicProperties(Node* const node);
+
+    // ************************************************
 
     // Funciones patateras, mejoradas arriba
     void createRigidbody(Node * const node);
@@ -346,6 +357,9 @@ struct HyperEngine
 
     // Las colisiones que usarán los mapas
     void createTriangleMeshShape(Node * const node);
+
+    // ************************************************
+
 
     // Funciones necesarias para el raycast (2/2)
     bool throwRaycast(

@@ -837,6 +837,51 @@ HyperEngine::createPhysicPropertiesTriangleMeshShape(
 	);
 }
 
+void 
+HyperEngine::createPhysicPropertiesKinematicCharacterController(
+	Node* const node
+,   float capsuleRadius
+,   float capsuleHeight
+,   float jumpHeight
+,	float stepHeight
+,   int collisionMaskFlags
+)
+{
+	if(!node || node->getPhysicProperties()) return;
+
+    btTransform startTransform;
+    startTransform.setIdentity();
+	auto trans = util::glmVec3TobtVec3(node->getTranslation());
+    startTransform.setOrigin(trans);
+
+    btConvexShape* capsule = new btCapsuleShape(capsuleRadius, capsuleHeight);
+	btPairCachingGhostObject* ghostObj = new btPairCachingGhostObject;
+	ghostObj->setWorldTransform(startTransform);
+	ghostObj->setUserPointer(node);
+
+	INFOLOG("---- LLEGO -----")
+
+    m_world->getBroadphase()->getOverlappingPairCache()->setInternalGhostPairCallback(new btGhostPairCallback());
+
+    ghostObj->setCollisionShape(capsule);
+    ghostObj->setCollisionFlags(btCollisionObject::CF_CHARACTER_OBJECT);	// Pequeña duda en las flags de colisiones
+
+    btKinematicCharacterController* charCon = new btKinematicCharacterController(ghostObj, capsule, stepHeight);
+    charCon->setGravity(m_world->getGravity());
+
+	INFOLOG("---- LLEGO2 -----")
+
+    m_world->addCollisionObject(ghostObj, btBroadphaseProxy::CharacterFilter, btBroadphaseProxy::AllFilter);
+    m_world->addAction(charCon);
+    charCon->setMaxJumpHeight(jumpHeight);
+
+	PhysicProperties* prop = new PhysicProperties;
+	prop->m_type = PhysicProperties::KINEMATIC_CHARACTER;
+	prop->m_data.ghostObj = ghostObj;
+	prop->charCon = charCon;
+	node->setPhysicProperties(prop);
+	INFOLOG("---- LLEGO3 -----")
+}
 
 bool 
 HyperEngine::getAABBCollisionBetweenNodes(Node* const nodeA, Node* const nodeB)
@@ -1396,7 +1441,7 @@ HyperEngine::initializePhysics(void)
 			for (int j {0}; j < numContacts; ++j)
 			{
 				auto& pt = contactManifold->getContactPoint(j);
-				CollisionPoint point { .pointA{pt.getPositionWorldOnA()}, .pointB{pt.getPositionWorldOnB()}, .normalOnB{pt.m_normalWorldOnB} };
+				CollisionPoint point { .pointA{pt.getPositionWorldOnA()}, .pointB{pt.getPositionWorldOnB()}, .normalOnB{pt.m_normalWorldOnB}, .distance{pt.getDistance()} };
 				pair.points.push_back(std::move(point));
 
 				// INFOLOG( "TickCallback: pt.getDistance() = " VAR(pt.getDistance()) )
@@ -1411,10 +1456,12 @@ HyperEngine::initializePhysics(void)
 
 				// if (pt.getDistance() < 0.0f)
 				// {
-				// 	++deepcontacts;
-				// 	Vector3 ptA = pt.PositionWorldOnA;
-				// 	Vector3 ptB = pt.PositionWorldOnB;
-				// 	Vector3 normalOnB = pt.NormalWorldOnB;
+					// CollisionPoint point { .pointA{pt.getPositionWorldOnA()}, .pointB{pt.getPositionWorldOnB()}, .normalOnB{pt.m_normalWorldOnB} };
+					// pair.points.push_back(std::move(point));
+					// ++deepcontacts;
+					// Vector3 ptA = pt.PositionWorldOnA;
+					// Vector3 ptB = pt.PositionWorldOnB;
+					// Vector3 normalOnB = pt.NormalWorldOnB;
 				// }
 			}
 
