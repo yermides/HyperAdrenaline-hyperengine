@@ -886,6 +886,8 @@ HyperEngine::createPhysicPropertiesKinematicCharacterController(
 	prop->m_data.ghostObj = ghostObj;
 	prop->charCon = charCon;
 	node->setPhysicProperties(prop);
+
+	m_characterControllers.push_back(charCon);
 	INFOLOG("---- LLEGO3 -----")
 }
 
@@ -960,6 +962,71 @@ HyperEngine::deletePhysicProperties(Node* const node)
 	m_world->removeCollisionObject(prop->m_data.collObj);
 	delete prop;
 	node->setPhysicProperties(nullptr);
+}
+
+void 
+HyperEngine::deleteAllWorldPhysics(void)
+{
+	// WARNING! Los nodos solo obtienen sus propiedades físicas una vez, si se borran los objectos colisionables desde aquí
+	// no se les puede meter otras physic properties
+
+	//cleanup in the reverse order of creation/initialization
+	//remove the rigidbodies from the dynamics world and delete them
+
+	for(auto controller : m_characterControllers)
+	{
+		if(controller)
+		{
+			m_world->removeAction(controller);
+			controller = nullptr;
+		}
+	}
+
+	m_characterControllers.clear();
+
+	for (int i { m_world->getNumCollisionObjects()-1 }; i>=0; i--)
+	{
+		btCollisionObject* obj = m_world->getCollisionObjectArray()[i];
+		btRigidBody* body = btRigidBody::upcast(obj);
+
+		if (body && body->getMotionState())
+			delete body->getMotionState();
+
+		m_world->removeCollisionObject( obj );
+		delete obj;
+		obj = nullptr;
+	}
+
+
+	// m_world->removeCharacter()
+
+	// auto m_collisionShapes = m_world->
+
+	// //delete collision shapes
+	// for (int j=0;j<m_collisionShapes.size();j++)
+	// {
+	// 	btCollisionShape* shape = m_collisionShapes[j];
+	// 	delete shape;
+	// }
+
+
+	// //delete solver
+	// auto* solver = m_world->getConstraintSolver();
+	// delete solver;
+
+	// //delete broadphase
+	// auto* overlappingPairCache = m_world->getPairCache();
+	// delete overlappingPairCache;
+
+	// //delete dispatcher
+	// auto* dispatcher = m_world->getDispatcher();
+	// delete dispatcher;
+
+	// //delete dynamics world
+	// delete m_world;
+
+	// auto* collisionConfig = m_world->get
+	// delete m_collisionConfiguration;
 }
 
 // Old functions for physics

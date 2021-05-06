@@ -344,6 +344,8 @@ struct HyperEngine
 
     void deletePhysicProperties(Node* const node);
 
+    void deleteAllWorldPhysics(void);
+
     // ************************************************
 
     // Funciones patateras, mejoradas arriba
@@ -433,6 +435,7 @@ private:
     DebugDrawer* m_debugDrawer          { nullptr };
     bool m_useDebugDrawer               { false   };
     std::vector<CollisionPairResult> m_collisionPairs;
+    std::vector<btKinematicCharacterController*> m_characterControllers; // Necesario para el cleanup de las físicas de la escena
 
     // std::vector<std::pair<Node::NodeID, Node::NodeID>> m_collisionPairs;
 

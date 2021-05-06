@@ -1595,14 +1595,22 @@ std::unique_ptr<hyper::HyperEngine> engine = std::make_unique<hyper::HyperEngine
         ,   0b00000010
         ,   0b00000001
     );
+
+    // engine->createPhysicPropertiesCollisionObject(
+    //         cubito_rosa
+    //     ,   new btBoxShape({0.2f,0.2f,0.2f})
+    //     ,   0b00000001
+    //     ,   0b00000010
+    // );
+    
     engine->createPhysicPropertiesKinematicCharacterController(
             cubito_rosa
         ,   2.3f
         ,   1.0f
     );
 
-    auto& controller = cubito_rosa->getPhysicProperties()->charCon;
-    controller->setLinearVelocity({0.00001f, 0.0f, 0.00001f});
+    // auto& controller = cubito_rosa->getPhysicProperties()->charCon;
+    // controller->setLinearVelocity({0.00001f, 0.0f, 0.00001f});
 
     while(engine->isWindowActive() && !engine->getKeyContinuousPress(GLFW_KEY_ESCAPE))
     {
@@ -1702,27 +1710,35 @@ std::unique_ptr<hyper::HyperEngine> engine = std::make_unique<hyper::HyperEngine
 
         if(engine->getKeyContinuousPress(GLFW_KEY_1))
         {
-            if(controller->onGround())
-            {
-                controller->jump({0,5,0});
-            }
+            // if(controller->onGround())
+            // {
+            //     controller->jump({0,5,0});
+            // }
         }
 
-        controller->setWalkDirection({0,0,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_2))
+        {
+            engine->deleteAllWorldPhysics();
+        }
 
-        if(engine->getKeyContinuousPress(GLFW_KEY_KP_8))
-            controller->setWalkDirection(btVector3(0,0,1).normalized() / 10);
-        if(engine->getKeyContinuousPress(GLFW_KEY_KP_2))
-            controller->setWalkDirection(btVector3(0,0,-1).normalized() / 10);
-        if(engine->getKeyContinuousPress(GLFW_KEY_KP_4))
-            controller->setWalkDirection(btVector3(1,0,0).normalized() / 10);
-        if(engine->getKeyContinuousPress(GLFW_KEY_KP_6))
-            controller->setWalkDirection(btVector3(-1,0,0).normalized() / 10);
+
+        // controller->setWalkDirection({0,0,0});
+        // if(engine->getKeyContinuousPress(GLFW_KEY_KP_8))
+        //     controller->setWalkDirection(btVector3(0,0,1).normalized() / 10);
+        // if(engine->getKeyContinuousPress(GLFW_KEY_KP_2))
+        //     controller->setWalkDirection(btVector3(0,0,-1).normalized() / 10);
+        // if(engine->getKeyContinuousPress(GLFW_KEY_KP_4))
+        //     controller->setWalkDirection(btVector3(1,0,0).normalized() / 10);
+        // if(engine->getKeyContinuousPress(GLFW_KEY_KP_6))
+        //     controller->setWalkDirection(btVector3(-1,0,0).normalized() / 10);
 
         // updating stuff
         // cubito_rosa->translate({0,-0.01f,0});
-        camnode->setCameraTarget({100,2,0});
-        camnode->setTranslation(cubito_rosa->getTranslation() - glm::vec3{10,0,0});
+
+        // camnode->setCameraTarget({100,2,0});
+        // camnode->setTranslation(cubito_rosa->getTranslation() - glm::vec3{10,0,0});
+
+        camnode->setCameraTarget({0,0,0});
         engine->updatePhysics();
     }
 }
