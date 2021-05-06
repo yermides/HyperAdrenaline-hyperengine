@@ -10,6 +10,7 @@ HyperEngine::HyperEngine(bool const init)
 
 HyperEngine::~HyperEngine()
 {
+	Node::deleteBranch(m_rootnode);
 	m_shaders.clear();
 	m_keystates.clear();
 	m_mousekeystates.clear();
@@ -17,7 +18,6 @@ HyperEngine::~HyperEngine()
 	m_lights.clear();
 	m_active_lights.clear();
 	m_cameras.clear();
-	Node::deleteBranch(m_rootnode);
 	m_collisionPairs.clear(); 
 	delete m_debugDrawer;
 	delete m_world;
@@ -633,8 +633,6 @@ HyperEngine::createPhysicPropertiesRigidBody(
 ,   int collisionMaskFlags
 )
 {
-	if(!node || node->getPhysicProperties()) return;
-
 	// Translación y rotación iguales a las del nodo
 	auto nodetrans = util::glmVec3TobtVec3(node->getTranslation());
 	btTransform transform;
@@ -683,8 +681,6 @@ HyperEngine::createPhysicPropertiesCollisionObject(
 ,   int collisionMaskFlags
 )
 {
-	if(!node || node->getPhysicProperties()) return;
-
 	btCollisionObject* collisionObject = new btCollisionObject;
 	collisionObject->setUserPointer( static_cast<void*>(node) );
 	collisionObject->setCollisionShape(pShape);
@@ -723,8 +719,6 @@ HyperEngine::createPhysicPropertiesStaticBody(
 ,   int collisionMaskFlags
 )
 {
-	if(!node || node->getPhysicProperties()) return;
-
 	// No afectado por las fuerzas por tener masa cero
 	this->createPhysicPropertiesRigidBody(
 			node
@@ -749,8 +743,6 @@ HyperEngine::createPhysicPropertiesKinematicBody(
 ,   int collisionMaskFlags
 )
 {
-	if(!node || node->getPhysicProperties()) return;
-
 	// No afectado por las fuerzas por tener masa cero
 	this->createPhysicPropertiesRigidBody(
 			node
@@ -779,8 +771,6 @@ HyperEngine::createPhysicPropertiesDynamicBody(
 ,   int collisionMaskFlags
 )
 {
-	if(!node || node->getPhysicProperties()) return;
-
 	// Masa mínima de 1
 	mass = std::max(mass, 1.0f);
 
@@ -808,8 +798,6 @@ HyperEngine::createPhysicPropertiesTriangleMeshShape(
 ,   int collisionMaskFlags
 )
 {
-	if(!node || node->getPhysicProperties()) return;
-
 	auto model 			= static_cast<EModel*>(node->getEntity());
 	auto vertices 		= model->getVertexPositions();
 	auto indices 		= model->getVertexIndices();
@@ -853,19 +841,24 @@ HyperEngine::createPhysicPropertiesKinematicCharacterController(
 ,   int collisionMaskFlags
 )
 {
-	if(!node || node->getPhysicProperties()) return;
-
     btTransform startTransform;
     startTransform.setIdentity();
 	auto trans = util::glmVec3TobtVec3(node->getTranslation());
     startTransform.setOrigin(trans);
 
+	// Esto es nuevo, la rotación, para que la cápsula sea vertical
+	auto noderot = glm::vec3{90,0,0};
+	btQuaternion btquatx( {1.0,0.0,0.0}, glm::radians( noderot.x ) );
+	btQuaternion btquaty( {0.0,1.0,0.0}, glm::radians( noderot.y ) );
+	btQuaternion btquatz( {0.0,0.0,1.0}, glm::radians( noderot.z ) );
+	btQuaternion btquat = btquatx * btquaty * btquatz;
+	startTransform.setRotation(btquat);
+
     btConvexShape* capsule = new btCapsuleShape(capsuleRadius, capsuleHeight);
+	
 	btPairCachingGhostObject* ghostObj = new btPairCachingGhostObject;
 	ghostObj->setWorldTransform(startTransform);
 	ghostObj->setUserPointer(node);
-
-	INFOLOG("---- LLEGO -----")
 
     m_world->getBroadphase()->getOverlappingPairCache()->setInternalGhostPairCallback(new btGhostPairCallback());
 
@@ -874,8 +867,6 @@ HyperEngine::createPhysicPropertiesKinematicCharacterController(
 
     btKinematicCharacterController* charCon = new btKinematicCharacterController(ghostObj, capsule, stepHeight);
     charCon->setGravity(m_world->getGravity());
-
-	INFOLOG("---- LLEGO2 -----")
 
     m_world->addCollisionObject(ghostObj, btBroadphaseProxy::CharacterFilter, btBroadphaseProxy::AllFilter);
     m_world->addAction(charCon);
@@ -888,14 +879,11 @@ HyperEngine::createPhysicPropertiesKinematicCharacterController(
 	node->setPhysicProperties(prop);
 
 	m_characterControllers.push_back(charCon);
-	INFOLOG("---- LLEGO3 -----")
 }
 
 bool 
 HyperEngine::getAABBCollisionBetweenNodes(Node* const nodeA, Node* const nodeB)
 {
-	if(!nodeA || !nodeB) return false;
-
 	auto it = std::find_if(m_collisionPairs.begin(), m_collisionPairs.end(), [nodeA, nodeB](CollisionPairResult& collPair){
 		return ( collPair.IDs.first == nodeA->getNameID() && collPair.IDs.second == nodeB->getNameID() ) 
 			|| ( collPair.IDs.first == nodeB->getNameID() && collPair.IDs.second == nodeA->getNameID() );
@@ -909,8 +897,6 @@ HyperEngine::getAABBCollisionBetweenNodes(Node* const nodeA, Node* const nodeB)
 bool 
 HyperEngine::getCollisionBetweenNodes(Node* const nodeA, Node* const nodeB, CollisionPairResult& collPairResult)
 {
-	if(!nodeA || !nodeB) return false;
-
 	auto it = std::find_if(m_collisionPairs.begin(), m_collisionPairs.end(), [nodeA, nodeB](CollisionPairResult& collPair){
 		return ( collPair.IDs.first == nodeA->getNameID() && collPair.IDs.second == nodeB->getNameID() ) 
 			|| ( collPair.IDs.first == nodeB->getNameID() && collPair.IDs.second == nodeA->getNameID() );
@@ -921,35 +907,7 @@ HyperEngine::getCollisionBetweenNodes(Node* const nodeA, Node* const nodeB, Coll
 	collPairResult = *it;
 
 	return !it->points.empty();
-
-
-	// if(!nodeA || !nodeB) return false;
-
-	// auto& cp = m_collisionPairs;
-	// auto it = 
-	// 	std::find_if(cp.begin(), cp.end(), 
-	// 		[&nodeA, &nodeB](std::pair<Node::NodeID, Node::NodeID> const& p)
-	// 		{
-	// 			return ( p.first == nodeA->getNameID() && p.second == nodeB->getNameID() ) 
-	// 				|| ( p.first == nodeB->getNameID() && p.second == nodeA->getNameID() );
-	// 		}
-	// 	);
-
-	// if(it != cp.end())
-	// 	return true;
-	// else 
-	// 	return false;
 }
-
-// bool 
-// HyperEngine::getCollisionBetweenNodes(Node* const nodeA, Node* const nodeB, PhysicContactResult& result)
-// {
-// 	// Patata, no funciona, no mires
-
-// 	// m_world->contactPairTest(collObjA, collObjB, callback);
-// 	// m_world->contactTest();
-// 	// m_world->contactPairTest();
-// }
 
 void 
 HyperEngine::deletePhysicProperties(Node* const node)
@@ -958,10 +916,43 @@ HyperEngine::deletePhysicProperties(Node* const node)
 	auto prop = node->getPhysicProperties();
 	if(!prop) return;
 
-	// COLLISION_OBJECT, RIGID_BODY
+	// COLLISION_OBJECT, RIGID_BODY, KINEMATIC_CHARACTERç
+	switch (prop->m_type)
+	{
+		case PhysicProperties::RIGID_BODY:
+		{
+		auto* body = prop->m_data.body;
+
+		if (body && body->getMotionState())
+			delete body->getMotionState();
+		}
+			break;
+		case PhysicProperties::COLLISION_OBJECT:
+		{
+			break;
+		}
+		case PhysicProperties::KINEMATIC_CHARACTER:
+		{
+			auto* controller = prop->charCon;
+			m_world->removeAction(controller);
+
+			auto it = std::find(m_characterControllers.begin(), m_characterControllers.end(), controller);
+
+			if(it != m_characterControllers.end())
+				m_characterControllers.erase(it);
+
+			break;
+		}
+		default:
+			break;
+	}
+
+	INFOLOG("m_characterControllers.size() " << VAR(m_characterControllers.size()) )
+
+
 	m_world->removeCollisionObject(prop->m_data.collObj);
 	delete prop;
-	node->setPhysicProperties(nullptr);
+	node->setPhysicProperties(NULL);
 }
 
 void 
@@ -984,7 +975,7 @@ HyperEngine::deleteAllWorldPhysics(void)
 
 	m_characterControllers.clear();
 
-	for (int i { m_world->getNumCollisionObjects()-1 }; i>=0; i--)
+	for (int i { m_world->getNumCollisionObjects() - 1 }; i>=0; i--)
 	{
 		btCollisionObject* obj = m_world->getCollisionObjectArray()[i];
 		btRigidBody* body = btRigidBody::upcast(obj);
@@ -1008,8 +999,7 @@ HyperEngine::deleteAllWorldPhysics(void)
 	// 	btCollisionShape* shape = m_collisionShapes[j];
 	// 	delete shape;
 	// }
-
-
+	
 	// //delete solver
 	// auto* solver = m_world->getConstraintSolver();
 	// delete solver;

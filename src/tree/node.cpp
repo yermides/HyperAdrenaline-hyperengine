@@ -10,6 +10,8 @@ Node::Node()
 
 Node::~Node()
 {
+    // Cambiado el 6/5/2021, por si hay que volver a lo anterior
+
     // Borrado recursivo, TODO:: revisar, pues ha habido double frees
     INFOLOG("Deleting entity from node "<< VAR(this));
 
@@ -24,7 +26,7 @@ Node::~Node()
     if(m_parent) {
         // necesario en algún momento llamar al removechild o hacer algo similar, pero de momento sirve
         // para deletear el rootnode
-        m_parent = nullptr;
+        m_parent->removeChild(this);
     }
 }
 
@@ -198,10 +200,9 @@ cameraskip:
 void 
 Node::deleteBranch(Node* node) 
 {
+    // Cambiado el 6/5/2021, por si hay que volver a lo anterior
     if(!node) return;
-
-    for(auto child : node->m_childs)
-        deleteBranch(child);
+    deleteBranchChilds(node);
 
     delete node;
     node = nullptr;
@@ -210,16 +211,11 @@ Node::deleteBranch(Node* node)
 void
 Node::deleteBranchChilds(Node* node)
 {
-    // TODO:: revisar, pero parece ir bien
+    // Cambiado el 6/5/2021, por si hay que volver a lo anterior
     if(!node) return;
 
-    for(auto n : node->m_childs)
-    {
-        if(n)
-        {
-            deleteBranch(n);
-        }
-    }
+    while(!node->m_childs.empty())
+        deleteBranch(node->m_childs[0]);
 
     node->m_childs.clear();
 }

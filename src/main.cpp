@@ -1574,6 +1574,7 @@ std::unique_ptr<hyper::HyperEngine> engine = std::make_unique<hyper::HyperEngine
         ,   default_scale
         // ,   "assets/planes/semicube.obj"
         ,   "assets/planes/character-test.obj"
+        // ,   "assets/pruebacolisiones.obj"
     );
 
     [[maybe_unused]] 
@@ -1603,14 +1604,25 @@ std::unique_ptr<hyper::HyperEngine> engine = std::make_unique<hyper::HyperEngine
     //     ,   0b00000010
     // );
     
+    // Datos para Liam
     engine->createPhysicPropertiesKinematicCharacterController(
             cubito_rosa
-        ,   2.3f
-        ,   1.0f
+        ,   0.5f
+        ,   1.8f
+        ,   2.0f
+        ,   0.9f
     );
 
-    // auto& controller = cubito_rosa->getPhysicProperties()->charCon;
-    // controller->setLinearVelocity({0.00001f, 0.0f, 0.00001f});
+    // engine->createPhysicPropertiesKinematicCharacterController(
+    //         cubito_rosa
+    //     ,   0.5f
+    //     ,   0.0f
+    //     ,   2.0f
+    //     ,   0.5f
+    // );
+
+    auto& controller = cubito_rosa->getPhysicProperties()->charCon;
+    controller->setLinearVelocity({0.00001f, 0.0f, 0.00001f});
 
     while(engine->isWindowActive() && !engine->getKeyContinuousPress(GLFW_KEY_ESCAPE))
     {
@@ -1648,29 +1660,21 @@ std::unique_ptr<hyper::HyperEngine> engine = std::make_unique<hyper::HyperEngine
             engine->deletePhysicProperties(plane);
         }
 
-        // if(engine->getKeySinglePress(GLFW_KEY_1))
-        // {
-        //     // engine->createPhysicPropertiesCollisionObject(
-        //     //         cubito_rosa
-        //     //     ,   new btBoxShape({0.2f,0.2f,0.2f})
-        //     //     ,   0b00000001
-        //     //     ,   0b00000010
-        //     // );
+        if(engine->getKeySinglePress(GLFW_KEY_1))
+        {
+            engine->createPhysicPropertiesKinematicCharacterController(
+                    cubito_rosa
+                ,   2.3f
+                ,   1.0f
+            );
 
-        //     engine->createPhysicPropertiesKinematicCharacterController(
-        //         cubito_rosa
-        //     );
-
-        //     engine->createPhysicPropertiesTriangleMeshShape(
-        //             plane
-        //         ,   0
-        //         ,   0b00000010
-        //         ,   0b00000001
-        //     );
-
-	    //     INFOLOG("---- LLEGO4 -----")
-
-        // }
+            engine->createPhysicPropertiesTriangleMeshShape(
+                    plane
+                ,   0
+                ,   0b00000010
+                ,   0b00000001
+            );
+        }
 
         // Check collision
         if(engine->getKeySinglePress(GLFW_KEY_ENTER))
@@ -1708,29 +1712,29 @@ std::unique_ptr<hyper::HyperEngine> engine = std::make_unique<hyper::HyperEngine
         // if(engine->getKeySinglePress(GLFW_KEY_KP_9))
         //     cubito_rosa->translate({0.0f,0.2f,0.0f});
 
-        if(engine->getKeyContinuousPress(GLFW_KEY_1))
-        {
-            // if(controller->onGround())
-            // {
-            //     controller->jump({0,5,0});
-            // }
-        }
 
         if(engine->getKeyContinuousPress(GLFW_KEY_2))
         {
             engine->deleteAllWorldPhysics();
         }
 
+        if(engine->getKeyContinuousPress(GLFW_KEY_KP_1))
+        {
+            if(controller->onGround())
+            {
+                controller->jump({0,5,0});
+            }
+        }
 
-        // controller->setWalkDirection({0,0,0});
-        // if(engine->getKeyContinuousPress(GLFW_KEY_KP_8))
-        //     controller->setWalkDirection(btVector3(0,0,1).normalized() / 10);
-        // if(engine->getKeyContinuousPress(GLFW_KEY_KP_2))
-        //     controller->setWalkDirection(btVector3(0,0,-1).normalized() / 10);
-        // if(engine->getKeyContinuousPress(GLFW_KEY_KP_4))
-        //     controller->setWalkDirection(btVector3(1,0,0).normalized() / 10);
-        // if(engine->getKeyContinuousPress(GLFW_KEY_KP_6))
-        //     controller->setWalkDirection(btVector3(-1,0,0).normalized() / 10);
+        controller->setWalkDirection({0,0,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_KP_8))
+            controller->setWalkDirection(btVector3(0,0,1).normalized() / 10);
+        if(engine->getKeyContinuousPress(GLFW_KEY_KP_2))
+            controller->setWalkDirection(btVector3(0,0,-1).normalized() / 10);
+        if(engine->getKeyContinuousPress(GLFW_KEY_KP_4))
+            controller->setWalkDirection(btVector3(1,0,0).normalized() / 10);
+        if(engine->getKeyContinuousPress(GLFW_KEY_KP_6))
+            controller->setWalkDirection(btVector3(-1,0,0).normalized() / 10);
 
         // updating stuff
         // cubito_rosa->translate({0,-0.01f,0});
