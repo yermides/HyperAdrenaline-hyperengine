@@ -666,11 +666,13 @@ HyperEngine::createPhysicPropertiesRigidBody(
 	properties->m_motionState 		= motionState;
 	node->setPhysicProperties(properties);
 
-	m_world->addRigidBody(rigidBody);
-
+	// m_world->addRigidBody(rigidBody);
+	
 	// Meter las flags del grupo de objetos colisionables y los objetos contra los que puede colisionar
 	// TODO:: descomentar cuando se haga bien
-	// m_world->addRigidBody(rigidBody, collisionGroupFlags, collisionMaskFlags);	
+	m_world->addRigidBody(rigidBody, collisionGroupFlags, collisionMaskFlags);
+	// INFOLOG("flags" << VAR(rigidBody->getFlags()) )
+	// INFOLOG("collflags" << VAR(rigidBody->getCollisionFlags()) )	
 }
 
 void 
@@ -879,6 +881,45 @@ HyperEngine::createPhysicPropertiesKinematicCharacterController(
 	node->setPhysicProperties(prop);
 
 	m_characterControllers.push_back(charCon);
+}
+
+void 
+HyperEngine::createPhysicPropertiesFromArchive(Node* const node, std::string const& filepath)
+{
+	INFOLOG("num bodies before" << VAR(m_importer->getNumRigidBodies()) )
+	// INFOLOG("getCollisionObjectArray.size " << VAR(objects.size()) )
+
+	bool loaded = m_importer->loadFile(filepath.c_str());
+
+	INFOLOG("loaded?" << VAR(loaded) )
+
+	INFOLOG("num bodies after" << VAR(m_importer->getNumCollisionShapes() ))
+
+    btCollisionObjectArray &objects = m_world->getCollisionObjectArray();
+
+	INFOLOG("getCollisionObjectArray.size " << VAR(objects.size()) )
+	INFOLOG("rigidbodies.size " << VAR(m_importer->getNumRigidBodies()) )
+	INFOLOG("collshapes.size " << VAR(m_importer->getNumCollisionShapes()) )
+
+	// auto* body = m_importer->getRigidBodyByIndex(0);
+	// btTransform transform;
+	// transform.setIdentity();
+	// transform.setOrigin({0,0,0});
+	// body->setWorldTransform(transform);
+	// m_world->addCollisionObject(body);
+
+
+    // btCollisionObjectArray &objects = m_world->getCollisionObjectArray();
+	// for(int i=0;i<objects.size();i++) {
+    //     btCollisionObject *obj = objects[i];
+    //     if(obj->getCollisionShape()->getShapeType() == SCALED_TRIANGLE_MESH_SHAPE_PROXYTYPE) {
+    //         btScaledBvhTriangleMeshShape *shape = static_cast<btScaledBvhTriangleMeshShape *>(obj->getCollisionShape());
+    //         if(!shape->getChildShape()->getOwnsBvh()) {
+    //             shape->getChildShape()->buildOptimizedBvh();
+    //         }
+    //     }
+		
+    // }
 }
 
 bool 
@@ -1462,6 +1503,7 @@ HyperEngine::initializePhysics(void)
 
 	// World seteado
 	m_world 											=     new btDiscreteDynamicsWorld(dispatcher, broadPhase, solver, collisionConfiguration);
+	m_importer											=	  new btBulletWorldImporter(m_world);
 
 	// setear su debug drawer y opciones por defecto
 	m_debugDrawer = new DebugDrawer;

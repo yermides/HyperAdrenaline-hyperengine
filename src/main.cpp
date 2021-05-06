@@ -1526,7 +1526,7 @@ void test_multiple_lights(void) {
 
 // Se llama test de sliding speed pero es comprobar el punto de choque: su ángulo con la superficie y su distancia en altura
 void test_physics_sliding_speed(void) {
-std::unique_ptr<hyper::HyperEngine> engine = std::make_unique<hyper::HyperEngine>(true);
+    std::unique_ptr<hyper::HyperEngine> engine = std::make_unique<hyper::HyperEngine>(true);
     engine->setWindowTitle("test_physics_sliding_speed");
     engine->setWindowIcon("assets/logo.jpg");
 
@@ -1747,6 +1747,167 @@ std::unique_ptr<hyper::HyperEngine> engine = std::make_unique<hyper::HyperEngine
     }
 }
 
+void test_physics_world_importer(void) {
+    std::unique_ptr<hyper::HyperEngine> engine = std::make_unique<hyper::HyperEngine>(true);
+    engine->setWindowTitle("test_physics_world_importer");
+    engine->setWindowIcon("assets/logo.jpg");
+
+    [[maybe_unused]] 
+    hyper::Node* camnode = engine->createCamera(
+            nullptr
+        ,   {-5,2,0}
+        ,   default_rot_and_scale
+    ); // tendrá la proyección por defecto    
+
+    hyper::Node* lightnode = engine->createLight(
+            default_createnode_params
+        ,   hyper::LightType::Point
+        ,   hyper::LightIntensity   { .ambient{0.05f, 0.05f, 0.05f}, .diffuse{0.8f, 0.8f, 0.8f}, .specular{1.0f, 1.0f, 1.0f} }
+        ,   hyper::LightAttenuation { .constant{1.0f}, .linear{0.09}, .quadratic{0.032} }
+        ,   hyper::LightAperture    { .innerCutoff{0.0f}, .outerCutoff{0.0f} }
+        ,   hyper::LightDirection   { 0,0,0 }
+    );
+
+    hyper::Node* lightnode3 = engine->createLight(
+            nullptr
+        ,   glm::vec3(2.0f,-3.5f,0.0f)
+        ,   default_rot_and_scale   
+        ,   hyper::LightType::Point
+        ,   hyper::LightIntensity   { .ambient{0.02f, 0.02f, 0.2f}, .diffuse{0.8f, 0.8f, 0.8f}, .specular{1.0f, 1.0f, 1.0f} }
+        ,   hyper::LightAttenuation { .constant{1.0f}, .linear{0.009f}, .quadratic{0.00032f} }
+        ,   hyper::LightAperture    { .innerCutoff{0.0f}, .outerCutoff{0.0f} }
+        ,   hyper::LightDirection   { 0,0,0 }
+    );
+
+    hyper::Node* lightnode2 = engine->createLight(
+            default_createnode_params
+        ,   hyper::LightType::Directional
+        ,   hyper::LightIntensity   { .ambient{0.05f, 0.05f, 0.05f}, .diffuse{0.4f, 0.4f, 0.4f}, .specular{0.5f, 0.5f, 0.5f} }
+        ,   hyper::LightAttenuation { .constant{0.0f}, .linear{0.0f}, .quadratic{0.0f} }
+        ,   hyper::LightAperture    { .innerCutoff{0.0f}, .outerCutoff{0.0f} }
+        ,   hyper::LightDirection   { -0.2f, -1.0f, -0.3f }
+    );
+
+    [[maybe_unused]] 
+    hyper::Node* plane = engine->createModel(
+            nullptr
+        ,   {0,-0.2,0}
+        ,   {0,0,0}
+        ,   default_scale
+        // ,   "assets/planes/semicube.obj"
+        ,   "assets/planes/character-test.obj"
+        // ,   "assets/mapa1joined.obj"
+        // ,   "assets/pruebacolisiones.obj"
+        // ,   "assets/planes/mapa3.obj"
+        // ,   "assets/planes/halllway.obj"
+    );
+
+    [[maybe_unused]] 
+    hyper::Node* cubito_rosa = engine->createModel(
+            nullptr
+        ,   {0,1,0}
+        ,   default_rot
+        ,   {0.2f,0.2f,0.2f}
+        ,   "assets/cubito_rosa.obj"
+    );
+
+    engine->enableDebugDraw();
+    plane->setNameID(1);
+    cubito_rosa->setNameID(2);
+
+    engine->createPhysicPropertiesTriangleMeshShape(
+            plane
+        ,   0
+        ,   8
+        ,   -1
+    );
+
+    // engine->createPhysicPropertiesFromArchive(
+    //         plane
+    //     // ,   "assets/physics/fisica.bullet"
+    //     ,   "assets/physics/mapa1.bullet"
+    //     // ,   "assets/physics/entrenamiento.bullet"
+    //     // ,   "assets/physics/mapa1.dae"
+    // );
+
+    // Datos para Liam
+    engine->createPhysicPropertiesKinematicCharacterController(
+            cubito_rosa
+        ,   0.5f
+        ,   1.8f
+        ,   2.0f
+        ,   0.9f
+        ,   2
+    );
+
+    auto& controller = cubito_rosa->getPhysicProperties()->charCon;
+    controller->setLinearVelocity({0.00001f, 0.0f, 0.00001f});
+
+    while(engine->isWindowActive() && !engine->getKeyContinuousPress(GLFW_KEY_ESCAPE))
+    {
+        // Render
+        engine->beginRender();
+        engine->drawScene();
+        engine->endRender();
+
+        // Input controls
+        if(engine->getKeyContinuousPress(GLFW_KEY_A))       
+            camnode->rotate({0,3,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_D))       
+            camnode->rotate({0,-3,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_W))       
+            camnode->rotate({3,0,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_S))       
+            camnode->rotate({-3,0,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_LEFT))    
+            camnode->translate({-.3,0,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_RIGHT))   
+            camnode->translate({.3,0,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_UP))      
+            camnode->translate({0,0,-.3f});
+        if(engine->getKeyContinuousPress(GLFW_KEY_DOWN))    
+            camnode->translate({0,0,.3f});
+        if(engine->getKeyContinuousPress(GLFW_KEY_SPACE))       
+            camnode->translate({0,.3f,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_LEFT_CONTROL))       
+            camnode->translate({0,-.3f,0});
+
+        // Input debug
+        if(engine->getKeySinglePress(GLFW_KEY_0))
+        {
+            engine->deletePhysicProperties(cubito_rosa);
+            engine->deletePhysicProperties(plane);
+        }
+
+        if(engine->getKeyContinuousPress(GLFW_KEY_2))
+        {
+            engine->deleteAllWorldPhysics();
+        }
+
+        if(engine->getKeyContinuousPress(GLFW_KEY_KP_1))
+        {
+            if(controller->onGround())
+            {
+                controller->jump({0,5,0});
+            }
+        }
+
+        controller->setWalkDirection({0,0,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_KP_8))
+            controller->setWalkDirection(btVector3(0,0,1).normalized() / 10);
+        if(engine->getKeyContinuousPress(GLFW_KEY_KP_2))
+            controller->setWalkDirection(btVector3(0,0,-1).normalized() / 10);
+        if(engine->getKeyContinuousPress(GLFW_KEY_KP_4))
+            controller->setWalkDirection(btVector3(1,0,0).normalized() / 10);
+        if(engine->getKeyContinuousPress(GLFW_KEY_KP_6))
+            controller->setWalkDirection(btVector3(-1,0,0).normalized() / 10);
+
+        // updating stuff
+        camnode->setCameraTarget({0,0,0});
+        engine->updatePhysics();
+    }
+}
+
 int main(void) {
 	// test_models_and_imgui();
 	// test_basic_lights();
@@ -1778,5 +1939,7 @@ int main(void) {
 
     // test_multiple_lights();
 
-    test_physics_sliding_speed(); // Done
+    // test_physics_sliding_speed(); // Done
+
+    test_physics_world_importer(); 
 }

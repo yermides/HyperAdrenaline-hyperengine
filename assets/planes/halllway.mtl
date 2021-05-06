@@ -1,0 +1,62 @@
+# Blender MTL File: 'None'
+# Material Count: 5
+
+newmtl Borde_pasillos
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.619000 0.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump ProyectoABP/HyperAdrenaline/assets/maps/texture/Pasillos/Borde_normal.png
+map_Kd ProyectoABP/HyperAdrenaline/assets/maps/texture/Pasillos/Borde_metallic.jpg
+
+newmtl Centro_pasillos
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.000000 0.016210
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump ProyectoABP/HyperAdrenaline/assets/maps/texture/Pasillos/Centro_normal.png
+map_Kd ProyectoABP/HyperAdrenaline/assets/maps/texture/Pasillos/Centro_metallic.jpg
+
+newmtl Paredes_pasillos
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.005712 0.000000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump ProyectoABP/HyperAdrenaline/assets/maps/texture/Pasillos/Paredes_normal.png
+map_Kd ProyectoABP/HyperAdrenaline/assets/maps/texture/Pasillos/Paredes_metallic.jpg
+
+newmtl Suelos_pasillos
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.044501 0.800000 0.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump ProyectoABP/HyperAdrenaline/assets/maps/texture/Pasillos/Suelo_normal.png
+map_Kd ProyectoABP/HyperAdrenaline/assets/maps/texture/Pasillos/Suelo_metallic.jpg
+
+newmtl Techos_pasillos
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.000000 0.388341
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump ProyectoABP/HyperAdrenaline/assets/maps/texture/Pasillos/Techo_normal.png
+map_Kd ProyectoABP/HyperAdrenaline/assets/maps/texture/Pasillos/Techo_metallic.jpg

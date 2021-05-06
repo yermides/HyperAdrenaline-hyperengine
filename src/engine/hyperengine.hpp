@@ -18,6 +18,8 @@
 #include <bullet/btBulletDynamicsCommon.h>
 #include <bullet/btBulletCollisionCommon.h>
 #include <bullet/BulletCollision/CollisionDispatch/btGhostObject.h>
+#include <bullet/BulletWorldImporter/btBulletWorldImporter.h>
+
 // HyperEngine
 #include <tree/node.hpp>
 #include <resources/r_shader.hpp>
@@ -337,6 +339,8 @@ struct HyperEngine
         ,   int collisionMaskFlags = 0
     );
 
+    void createPhysicPropertiesFromArchive(Node* const node, std::string const& filepath);
+
     // Solo comprueba el AABB, seguramente ni se use
     bool getAABBCollisionBetweenNodes(Node* const nodeA, Node* const nodeB);
 
@@ -436,6 +440,7 @@ private:
     bool m_useDebugDrawer               { false   };
     std::vector<CollisionPairResult> m_collisionPairs;
     std::vector<btKinematicCharacterController*> m_characterControllers; // Necesario para el cleanup de las físicas de la escena
+    btBulletWorldImporter* m_importer   { nullptr };
 
     // std::vector<std::pair<Node::NodeID, Node::NodeID>> m_collisionPairs;
 
