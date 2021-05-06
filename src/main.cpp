@@ -1533,7 +1533,7 @@ std::unique_ptr<hyper::HyperEngine> engine = std::make_unique<hyper::HyperEngine
     [[maybe_unused]] 
     hyper::Node* camnode = engine->createCamera(
             nullptr
-        ,   {5,4,-5}
+        ,   {-5,2,0}
         ,   default_rot_and_scale
     ); // tendrá la proyección por defecto    
 
@@ -1718,15 +1718,12 @@ std::unique_ptr<hyper::HyperEngine> engine = std::make_unique<hyper::HyperEngine
             controller->setWalkDirection(btVector3(1,0,0).normalized() / 10);
         if(engine->getKeyContinuousPress(GLFW_KEY_KP_6))
             controller->setWalkDirection(btVector3(-1,0,0).normalized() / 10);
-            
 
         // updating stuff
         // cubito_rosa->translate({0,-0.01f,0});
-        camnode->setCameraTarget({0,0,0});
+        camnode->setCameraTarget({100,2,0});
+        camnode->setTranslation(cubito_rosa->getTranslation() - glm::vec3{10,0,0});
         engine->updatePhysics();
-
-        INFOLOG("---- LLEGO5 -----")
-
     }
 }
 
@@ -1761,5 +1758,5 @@ int main(void) {
 
     // test_multiple_lights();
 
-    test_physics_sliding_speed();
+    test_physics_sliding_speed(); // Done
 }

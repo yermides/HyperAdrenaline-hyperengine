@@ -1,5 +1,6 @@
 #pragma once
 #include <bullet/btBulletCollisionCommon.h>
+#include <bullet/BulletCollision/CollisionDispatch/btGhostObject.h>
 #include <bullet/BulletDynamics/Character/btKinematicCharacterController.h>
 
 // Clase que hereda de la transformación del mundo de bullet para setear la info de bullet a los gráficos y viceversa

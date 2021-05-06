@@ -12,14 +12,20 @@ HyperEngine::~HyperEngine()
 {
 	m_shaders.clear();
 	m_keystates.clear();
+	m_mousekeystates.clear();
+	m_viewports.clear();
+	m_lights.clear();
+	m_active_lights.clear();
+	m_cameras.clear();
 	Node::deleteBranch(m_rootnode);
+	m_collisionPairs.clear(); 
+	delete m_debugDrawer;
+	delete m_world;
 	ImGui_ImplOpenGL3_Shutdown();
 	ImGui_ImplGlfw_Shutdown();
 	gui::DestroyContext();
 	glfwDestroyWindow(m_window);
 	glfwTerminate();
-	m_collisionPairs.clear();
-	delete m_world;
 }
 
 void 
@@ -58,7 +64,7 @@ HyperEngine::clearTree(void)
 	m_cameras.clear();
 	m_active_camera = engine_invalid_id;
 	m_lights.clear();
-	// m_active_lights.clear();
+	m_active_lights.clear();
 	m_viewports.clear();
 	m_active_viewport = engine_invalid_id;
 

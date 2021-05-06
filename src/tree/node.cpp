@@ -173,6 +173,13 @@ Node::traverse(glm::mat4 const& accumulatedTrans)
                 // Aplicar transformaciones al objeto de bullet (obviando el escalado)
                 body->getMotionState()->setWorldTransform(transform);
             }
+            else if(m_physicProperties->m_type == PhysicProperties::PhysicDatatype::KINEMATIC_CHARACTER)
+            {
+                btPairCachingGhostObject* object { m_physicProperties->m_data.ghostObj };
+                btTransform& transform { object->getWorldTransform() };
+                glm::vec3 glmtrans { util::btVec3ToGlmVec3(transform.getOrigin()) };
+                setTranslation(glmtrans);
+            }
         }
     }
 
