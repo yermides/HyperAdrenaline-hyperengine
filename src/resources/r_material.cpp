@@ -165,15 +165,15 @@ RMaterial::loadMaterial(aiMaterial* amaterial, std::string const& search_directo
         m_mapKs = ResourceManager::getResource_t<RTexture>(search_directory +"/"+ formattedpath);
     }
 
-    INFOLOG("RMaterial name " << VAR(amaterial->GetName().C_Str()) );
+    // INFOLOG("RMaterial name " << VAR(amaterial->GetName().C_Str()) );
 
-    INFOLOG("\n" << "Propiedades del material: " << "\n"
-        << VAR(m_Ka.r) << ":" << VAR(m_Ka.g) << ":" << VAR(m_Ka.b) << "\n"
-        << VAR(m_Kd.r) << ":" << VAR(m_Kd.g) << ":" << VAR(m_Kd.b) << "\n"
-        << VAR(m_Ks.r) << ":" << VAR(m_Ks.g) << ":" << VAR(m_Ks.b) << "\n"
-        << VAR(m_Ns) << "\n"
-        << VAR(m_d) << "\n"
-    );
+    // INFOLOG("\n" << "Propiedades del material: " << "\n"
+    //     << VAR(m_Ka.r) << ":" << VAR(m_Ka.g) << ":" << VAR(m_Ka.b) << "\n"
+    //     << VAR(m_Kd.r) << ":" << VAR(m_Kd.g) << ":" << VAR(m_Kd.b) << "\n"
+    //     << VAR(m_Ks.r) << ":" << VAR(m_Ks.g) << ":" << VAR(m_Ks.b) << "\n"
+    //     << VAR(m_Ns) << "\n"
+    //     << VAR(m_d) << "\n"
+    // );
 }
 
 void 

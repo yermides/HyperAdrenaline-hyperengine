@@ -71,7 +71,7 @@ ESkybox::loadFromFile(SkyboxNamelist const& paths)
 void
 ESkybox::draw(glm::mat4 const& tranform)
 {
-    if(!m_shader) return;
+    // if(!m_shader) return;
 
     // m_shader->bind();
     // m_shader->setInt("skybox", 0);

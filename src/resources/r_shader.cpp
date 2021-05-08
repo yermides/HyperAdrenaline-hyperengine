@@ -59,7 +59,7 @@ RShader::loadShaders( Cstring path_vertex, Cstring path_fragment )
 	int InfoLogLength;
 
 	// Compile Vertex Shader
-	LOG("Compiling shader: " << path_vertex);
+	// INFOLOG("Compiling shader: " << path_vertex);
 	char const * VertexSourcePointer = VertexShaderCode.c_str();
 	glShaderSource(VertexShaderID, 1, &VertexSourcePointer , NULL);
 	glCompileShader(VertexShaderID);
@@ -76,7 +76,7 @@ RShader::loadShaders( Cstring path_vertex, Cstring path_fragment )
 	}
 
 	// Compile Fragment Shader
-	LOG("Compiling shader: " << path_fragment);
+	// INFOLOG("Compiling shader: " << path_fragment);
 	char const * FragmentSourcePointer = FragmentShaderCode.c_str();
 	glShaderSource(FragmentShaderID, 1, &FragmentSourcePointer , NULL);
 	glCompileShader(FragmentShaderID);
@@ -92,7 +92,7 @@ RShader::loadShaders( Cstring path_vertex, Cstring path_fragment )
 	}
 
 	// Link the program
-	LOG("Linking program");
+	// INFOLOG("Linking program");
 	GLuint ProgramID = glCreateProgram();
 	glAttachShader(ProgramID, VertexShaderID);
 	glAttachShader(ProgramID, FragmentShaderID);
