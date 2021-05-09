@@ -12,7 +12,6 @@ Mesh::~Mesh()
     m_normals.clear();
     m_texture_coords.clear();
     m_indices.clear();
-    m_textures.clear();
 
     for(auto m : m_materials)
         delete m;

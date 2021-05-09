@@ -34,13 +34,13 @@ struct Mesh
     // Size = vertex count
     std::vector<GLuint>     m_indices           ;
 
-    // Size = undetermined
-    // TODO:: comentarlo, ya no se usa realmente
-    std::vector<RTexture*>  m_textures          ;
+    // Size = vertex count * 4
+    std::vector<GLfloat>    m_boneIDs           ;
+    std::vector<GLfloat>    m_boneWeights       ;
 
     // Size = undetermined
     std::vector<RMaterial*>  m_materials        ;
-    
+
 private:
     // Handlers
     GLuint vao, *vbo, ebo;      

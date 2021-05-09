@@ -1,10 +1,13 @@
 #pragma once
 #include <iostream>
 #include <memory>
+#include <chrono>
+#include <ratio>
 #include <util/macros.hpp>
 #include <engine/hyperengine.hpp>
 // #include <entities/e_light.hpp>
 #include <entities/e_model.hpp>
+#include <entities/e_animation.hpp>
 #include <tree/node.hpp>
 #include <util/functions.hpp>
 

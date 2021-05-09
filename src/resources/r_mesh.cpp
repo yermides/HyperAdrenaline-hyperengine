@@ -101,25 +101,26 @@ RMesh::loadMesh(std::string const& filepath)
             ++texcoordsarray;
         }
 
-        // Huesos
-        // auto bonearray = amesh->mBones[0];
-        INFOLOG(amesh->mNumBones)
-        for (uint32_t j {0}; j < amesh->mNumBones; ++j)
-        {
-            auto* bone = amesh->mBones[j];
-            INFOLOG("bone name " << bone->mName.C_Str())
+        // // Huesos
+        // // auto bonearray = amesh->mBones[0];
+        
+        // INFOLOG(amesh->mNumBones)
+        // for (uint32_t j {0}; j < amesh->mNumBones; ++j)
+        // {
+        //     auto* bone = amesh->mBones[j];
+        //     INFOLOG("bone name " << bone->mName.C_Str())
 
-            INFOLOG("bone weight num " << bone->mNumWeights)
+        //     INFOLOG("bone weight num " << bone->mNumWeights)
 
-            for(uint32_t k {0}; k < bone->mNumWeights; ++k)
-            {
-                uint32_t id = bone->mWeights[j].mVertexId;
-			    float weight = bone->mWeights[j].mWeight;
-                INFOLOG("id" << VAR(id))
-                INFOLOG("weight" << VAR(weight))
-            }
-            // ++bonearray;
-        }
+        //     for(uint32_t k {0}; k < bone->mNumWeights; ++k)
+        //     {
+        //         uint32_t id = bone->mWeights[j].mVertexId;
+		// 	    float weight = bone->mWeights[j].mWeight;
+        //         // INFOLOG("id" << VAR(id))
+        //         // INFOLOG("weight" << VAR(weight))
+        //     }
+        //     // ++bonearray;
+        // }
         
 
         // Almacenar los índices de las caras
