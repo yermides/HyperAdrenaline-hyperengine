@@ -1788,6 +1788,8 @@ void test_physics_world_importer(void) {
         ,   hyper::LightDirection   { -0.2f, -1.0f, -0.3f }
     );
 
+    
+
     [[maybe_unused]] 
     hyper::Node* plane = engine->createModel(
             nullptr
@@ -1952,6 +1954,20 @@ void test_animations() {
         ,   hyper::LightDirection   { -0.0f, -0.0f, -1.0f }
     );
 
+    [[maybe_unused]] 
+    hyper::Node* skyboxnode = engine->createSkybox(
+        default_createnode_params
+    ,   SkyboxNamelist 
+        { 
+            "assets/skybox/space/lightblue/top.png"
+        ,   "assets/skybox/space/lightblue/bot.png"
+        ,   "assets/skybox/space/lightblue/left.png"
+        ,   "assets/skybox/space/lightblue/right.png"
+        ,   "assets/skybox/space/lightblue/front.png"
+        ,   "assets/skybox/space/lightblue/back.png" 
+        }
+    );
+
     // hyper::Node* map = engine->createModel(
     //         nullptr
     //     ,   default_trans
@@ -1969,21 +1985,77 @@ void test_animations() {
     //     ,   "assets/animations/robot/robot_animation_000000.obj"
     // );
 
-    hyper::RMesh* anim1 = hyper::ResourceManager::getResource_t<hyper::RMesh>("assets/animations/robot/robot_animation_000000.obj");
-    hyper::RMesh* anim2 = hyper::ResourceManager::getResource_t<hyper::RMesh>("assets/animations/robot/robot_animation_000030.obj");
-    hyper::RMesh* anim3 = hyper::ResourceManager::getResource_t<hyper::RMesh>("assets/animations/robot/robot_animation_000069.obj");
-    hyper::RMesh* anim4 = hyper::ResourceManager::getResource_t<hyper::RMesh>("assets/animations/robot/robot_animation_000030.obj");
-    hyper::RMesh* anim5 = hyper::ResourceManager::getResource_t<hyper::RMesh>("assets/animations/robot/robot_animation_000000.obj");
+    hyper::RMesh* anim0 = hyper::ResourceManager::getResource_t<hyper::RMesh>("assets/animations/robot/robot_animation_000000.obj");
+    hyper::RMesh* anim1 = hyper::ResourceManager::getResource_t<hyper::RMesh>("assets/animations/robot/robot_animation_000001.obj");
+    hyper::RMesh* anim2 = hyper::ResourceManager::getResource_t<hyper::RMesh>("assets/animations/robot/robot_animation_000002.obj");
+    hyper::RMesh* anim3 = hyper::ResourceManager::getResource_t<hyper::RMesh>("assets/animations/robot/robot_animation_000003.obj");
+    hyper::RMesh* anim4 = hyper::ResourceManager::getResource_t<hyper::RMesh>("assets/animations/robot/robot_animation_000004.obj");
+    hyper::RMesh* anim5 = hyper::ResourceManager::getResource_t<hyper::RMesh>("assets/animations/robot/robot_animation_000005.obj");
+    hyper::RMesh* anim6 = hyper::ResourceManager::getResource_t<hyper::RMesh>("assets/animations/robot/robot_animation_000006.obj");
+    hyper::RMesh* anim7 = hyper::ResourceManager::getResource_t<hyper::RMesh>("assets/animations/robot/robot_animation_000007.obj");
+    hyper::RMesh* anim8 = hyper::ResourceManager::getResource_t<hyper::RMesh>("assets/animations/robot/robot_animation_000008.obj");
+    hyper::RMesh* anim9 = hyper::ResourceManager::getResource_t<hyper::RMesh>("assets/animations/robot/robot_animation_000009.obj");
+    hyper::RMesh* anim10 = hyper::ResourceManager::getResource_t<hyper::RMesh>("assets/animations/robot/robot_animation_000010.obj");
+    hyper::RMesh* anim11 = hyper::ResourceManager::getResource_t<hyper::RMesh>("assets/animations/robot/robot_animation_000011.obj");
+    hyper::RMesh* anim12 = hyper::ResourceManager::getResource_t<hyper::RMesh>("assets/animations/robot/robot_animation_000012.obj");
+    hyper::RMesh* anim13 = hyper::ResourceManager::getResource_t<hyper::RMesh>("assets/animations/robot/robot_animation_000013.obj");
+    hyper::RMesh* anim14 = hyper::ResourceManager::getResource_t<hyper::RMesh>("assets/animations/robot/robot_animation_000014.obj");
+    hyper::RMesh* anim15 = hyper::ResourceManager::getResource_t<hyper::RMesh>("assets/animations/robot/robot_animation_000015.obj");
+    hyper::RMesh* anim16 = hyper::ResourceManager::getResource_t<hyper::RMesh>("assets/animations/robot/robot_animation_000016.obj");
+    hyper::RMesh* anim17 = hyper::ResourceManager::getResource_t<hyper::RMesh>("assets/animations/robot/robot_animation_000017.obj");
+    hyper::RMesh* anim18 = hyper::ResourceManager::getResource_t<hyper::RMesh>("assets/animations/robot/robot_animation_000018.obj");
+    hyper::RMesh* anim19 = hyper::ResourceManager::getResource_t<hyper::RMesh>("assets/animations/robot/robot_animation_000019.obj");
+    hyper::RMesh* anim20 = hyper::ResourceManager::getResource_t<hyper::RMesh>("assets/animations/robot/robot_animation_000020.obj");
+    hyper::RMesh* anim21 = hyper::ResourceManager::getResource_t<hyper::RMesh>("assets/animations/robot/robot_animation_000021.obj");
+    hyper::RMesh* anim22 = hyper::ResourceManager::getResource_t<hyper::RMesh>("assets/animations/robot/robot_animation_000022.obj");
+    hyper::RMesh* anim23 = hyper::ResourceManager::getResource_t<hyper::RMesh>("assets/animations/robot/robot_animation_000023.obj");
+    hyper::RMesh* anim24 = hyper::ResourceManager::getResource_t<hyper::RMesh>("assets/animations/robot/robot_animation_000024.obj");
+
+    std::vector<std::string> frames;
+    frames.reserve(25);
+
+    for(int i {0}; i < 9; ++i)
+    {
+        std::string name { "assets/animations/robot/robot_animation_00000" };
+        name += std::to_string(i);
+        name += ".obj";
+        INFOLOG(name)
+        frames.push_back(name);
+    }
+
 
     hyper::Node* robot = engine->createNode(default_createnode_params);
     hyper::EAnimation* anim = new hyper::EAnimation;
     auto shader = hyper::ResourceManager::getResource_t<hyper::RShader>(SHADER_DEFAULT_PATH);
     anim->setShader(shader);
-    anim->addFrame(anim1);
-    anim->addFrame(anim2);
-    anim->addFrame(anim3);
-    anim->addFrame(anim4);
-    anim->addFrame(anim5);
+    anim->setLooped(true);
+    // anim->addFrames(frames);
+    anim->addFrame(anim0,  0.09);
+    anim->addFrame(anim1,  0.09);
+    anim->addFrame(anim2,  0.09);
+    anim->addFrame(anim3,  0.09);
+    anim->addFrame(anim4,  0.09);
+    anim->addFrame(anim5,  0.09);
+    anim->addFrame(anim6,  0.09);
+    anim->addFrame(anim7,  0.09);
+    anim->addFrame(anim8,  0.09);
+    anim->addFrame(anim9,  0.09);
+    anim->addFrame(anim10, 0.09);
+    anim->addFrame(anim11, 0.09);
+    anim->addFrame(anim12, 0.09);
+    anim->addFrame(anim13, 0.09);
+    anim->addFrame(anim14, 0.09);
+    anim->addFrame(anim15, 0.09);
+    anim->addFrame(anim16, 0.09);
+    anim->addFrame(anim17, 0.09);
+    anim->addFrame(anim18, 0.09);
+    anim->addFrame(anim19, 0.09);
+    anim->addFrame(anim20, 0.09);
+    anim->addFrame(anim21, 0.09);
+    anim->addFrame(anim22, 0.09);
+    anim->addFrame(anim23, 0.09);
+    anim->addFrame(anim24, 0.09);
+
     robot->setEntity(anim);
 
     const double fpsLimit = 1.0 / 60.0;
@@ -1994,6 +2066,9 @@ void test_animations() {
     {
         double now = glfwGetTime();
         double deltaTime = now - lastUpdateTime;
+
+        anim->update(deltaTime);
+        robot->translate({0,0,1.0 * deltaTime});
         // INFOLOG("Framerate: " << 1.0 / deltaTime) // Not accurrate
 
         // This if-statement only executes once every 60th of a second
@@ -2045,7 +2120,7 @@ void test_animations() {
 
 
         // updating stuff
-        camnode->setCameraTarget({0,0,0});
+        camnode->setCameraTarget({0,1,0});
         engine->updatePhysics( /* deltaseconds.count() */ );
 
         lastUpdateTime = now;
