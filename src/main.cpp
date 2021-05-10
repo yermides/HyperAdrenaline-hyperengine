@@ -2185,6 +2185,7 @@ void test_animated_model(void) {
     //     ,   default_rot_and_scale
     // ); // tendrá la proyección por defecto   
 
+    // Si peta es casi al 100% que sea porque no hay aún un createAnimatedModel en hyperengine.cpp, construir el ejemplo bien de una vez pls
     auto amodel { hyper::EAnimatedModel("assets/animations/robot/") };
 }
 

@@ -25,7 +25,7 @@ void
 EAnimatedModel::draw(glm::mat4 const& transform)
 {
     if(m_animation) 
-        m_animation->draw(transform);
+        m_animation->draw(transform, m_shader);
 }
 
 void 
@@ -40,22 +40,26 @@ EAnimatedModel::loadAnimations(std::string const& directory)
         {
             Animation::Key key = hyper::util::getCurrentFolderName(p.path().string());
             std::vector<std::string> frames;
+            auto const& path { p.path().string() };
 
-            INFOLOG(p.path().string())
-            // INFOLOG(key)
+            INFOLOG(path)
+            INFOLOG(key)
 
             if ((dir = opendir(p.path().c_str())) != nullptr) {
                 while ((diread = readdir(dir)) != nullptr) {
                     std::string filename(diread->d_name);
 
-                    // INFOLOG(filename);
+                    INFOLOG(filename);
                     // INFOLOG(filename.length());
 
                     auto extension = hyper::util::getCurrentFileExtension(diread->d_name);
                     // INFOLOG(extension);
 
                     if(filename.length() > 2 && extension == "obj")
-                        frames.emplace_back(filename);
+                    {
+                        INFOLOG("Path" << VAR( path + "/" + filename) );
+                        frames.push_back(path + "/" + filename);
+                    }
                 }
                 closedir(dir);
             } else {
@@ -64,14 +68,35 @@ EAnimatedModel::loadAnimations(std::string const& directory)
             }
 
             std::sort(frames.begin(), frames.end());
-            // INFOLOG( "*****************************" );
-            auto const& path { p.path().string() };
+
             for(auto& frame : frames)
             {
                 // aquí crear cada Animation* y guardarla en el hashmap
-                INFOLOG(path + "/" + frame);
+                // INFOLOG(path + "/" + frame);
+                INFOLOG("frame"  << VAR(frame) );
             }
+            // INFOLOG( "*****************************" );
+            auto it = m_animations.find(key);
 
+            if(it == m_animations.end())
+            {
+                INFOLOG("llego?")
+                auto* anim { new Animation(key, frames) };
+                m_animations[key] = anim;
+
+
+                if(!m_animation)
+                {
+                    m_animation = anim; 
+                }
+            }
+            // for(auto& frame : frames)
+            // {
+            //     // aquí crear cada Animation* y guardarla en el hashmap
+            //     INFOLOG(path + "/" + frame);
+            // }
+
+            frames.clear();
         }
 
         // INFOLOG( p.path().string() );

@@ -142,8 +142,13 @@ RMesh::loadMesh(std::string const& filepath)
         RMaterial* rmaterial = new RMaterial(amaterial, this->getDirectory());
         mesh->m_materials.push_back(rmaterial);
 
+        INFOLOG("LLego??????")
+
         // Inicializar valores de la malla en opengl
         mesh->initialize();
+
+        INFOLOG("LLego?????2?")
+
 
         // Guardar malla en el array
         m_meshes.push_back(mesh);
