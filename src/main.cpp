@@ -2174,19 +2174,106 @@ void test_filesystem(void) {
 }
 
 void test_animated_model(void) {
-    // std::unique_ptr<hyper::HyperEngine> engine = std::make_unique<hyper::HyperEngine>(true);
-    // engine->setWindowTitle("test_animations");
-    // engine->setWindowIcon("assets/logo.jpg");
+    std::unique_ptr<hyper::HyperEngine> engine = std::make_unique<hyper::HyperEngine>(true);
+    engine->setWindowTitle("test_animations");
+    engine->setWindowIcon("assets/logo.jpg");
 
-    // [[maybe_unused]] 
-    // hyper::Node* camnode = engine->createCamera(
-    //         nullptr
-    //     ,   {0,0,5}
-    //     ,   default_rot_and_scale
-    // ); // tendrá la proyección por defecto   
+    [[maybe_unused]] 
+    hyper::Node* camnode = engine->createCamera(
+            nullptr
+        ,   {0,0,5}
+        ,   default_rot_and_scale
+    ); // tendrá la proyección por defecto   
+
+    [[maybe_unused]] 
+    hyper::Node* lightnode = engine->createLight(
+            default_createnode_params
+        ,   hyper::LightType::Point
+        ,   hyper::LightIntensity   { .ambient{0.05f, 0.05f, 0.05f}, .diffuse{0.8f, 0.8f, 0.8f}, .specular{1.0f, 1.0f, 1.0f} }
+        ,   hyper::LightAttenuation { .constant{1.0f}, .linear{0.09}, .quadratic{0.032} }
+        ,   hyper::LightAperture    { .innerCutoff{0.0f}, .outerCutoff{0.0f} }
+        ,   hyper::LightDirection   { 0,0,0 }
+    );
+
+    hyper::Node* robot = engine->createAnimatedModel(
+            default_createnode_params
+        ,   "assets/animations/robot/"
+    );
+
+    auto animation = robot->getEntityAsAnimatedModel();
+    auto walking = animation->getCurrentAnimation();
 
     // Si peta es casi al 100% que sea porque no hay aún un createAnimatedModel en hyperengine.cpp, construir el ejemplo bien de una vez pls
-    auto amodel { hyper::EAnimatedModel("assets/animations/robot/") };
+    // auto amodel { hyper::EAnimatedModel("assets/animations/robot/") };
+
+    const double fpsLimit = 1.0 / 60.0;
+    double lastUpdateTime = 0;  // number of seconds since the last loop
+    double lastFrameTime = 0;   // number of seconds since the last frame
+
+    while(engine->isWindowActive() && !engine->getKeyContinuousPress(GLFW_KEY_ESCAPE))
+    {
+        double now = glfwGetTime();
+        double deltaTime = now - lastUpdateTime;
+        animation->updateAnimation(deltaTime);
+
+        // anim->update(deltaTime);
+        // robot->translate({0,0,1.0 * deltaTime});
+        // INFOLOG("Framerate: " << 1.0 / deltaTime) // Not accurrate
+
+        // This if-statement only executes once every 60th of a second
+        if ((now - lastFrameTime) >= fpsLimit)
+        {
+            // fpsLimit is being treated as a fixed timestep
+            // Input controls
+            if(engine->getKeyContinuousPress(GLFW_KEY_A))       
+                camnode->rotate({0,3,0});
+            if(engine->getKeyContinuousPress(GLFW_KEY_D))       
+                camnode->rotate({0,-3,0});
+            if(engine->getKeyContinuousPress(GLFW_KEY_W))       
+                camnode->rotate({3,0,0});
+            if(engine->getKeyContinuousPress(GLFW_KEY_S))       
+                camnode->rotate({-3,0,0});
+            if(engine->getKeyContinuousPress(GLFW_KEY_LEFT))    
+                camnode->translate({-5.0 * fpsLimit,0,0});
+            if(engine->getKeyContinuousPress(GLFW_KEY_RIGHT))   
+                camnode->translate({.3,0,0});
+            if(engine->getKeyContinuousPress(GLFW_KEY_UP))      
+                camnode->translate({0,0,-.3f});
+            if(engine->getKeyContinuousPress(GLFW_KEY_DOWN))    
+                camnode->translate({0,0,.3f});
+            if(engine->getKeyContinuousPress(GLFW_KEY_SPACE))       
+                camnode->translate({0,5.0f * fpsLimit, 0});
+            if(engine->getKeyContinuousPress(GLFW_KEY_LEFT_CONTROL))       
+                camnode->translate({0,-5.0f * fpsLimit, 0});
+
+            if(engine->getKeySinglePress(GLFW_KEY_1))
+                walking->setFrameIndex(0, true);
+            if(engine->getKeySinglePress(GLFW_KEY_2))
+                walking->setFrameIndex(1);
+            if(engine->getKeySinglePress(GLFW_KEY_3))
+                walking->setFrameIndex(2);
+            if(engine->getKeySinglePress(GLFW_KEY_4))
+                walking->setFrameIndex(3);
+            if(engine->getKeySinglePress(GLFW_KEY_5))
+                walking->setFrameIndex(4);
+            // draw your frame here
+
+            // Render
+            engine->beginRender();
+            engine->drawScene();
+            engine->endRender();
+
+            // only set lastFrameTime when you actually draw something
+            lastFrameTime = now;
+        }
+
+
+        // updating stuff
+        camnode->setCameraTarget({0,1,0});
+        engine->updatePhysics( /* deltaseconds.count() */ );
+
+        lastUpdateTime = now;
+    }
 }
 
 int main(void) {

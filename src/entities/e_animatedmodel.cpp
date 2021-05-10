@@ -2,6 +2,11 @@
 
 namespace hyper {
 
+EAnimatedModel::EAnimatedModel()
+: Entity{}
+{
+}
+
 EAnimatedModel::EAnimatedModel(std::string const& directory)
 : Entity{}
 {
@@ -102,6 +107,32 @@ EAnimatedModel::loadAnimations(std::string const& directory)
         // INFOLOG( p.path().string() );
 
     }
+}
+
+void 
+EAnimatedModel::updateAnimation(double const& dt)
+{
+    if(m_animation)
+        m_animation->update(dt);
+}
+    
+void 
+EAnimatedModel::setAnimation(Animation::Key key)
+{
+    if(m_animations.empty()) return;
+
+    auto it = m_animations.find(key);
+
+    if(it != m_animations.end())
+    {
+        m_animation = it->second;
+    }
+}
+
+Animation* const 
+EAnimatedModel::getCurrentAnimation(void) const noexcept
+{
+    return m_animation;
 }
 
 }

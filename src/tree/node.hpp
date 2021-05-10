@@ -19,6 +19,7 @@
 #include "entities/e_camera.hpp"
 #include "entities/e_light.hpp"
 #include "entities/e_model.hpp"
+#include "entities/e_animatedmodel.hpp"
 // #include "entities/e_skybox.hpp"
 
 #define default_node_id -1
@@ -54,6 +55,9 @@ struct Node
 
     constexpr EModel*             getEntityAsModel(void)                                const
         { return static_cast<EModel*>(m_entity); }
+
+    constexpr EAnimatedModel*     getEntityAsAnimatedModel(void)                        const
+        { return static_cast<EAnimatedModel*>(m_entity); }
 
     constexpr ECamera*            getEntityAsCamera(void)                               const
         { return static_cast<ECamera*>(m_entity); }

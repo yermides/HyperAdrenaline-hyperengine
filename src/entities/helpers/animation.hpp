@@ -26,7 +26,7 @@ struct Animation
 
     void addFrame(RMesh* const mesh, double const duration = (1.0 / 15.0)) noexcept; 
 
-    void setFrameIndex(uint32_t index) noexcept;
+    void setFrameIndex(uint32_t index, bool reset = false) noexcept;
 
     std::size_t getFrameCount(void) const noexcept;
 

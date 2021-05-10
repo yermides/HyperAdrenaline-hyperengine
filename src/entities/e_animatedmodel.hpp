@@ -16,12 +16,19 @@ namespace hyper {
 
 struct EAnimatedModel : public Entity
 {
+    EAnimatedModel();
     EAnimatedModel(std::string const& directory);
     ~EAnimatedModel();
 
     void draw(glm::mat4 const& transform) final;
 
     void loadAnimations(std::string const& directory);
+
+    void updateAnimation(double const& dt);
+
+    void setAnimation(Animation::Key key);
+
+    Animation* const getCurrentAnimation(void) const noexcept;
 
 private:
     Hashmap<Animation::Key, Animation*> m_animations;

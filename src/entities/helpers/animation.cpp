@@ -7,7 +7,9 @@ Animation::Animation()
 }
 
 Animation::Animation(Key const& key, std::vector<std::string> const& frames)
+:   m_key(key)
 {
+    // m_looped = true;
     double const duration { 1.0 / 15.0 };
 
     for(auto f : frames)
@@ -87,10 +89,16 @@ Animation::addFrame(RMesh* const mesh, double const duration) noexcept
 }
 
 void 
-Animation::setFrameIndex(uint32_t index) noexcept
+Animation::setFrameIndex(uint32_t index, bool reset) noexcept
 { 
     uint32_t count { getFrameCount() - 1 };
     m_index = std::min(index, count);
+
+    if(reset)
+    {
+        m_paused = m_done = false;
+        m_elapsed = 0.0;
+    }
 }
 
 std::size_t 

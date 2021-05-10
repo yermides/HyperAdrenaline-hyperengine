@@ -145,6 +145,25 @@ struct HyperEngine
             node->setEntity(model);
             return node;
         }
+    
+    template <typename... Args>
+    Node* createAnimatedModel(
+            Node* const parent      = nullptr
+        ,   glm::vec3 const& trans  = {0.0f,0.0f,0.0f}
+        ,   glm::vec3 const& rot    = {0.0f,0.0f,0.0f}
+        ,   glm::vec3 const& scale  = {1.0f,1.0f,1.0f} 
+        ,   Args&&... args
+        )
+        {
+            auto node           = createNode(parent, trans, rot, scale);
+            auto animatedModel  = new EAnimatedModel(args...);
+
+            // Test, poner directamente el shader a usar
+            animatedModel->setShader(m_shaders[OpenGLShader::SHADER_DEFAULT]);
+
+            node->setEntity(animatedModel);
+            return node;
+        }
 
     template <typename... Args>
     Node* createSkybox(
