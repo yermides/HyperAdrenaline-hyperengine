@@ -17,7 +17,7 @@ struct Animation
     using Key = std::string;
 
     Animation();
-    Animation(Key const& key, std::vector<std::string> const& frames); // rutas de los modelos
+    Animation(Key const& key, std::vector<std::string> const& frames, double const& duration = 0.1); // rutas de los modelos
     ~Animation();
 
     void draw(glm::mat4 const& transform, RShader* const shader);
@@ -36,6 +36,8 @@ struct Animation
     void setPaused(bool) noexcept;
     bool getDone(void) const noexcept;
     void setDone(bool) noexcept;
+
+    void reset(void) noexcept;
 
 private:
     Key m_key;

@@ -39,13 +39,12 @@
 #define default_createnode_params           nullptr, default_matrix_params
 // Cameras, lights, etc
 #define engine_invalid_id                   -1
-// Shader paths
+// Shader paths, totalmente useless porque ahora se cargan desde un const char* path en memoria
 
 // #define SHADER_DEFAULT_PATH                 "src/shaders/model-loading-m-v-p" 
 // #define SHADER_DEFAULT_PATH                 "src/shaders/materials" 
 // #define SHADER_DEFAULT_PATH                 "src/shaders/materials-and-lights" 
 #define SHADER_DEFAULT_PATH                 "src/shaders/multiple-lights" 
-
 #define SHADER_SKYBOX_PATH                  "src/shaders/skybox"
 #define SHADER_DEBUGDRAWER_PATH             "src/shaders/debugdrawer"
 

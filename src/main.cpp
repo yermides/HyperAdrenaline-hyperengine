@@ -2024,39 +2024,39 @@ void test_animations() {
     }
 
 
-    hyper::Node* robot = engine->createNode(default_createnode_params);
-    hyper::EAnimation* anim = new hyper::EAnimation;
-    auto shader = hyper::ResourceManager::getResource_t<hyper::RShader>(SHADER_DEFAULT_PATH);
-    anim->setShader(shader);
-    anim->setLooped(true);
-    // anim->addFrames(frames);
-    anim->addFrame(anim0,  0.09);
-    anim->addFrame(anim1,  0.09);
-    anim->addFrame(anim2,  0.09);
-    anim->addFrame(anim3,  0.09);
-    anim->addFrame(anim4,  0.09);
-    anim->addFrame(anim5,  0.09);
-    anim->addFrame(anim6,  0.09);
-    anim->addFrame(anim7,  0.09);
-    anim->addFrame(anim8,  0.09);
-    anim->addFrame(anim9,  0.09);
-    anim->addFrame(anim10, 0.09);
-    anim->addFrame(anim11, 0.09);
-    anim->addFrame(anim12, 0.09);
-    anim->addFrame(anim13, 0.09);
-    anim->addFrame(anim14, 0.09);
-    anim->addFrame(anim15, 0.09);
-    anim->addFrame(anim16, 0.09);
-    anim->addFrame(anim17, 0.09);
-    anim->addFrame(anim18, 0.09);
-    anim->addFrame(anim19, 0.09);
-    anim->addFrame(anim20, 0.09);
-    anim->addFrame(anim21, 0.09);
-    anim->addFrame(anim22, 0.09);
-    anim->addFrame(anim23, 0.09);
-    anim->addFrame(anim24, 0.09);
+    // hyper::Node* robot = engine->createNode(default_createnode_params);
+    // hyper::EAnimation* anim = new hyper::EAnimation;
+    // auto shader = hyper::ResourceManager::getResource_t<hyper::RShader>(SHADER_DEFAULT_PATH);
+    // anim->setShader(shader);
+    // anim->setLooped(true);
+    // // anim->addFrames(frames);
+    // anim->addFrame(anim0,  0.09);
+    // anim->addFrame(anim1,  0.09);
+    // anim->addFrame(anim2,  0.09);
+    // anim->addFrame(anim3,  0.09);
+    // anim->addFrame(anim4,  0.09);
+    // anim->addFrame(anim5,  0.09);
+    // anim->addFrame(anim6,  0.09);
+    // anim->addFrame(anim7,  0.09);
+    // anim->addFrame(anim8,  0.09);
+    // anim->addFrame(anim9,  0.09);
+    // anim->addFrame(anim10, 0.09);
+    // anim->addFrame(anim11, 0.09);
+    // anim->addFrame(anim12, 0.09);
+    // anim->addFrame(anim13, 0.09);
+    // anim->addFrame(anim14, 0.09);
+    // anim->addFrame(anim15, 0.09);
+    // anim->addFrame(anim16, 0.09);
+    // anim->addFrame(anim17, 0.09);
+    // anim->addFrame(anim18, 0.09);
+    // anim->addFrame(anim19, 0.09);
+    // anim->addFrame(anim20, 0.09);
+    // anim->addFrame(anim21, 0.09);
+    // anim->addFrame(anim22, 0.09);
+    // anim->addFrame(anim23, 0.09);
+    // anim->addFrame(anim24, 0.09);
 
-    robot->setEntity(anim);
+    // robot->setEntity(anim);
 
     const double fpsLimit = 1.0 / 60.0;
     double lastUpdateTime = 0;  // number of seconds since the last loop
@@ -2067,8 +2067,8 @@ void test_animations() {
         double now = glfwGetTime();
         double deltaTime = now - lastUpdateTime;
 
-        anim->update(deltaTime);
-        robot->translate({0,0,1.0 * deltaTime});
+        // anim->update(deltaTime);
+        // robot->translate({0,0,1.0 * deltaTime});
         // INFOLOG("Framerate: " << 1.0 / deltaTime) // Not accurrate
 
         // This if-statement only executes once every 60th of a second
@@ -2097,16 +2097,16 @@ void test_animations() {
             if(engine->getKeyContinuousPress(GLFW_KEY_LEFT_CONTROL))       
                 camnode->translate({0,-5.0f * fpsLimit, 0});
 
-            if(engine->getKeySinglePress(GLFW_KEY_1))
-                anim->setFrameIndex(0);
-            if(engine->getKeySinglePress(GLFW_KEY_2))
-                anim->setFrameIndex(1);
-            if(engine->getKeySinglePress(GLFW_KEY_3))
-                anim->setFrameIndex(2);
-            if(engine->getKeySinglePress(GLFW_KEY_4))
-                anim->setFrameIndex(3);
-            if(engine->getKeySinglePress(GLFW_KEY_5))
-                anim->setFrameIndex(4);
+            // if(engine->getKeySinglePress(GLFW_KEY_1))
+            //     anim->setFrameIndex(0);
+            // if(engine->getKeySinglePress(GLFW_KEY_2))
+            //     anim->setFrameIndex(1);
+            // if(engine->getKeySinglePress(GLFW_KEY_3))
+            //     anim->setFrameIndex(2);
+            // if(engine->getKeySinglePress(GLFW_KEY_4))
+            //     anim->setFrameIndex(3);
+            // if(engine->getKeySinglePress(GLFW_KEY_5))
+            //     anim->setFrameIndex(4);
             // draw your frame here
 
             // Render
@@ -2175,7 +2175,7 @@ void test_filesystem(void) {
 
 void test_animated_model(void) {
     std::unique_ptr<hyper::HyperEngine> engine = std::make_unique<hyper::HyperEngine>(true);
-    engine->setWindowTitle("test_animations");
+    engine->setWindowTitle("test_animated_model");
     engine->setWindowIcon("assets/logo.jpg");
 
     [[maybe_unused]] 
@@ -2198,10 +2198,13 @@ void test_animated_model(void) {
     hyper::Node* robot = engine->createAnimatedModel(
             default_createnode_params
         ,   "assets/animations/robot/"
+        ,   0.025                                       // Intervalo entre frames
     );
 
     auto animation = robot->getEntityAsAnimatedModel();
-    auto walking = animation->getCurrentAnimation();
+    auto current = animation->getCurrentAnimation();
+
+    animation->getAnimation("walking")->setLooped(true);
 
     // Si peta es casi al 100% que sea porque no hay aún un createAnimatedModel en hyperengine.cpp, construir el ejemplo bien de una vez pls
     // auto amodel { hyper::EAnimatedModel("assets/animations/robot/") };
@@ -2247,15 +2250,22 @@ void test_animated_model(void) {
                 camnode->translate({0,-5.0f * fpsLimit, 0});
 
             if(engine->getKeySinglePress(GLFW_KEY_1))
-                walking->setFrameIndex(0, true);
+                current->setFrameIndex(0, true);
             if(engine->getKeySinglePress(GLFW_KEY_2))
-                walking->setFrameIndex(1);
+                current->setFrameIndex(1);
             if(engine->getKeySinglePress(GLFW_KEY_3))
-                walking->setFrameIndex(2);
+                current->setFrameIndex(2);
             if(engine->getKeySinglePress(GLFW_KEY_4))
-                walking->setFrameIndex(3);
+                current->setFrameIndex(3);
             if(engine->getKeySinglePress(GLFW_KEY_5))
-                walking->setFrameIndex(4);
+                current->setFrameIndex(4);
+
+            if(engine->getKeySinglePress(GLFW_KEY_6))
+                animation->setAnimation("walking");
+            if(engine->getKeySinglePress(GLFW_KEY_7))
+                animation->setAnimation("death");
+            if(engine->getKeySinglePress(GLFW_KEY_8))
+                animation->setAnimation("death22222222");
             // draw your frame here
 
             // Render
@@ -2273,6 +2283,98 @@ void test_animated_model(void) {
         engine->updatePhysics( /* deltaseconds.count() */ );
 
         lastUpdateTime = now;
+    }
+}
+
+void test_map2_error(void) {
+    std::unique_ptr<hyper::HyperEngine> engine = std::make_unique<hyper::HyperEngine>(true);
+    engine->setWindowTitle("test_map2_error");
+    engine->setWindowIcon("assets/logo.jpg");
+    engine->enableDebugDraw();
+
+    [[maybe_unused]] 
+    hyper::Node* camnode = engine->createCamera(
+            nullptr
+        ,   {0,0,5}
+        ,   default_rot_and_scale
+    ); // tendrá la proyección por defecto    
+
+    [[maybe_unused]] 
+    hyper::Node* lightnode = engine->createLight(
+            default_createnode_params
+        ,   hyper::LightType::Point
+        ,   hyper::LightIntensity   { .ambient{0.05f, 0.05f, 0.05f}, .diffuse{0.8f, 0.8f, 0.8f}, .specular{1.0f, 1.0f, 1.0f} }
+        ,   hyper::LightAttenuation { .constant{1.0f}, .linear{0.09}, .quadratic{0.032} }
+        ,   hyper::LightAperture    { .innerCutoff{0.0f}, .outerCutoff{0.0f} }
+        ,   hyper::LightDirection   { 0,0,0 }
+    );
+
+    [[maybe_unused]] 
+    hyper::Node* lightnode3 = engine->createLight(
+            nullptr
+        ,   glm::vec3(0.0f,4.0f,2.0f)
+        ,   default_rot_and_scale   
+        ,   hyper::LightType::Point
+        ,   hyper::LightIntensity   { .ambient{0.2f, 0.2f, 0.2f}, .diffuse{0.8f, 0.8f, 0.8f}, .specular{1.0f, 1.0f, 1.0f} }
+        ,   hyper::LightAttenuation { .constant{1.0f}, .linear{0.00f}, .quadratic{0.000f} }
+        ,   hyper::LightAperture    { .innerCutoff{0.0f}, .outerCutoff{0.0f} }
+        ,   hyper::LightDirection   { 0,0,0 }
+    );
+
+    [[maybe_unused]] 
+    hyper::Node* lightnode2 = engine->createLight(
+            default_createnode_params
+        ,   hyper::LightType::Directional
+        ,   hyper::LightIntensity   { .ambient{0.05f, 0.05f, 0.05f}, .diffuse{0.4f, 0.4f, 0.4f}, .specular{0.5f, 0.5f, 0.5f} }
+        ,   hyper::LightAttenuation { .constant{0.0f}, .linear{0.0f}, .quadratic{0.0f} }
+        ,   hyper::LightAperture    { .innerCutoff{0.0f}, .outerCutoff{0.0f} }
+        ,   hyper::LightDirection   { -0.0f, -0.0f, -1.0f }
+    );
+
+    [[maybe_unused]] 
+    hyper::Node* plane = engine->createModel(
+            nullptr
+        ,   {0,0,0}
+        ,   {0,0,0}
+        ,   default_scale
+        ,   "assets/mapa/mapa2joined.obj"
+    );
+    engine->createPhysicPropertiesTriangleMeshShape(
+        plane
+    );
+
+    while(engine->isWindowActive() && !engine->getKeyContinuousPress(GLFW_KEY_ESCAPE))
+    {
+        // Render
+        engine->beginRender();
+        engine->drawScene();
+        engine->endRender();
+
+        // Input controls
+        if(engine->getKeyContinuousPress(GLFW_KEY_A))       
+            camnode->rotate({0,3,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_D))       
+            camnode->rotate({0,-3,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_W))       
+            camnode->rotate({3,0,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_S))       
+            camnode->rotate({-3,0,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_LEFT))    
+            camnode->translate({-.3,0,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_RIGHT))   
+            camnode->translate({.3,0,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_UP))      
+            camnode->translate({0,0,-.3f});
+        if(engine->getKeyContinuousPress(GLFW_KEY_DOWN))    
+            camnode->translate({0,0,.3f});
+        if(engine->getKeyContinuousPress(GLFW_KEY_SPACE))       
+            camnode->translate({0,.3f,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_LEFT_CONTROL))       
+            camnode->translate({0,-.3f,0});
+
+        // updating stuff
+        camnode->setCameraTarget({0,0,0});
+        engine->updatePhysics();
     }
 }
 
@@ -2311,11 +2413,13 @@ int main(void) {
 
     // test_physics_world_importer(); 
 
+    // test_animations();
+
+    // test_filesystem(); 
+
     ///////////////////////////////////////////////////////
 
-    // test_animations(); // in progress
-
-    // test_filesystem(); // test for the animated model
-
     test_animated_model();
+
+    // test_map2_error();
 }

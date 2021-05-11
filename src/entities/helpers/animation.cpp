@@ -6,17 +6,16 @@ Animation::Animation()
 {
 }
 
-Animation::Animation(Key const& key, std::vector<std::string> const& frames)
+Animation::Animation(Key const& key, std::vector<std::string> const& frames, double const& duration)
 :   m_key(key)
 {
     // m_looped = true;
-    double const duration { 1.0 / 15.0 };
 
     for(auto f : frames)
     {
-        INFOLOG("f: " << VAR(f))
+        // INFOLOG("f: " << VAR(f))
         auto* mesh = ResourceManager::getResource_t<RMesh>(f);
-        INFOLOG("f2?")
+        // INFOLOG("f2?")
 
         addFrame(mesh, duration);
     }
@@ -142,6 +141,14 @@ Animation::setDone(bool done) noexcept
 {
     m_index = getFrameCount() - 1;
     m_done = done;
+}
+
+void 
+Animation::reset(void) noexcept
+{   
+    m_index = 0;
+    m_elapsed = 0.0;
+    m_paused = m_done = false;
 }
 
 } // namespace hyper

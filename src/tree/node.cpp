@@ -138,7 +138,7 @@ Node::traverse(glm::mat4 const& accumulatedTrans)
                 btTransform transform;
 
                 // Translación
-                auto trans = util::glmVec3TobtVec3(m_translation);
+                auto trans = util::glmVec3TobtVec3(m_translation + m_physicOffset);
                 transform.setOrigin(trans);
 
                 // Rotación
@@ -162,7 +162,7 @@ Node::traverse(glm::mat4 const& accumulatedTrans)
                 body->getMotionState()->getWorldTransform(transform);
 
                 // Translación
-                auto trans = util::glmVec3TobtVec3(this->getTranslation());
+                auto trans = util::glmVec3TobtVec3(getTranslation() + m_physicOffset);
                 transform.setOrigin( trans );
 
                 // Rotación
@@ -180,7 +180,7 @@ Node::traverse(glm::mat4 const& accumulatedTrans)
                 btPairCachingGhostObject* object { m_physicProperties->m_data.ghostObj };
                 btTransform& transform { object->getWorldTransform() };
                 glm::vec3 glmtrans { util::btVec3ToGlmVec3(transform.getOrigin()) };
-                setTranslation(glmtrans);
+                setTranslation(glmtrans - m_physicOffset);
             }
         }
     }

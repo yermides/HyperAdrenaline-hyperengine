@@ -7,10 +7,10 @@ EAnimatedModel::EAnimatedModel()
 {
 }
 
-EAnimatedModel::EAnimatedModel(std::string const& directory)
+EAnimatedModel::EAnimatedModel(std::string const& directory, double const& duration)
 : Entity{}
 {
-    loadAnimations(directory);
+    loadAnimations(directory, duration);
 }
 
 EAnimatedModel::~EAnimatedModel()
@@ -34,7 +34,7 @@ EAnimatedModel::draw(glm::mat4 const& transform)
 }
 
 void 
-EAnimatedModel::loadAnimations(std::string const& directory)
+EAnimatedModel::loadAnimations(std::string const& directory, double const& duration)
 {
     DIR*    dir; 
     dirent* diread;
@@ -86,7 +86,7 @@ EAnimatedModel::loadAnimations(std::string const& directory)
             if(it == m_animations.end())
             {
                 INFOLOG("llego?")
-                auto* anim { new Animation(key, frames) };
+                auto* anim { new Animation(key, frames, duration) };
                 m_animations[key] = anim;
 
 
@@ -116,16 +116,32 @@ EAnimatedModel::updateAnimation(double const& dt)
         m_animation->update(dt);
 }
     
-void 
-EAnimatedModel::setAnimation(Animation::Key key)
-{
-    if(m_animations.empty()) return;
 
+Animation* const 
+EAnimatedModel::getAnimation(Animation::Key key)
+{
     auto it = m_animations.find(key);
 
     if(it != m_animations.end())
     {
-        m_animation = it->second;
+        return it->second;
+    }
+
+    return nullptr;
+}
+
+void 
+EAnimatedModel::setAnimation(Animation::Key key)
+{
+    auto it = m_animations.find(key);
+
+    if(it != m_animations.end())
+    {
+        if(m_animation != it->second)
+        {
+            m_animation = it->second;
+            m_animation->reset();
+        }
     }
 }
 

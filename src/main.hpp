@@ -10,7 +10,6 @@
 #include <engine/hyperengine.hpp>
 // #include <entities/e_light.hpp>
 #include <entities/e_model.hpp>
-#include <entities/e_animation.hpp>
 #include <entities/e_animatedmodel.hpp>
 #include <tree/node.hpp>
 #include <util/functions.hpp>

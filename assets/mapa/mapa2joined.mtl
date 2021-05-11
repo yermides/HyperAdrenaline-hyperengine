@@ -1,5 +1,5 @@
 # Blender MTL File: 'mapa2joined.blend'
-# Material Count: 67
+# Material Count: 72
 
 newmtl Barrel
 Ns 225.000000
@@ -25,7 +25,7 @@ illum 3
 map_Kd texture\\Debris\\Barrel\\BarrelRings_baseColor.jpg
 map_Ns texture\\Debris\\Barrel\\BarrelRings_roughness.jpg
 
-newmtl Base.
+newmtl Base
 Ns 225.000000
 Ka 1.000000 1.000000 1.000000
 Kd 0.001012 0.000000 0.800000
@@ -731,7 +731,31 @@ map_Bump texture\\doorFrame\\door-1-frame_decorationLeft_Normal.png
 map_Kd texture\\doorFrame\\door-1-frame_decorationLeft_BaseColor.png
 map_Ns texture\\doorFrame\\door-1-frame_decorationLeft_Roughness.png
 
+newmtl decorationLeft.001
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.000000 0.733277 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump texture\\doorFrame\\door-1-frame_decorationLeft_Normal.png
+map_Kd texture\\doorFrame\\door-1-frame_decorationLeft_BaseColor.png
+map_Ns texture\\doorFrame\\door-1-frame_decorationLeft_Roughness.png
+
 newmtl decorationTop
+Ns 35.999996
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.000000 0.002184
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd texture\\doorFrame\\door-1-frame_decorationTop_BaseColor.png
+
+newmtl decorationTop.001
 Ns 35.999996
 Ka 1.000000 1.000000 1.000000
 Kd 0.800000 0.000000 0.002184
@@ -769,6 +793,19 @@ map_Kd texture\\doorFrame\\door-1-frame_floor_BaseColor.png
 map_Ns texture\\doorFrame\\door-1-frame_floor_Roughness.png
 refl texture\\doorFrame\\door-1-frame_floor_Metallic.png
 
+newmtl floor.001
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.000000 0.001525 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd texture\\doorFrame\\door-1-frame_floor_BaseColor.png
+map_Ns texture\\doorFrame\\door-1-frame_floor_Roughness.png
+refl texture\\doorFrame\\door-1-frame_floor_Metallic.png
+
 newmtl foot
 Ns 81.000006
 Ka 0.508333 0.508333 0.508333
@@ -791,7 +828,31 @@ illum 2
 map_Kd texture\\doorFrame\\door-1-frame_frameInner_BaseColor.png
 map_Ns texture\\doorFrame\\door-1-frame_frameInner_Roughness.png
 
+newmtl frameInner.001
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.667261 0.000000
+Ks 0.250000 0.250000 0.250000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd texture\\doorFrame\\door-1-frame_frameInner_BaseColor.png
+map_Ns texture\\doorFrame\\door-1-frame_frameInner_Roughness.png
+
 newmtl frameOutter
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.017602 0.800000 0.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd texture\\doorFrame\\door-1-frame_frameOutter_BaseColor.png
+map_Ns texture\\doorFrame\\door-1-frame_frameOutter_Roughness.png
+
+newmtl frameOutter.001
 Ns 225.000000
 Ka 1.000000 1.000000 1.000000
 Kd 0.017602 0.800000 0.000000

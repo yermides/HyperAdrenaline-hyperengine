@@ -870,7 +870,8 @@ HyperEngine::createPhysicPropertiesKinematicCharacterController(
     btKinematicCharacterController* charCon = new btKinematicCharacterController(ghostObj, capsule, stepHeight);
     charCon->setGravity(m_world->getGravity());
 
-    m_world->addCollisionObject(ghostObj, btBroadphaseProxy::CharacterFilter, btBroadphaseProxy::AllFilter);
+    // m_world->addCollisionObject(ghostObj, btBroadphaseProxy::CharacterFilter, btBroadphaseProxy::AllFilter);
+    m_world->addCollisionObject(ghostObj, 0, collisionMaskFlags);
     m_world->addAction(charCon);
     charCon->setMaxJumpHeight(jumpHeight);
 
@@ -1487,9 +1488,11 @@ HyperEngine::initializeGraphics(void)
 	ImGui_ImplOpenGL3_Init("#version 130");
 
 	// Load shaders here
-	m_shaders[OpenGLShader::SHADER_DEFAULT] 		= ResourceManager::getResource_t<RShader>(SHADER_DEFAULT_PATH);
-	m_shaders[OpenGLShader::SHADER_SKYBOX] 			= ResourceManager::getResource_t<RShader>(SHADER_SKYBOX_PATH);
-	m_shaders[OpenGLShader::SHADER_DEBUGDRAWER] 	= ResourceManager::getResource_t<RShader>(SHADER_DEBUGDRAWER_PATH);
+	m_shaders = {
+			{ OpenGLShader::SHADER_DEFAULT, new RShader(Shader::hypershader_vertex, 		Shader::hypershader_fragment) 	}
+		,	{ OpenGLShader::SHADER_SKYBOX,  new RShader(Shader::skybox_vertex, 				Shader::skybox_fragment)		}
+		,	{ OpenGLShader::SHADER_DEBUGDRAWER,  new RShader(Shader::debugdrawer_vertex, 	Shader::debugdrawer_fragment)	}
+	};
 	
 }
 
