@@ -366,4 +366,20 @@ namespace Shader {
         }
     )";
 
+    constexpr static char const* normals_vertex = R"(
+        #version 330 core
+
+        void main()
+        {
+        }
+    )";
+
+    constexpr static char const* normals_fragment = R"(
+        #version 330 core
+        
+        void main()
+        {
+        }
+    )";
+
 }

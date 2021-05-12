@@ -2290,7 +2290,7 @@ void test_map2_error(void) {
     std::unique_ptr<hyper::HyperEngine> engine = std::make_unique<hyper::HyperEngine>(true);
     engine->setWindowTitle("test_map2_error");
     engine->setWindowIcon("assets/logo.jpg");
-    engine->enableDebugDraw();
+    // engine->enableDebugDraw();
 
     [[maybe_unused]] 
     hyper::Node* camnode = engine->createCamera(
@@ -2298,6 +2298,10 @@ void test_map2_error(void) {
         ,   {0,0,5}
         ,   default_rot_and_scale
     ); // tendrá la proyección por defecto    
+
+    // auto camentity { camnode->getEntityAsCamera() };
+    // camentity->setParallel(45.0f, 16.0f/9.0f, 0.1f, 100.f);
+    // camentity->setParallel();
 
     [[maybe_unused]] 
     hyper::Node* lightnode = engine->createLight(
@@ -2339,9 +2343,9 @@ void test_map2_error(void) {
         ,   default_scale
         ,   "assets/mapa/mapa2joined.obj"
     );
-    engine->createPhysicPropertiesTriangleMeshShape(
-        plane
-    );
+    // engine->createPhysicPropertiesTriangleMeshShape(
+    //     plane
+    // );
 
     while(engine->isWindowActive() && !engine->getKeyContinuousPress(GLFW_KEY_ESCAPE))
     {
@@ -2377,6 +2381,92 @@ void test_map2_error(void) {
         engine->updatePhysics();
     }
 }
+
+void test_normal_mapping(void) {
+    std::unique_ptr<hyper::HyperEngine> engine = std::make_unique<hyper::HyperEngine>(true);
+    engine->setWindowTitle("test_normal_mapping");
+    engine->setWindowIcon("assets/logo.jpg");
+
+    [[maybe_unused]] 
+    hyper::Node* camnode = engine->createCamera(
+            nullptr
+        ,   {0,0,-4}
+        ,   default_rot_and_scale
+    ); // tendrá la proyección por defecto    
+
+    hyper::Node* lightnode2 = engine->createLight(
+            default_createnode_params
+        ,   hyper::LightType::Directional
+        ,   hyper::LightIntensity   { .ambient{0.05f, 0.05f, 0.05f}, .diffuse{0.4f, 0.4f, 0.4f}, .specular{0.5f, 0.5f, 0.5f} }
+        ,   hyper::LightAttenuation { .constant{0.0f}, .linear{0.0f}, .quadratic{0.0f} }
+        ,   hyper::LightAperture    { .innerCutoff{0.0f}, .outerCutoff{0.0f} }
+        ,   hyper::LightDirection   { -0.2f, -1.0f, -0.3f }
+    );
+
+    hyper::Node* lightnode = engine->createLight(
+            nullptr
+        ,   {0,1,-1}
+        ,   default_rot_and_scale
+        ,   hyper::LightType::Point
+        ,   hyper::LightIntensity   { .ambient{0.25f, 0.25f, 0.25f}, .diffuse{0.8f, 0.8f, 0.8f}, .specular{1.0f, 1.0f, 1.0f} }
+        ,   hyper::LightAttenuation { .constant{1.0f}, .linear{0.00009}, .quadratic{0.000032} }
+        ,   hyper::LightAperture    { .innerCutoff{0.0f}, .outerCutoff{0.0f} }
+        ,   hyper::LightDirection   { 0,0,0 }
+    );
+
+    [[maybe_unused]] 
+    hyper::Node* plane = engine->createModel(
+            nullptr
+        ,   {0,-1,0}
+        ,   {0,0,0}
+        ,   default_scale
+        ,   "assets/planes/semicube.obj"
+    );
+
+    [[maybe_unused]] 
+    hyper::Node* machine = engine->createModel(
+            nullptr
+        ,   {0,0,0}
+        ,   {0,0,0}
+        ,   {0.2,0.2,0.2}
+        ,   "assets/objects/AmmoMachine.obj"
+    );
+
+    while(engine->isWindowActive() && !engine->getKeyContinuousPress(GLFW_KEY_ESCAPE))
+    {
+        // Render
+        engine->beginRender();
+        engine->drawScene();
+        engine->endRender();
+
+        // Input controls
+        if(engine->getKeyContinuousPress(GLFW_KEY_A))       
+            camnode->rotate({0,3,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_D))       
+            camnode->rotate({0,-3,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_W))       
+            camnode->rotate({3,0,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_S))       
+            camnode->rotate({-3,0,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_LEFT))    
+            camnode->translate({-.3,0,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_RIGHT))   
+            camnode->translate({.3,0,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_UP))      
+            camnode->translate({0,0,-.3f});
+        if(engine->getKeyContinuousPress(GLFW_KEY_DOWN))    
+            camnode->translate({0,0,.3f});
+        if(engine->getKeyContinuousPress(GLFW_KEY_SPACE))       
+            camnode->translate({0,.3f,0});
+        if(engine->getKeyContinuousPress(GLFW_KEY_LEFT_CONTROL))       
+            camnode->translate({0,-.3f,0});
+
+        // updating stuff
+        camnode->setCameraTarget(machine->getTranslation());
+        engine->updatePhysics();
+    }
+}
+
 
 int main(void) {
 	// test_models_and_imgui();
@@ -2419,7 +2509,9 @@ int main(void) {
 
     ///////////////////////////////////////////////////////
 
-    test_animated_model();
+    // test_animated_model();
 
     // test_map2_error();
+
+    test_normal_mapping();
 }

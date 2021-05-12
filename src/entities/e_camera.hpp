@@ -17,11 +17,26 @@ struct ECamera : public Entity
 
 	void draw(glm::mat4 const& transform) final;
 
-	constexpr void setPerspective(float x, float y, float z, float w) noexcept
-		{ m_isPerspective = true; 		}	// TODO::
+	// TODO::
+	inline void setPerspective(float fov = 45.0f, float ratio = 16.0f/9.0f, float zNear = 0.1f, float zFar = 1000.f) noexcept
+	{ 
+		m_isPerspective = true;
+		m_projection = glm::perspective(glm::radians(fov), ratio, zNear, zFar);
+	}	
 
-	constexpr void setParallel(float x, float y, float z, float w) noexcept
-		{ m_isPerspective = false; 		}	// TODO::
+	// TODO:: casi, pero no
+	inline void setParallel(float fov = 45.0f, float ratio = 16.0f/9.0f, float zNear = 0.1f, float zFar = 1000.f) noexcept
+	{ 
+		m_isPerspective = false;
+		float ratio_size_per_depth = atan(glm::radians(fov / 2.0f)) * 2.0f;
+		// auto distance = glm::length(mTarget - mEye);
+		auto distance = glm::length(glm::vec3(0,0,100));
+		float aspect = ratio;
+		float size_y = ratio_size_per_depth * zFar;
+		float size_x = ratio_size_per_depth * zFar * aspect;
+
+		m_projection = glm::ortho(-size_x, size_x, -size_y, size_y, 0.0f, 2.0f * distance );
+	}	
 		
 	constexpr glm::mat4 const& getViewMatrix(void) const noexcept
 		{ return m_view; 				}
@@ -37,7 +52,7 @@ struct ECamera : public Entity
 	
 private:
 	float m_left, m_right, m_lower, m_upper, m_close, m_far;
-	bool m_isPerspective;
+	bool m_isPerspective { true };
 
 	// Matriz perspectiva por defecto
 	glm::mat4 m_projection;

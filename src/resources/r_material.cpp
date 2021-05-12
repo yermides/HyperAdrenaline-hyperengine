@@ -165,6 +165,17 @@ RMaterial::loadMaterial(aiMaterial* amaterial, std::string const& search_directo
         m_mapKs = ResourceManager::getResource_t<RTexture>(search_directory +"/"+ formattedpath);
     }
 
+    // Nota: assimp no reconoce map_Bump, renombrar a mapKn dentro del .mtl
+    res = amaterial->GetTexture(aiTextureType_NORMALS, 0, &str);
+
+    if(res == aiReturn_SUCCESS)
+    {
+        std::string formattedpath = str.C_Str();
+        util::replaceCharacters(formattedpath, "\\\\", "/");
+        m_mapKn = ResourceManager::getResource_t<RTexture>(search_directory +"/"+ formattedpath);
+    }
+
+
     // INFOLOG("RMaterial name " << VAR(amaterial->GetName().C_Str()) );
 
     // INFOLOG("\n" << "Propiedades del material: " << "\n"

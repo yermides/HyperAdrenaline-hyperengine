@@ -43,7 +43,11 @@ struct RMaterial : public Resource
 private:
     glm::vec3 m_Ka, m_Kd, m_Ks;                 // coeficientes de reflexión ambiental, difusa, especular
     float m_Ns, m_d;                            // exponente especular y transparencia
-    RTexture *m_mapKa { nullptr }, *m_mapKd { nullptr }, *m_mapKs { nullptr };      // Imagen mapaKa, mapaKd, mapaKs
+    RTexture 
+            *m_mapKa { nullptr }
+        ,   *m_mapKd { nullptr }
+        ,   *m_mapKs { nullptr }
+        ,   *m_mapKn { nullptr };      // Imagen mapaKa, mapaKd, mapaKs, mapaKn
 };
 
 }

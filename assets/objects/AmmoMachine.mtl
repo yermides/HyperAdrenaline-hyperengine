@@ -10,7 +10,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 2
-map_Bump texture\\MaquinaAmmo\\Boton_normal.png
+map_Kn texture\\MaquinaAmmo\\Boton_normal.png
 map_Ns texture\\MaquinaAmmo\\Boton_roughness.jpg
 map_Kd texture\\MaquinaAmmo\\Boton_baseColor.jpg
 
@@ -35,7 +35,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 2
-map_Bump texture\\MaquinaAmmo\\Maquina_normal.png
+map_Kn texture\\MaquinaAmmo\\Maquina_normal.png
 map_Kd texture\\MaquinaAmmo\\Maquina_baseColor.jpg
 
 newmtl Mirror
@@ -47,7 +47,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 2
-map_Bump texture\\MaquinaAmmo\\Pantalla_normal.png
+map_Kn texture\\MaquinaAmmo\\Pantalla_normal.png
 map_Kd texture\\MaquinaAmmo\\Pantalla_baseColor.jpg
 
 newmtl Numeros
@@ -81,5 +81,5 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 2
-map_Bump texture\\MaquinaAmmo\\Señal_normal.png
+map_Kn texture\\MaquinaAmmo\\Señal_normal.png
 map_Kd texture\\MaquinaAmmo\\Señal_baseColor.jpg
