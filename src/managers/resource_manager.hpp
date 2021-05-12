@@ -39,7 +39,7 @@ protected:
         // No encuentra el recurso, por ende lo crea
         if( it == m_resources.end() )
         {
-            LOG("Resource not found, creating...");
+            // LOG("Resource not found, creating...");
 
             newResource = new TResource();
             newResource->loadFromFile(name);
@@ -47,7 +47,7 @@ protected:
             return static_cast<TResource*>(newResource);
         }
 
-        LOG("Resource found, returning...");
+        // LOG("Resource found, returning...");
 
         return static_cast<TResource*>(*it);
     }

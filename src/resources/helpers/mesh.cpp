@@ -12,7 +12,6 @@ Mesh::~Mesh()
     m_normals.clear();
     m_texture_coords.clear();
     m_indices.clear();
-    m_textures.clear();
 
     for(auto m : m_materials)
         delete m;
@@ -69,6 +68,7 @@ Mesh::initialize(void)
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
     glBindVertexArray(0);
+
 
     // Initialize materials
     for(auto material : m_materials)

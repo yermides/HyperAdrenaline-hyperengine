@@ -1,10 +1,16 @@
 #pragma once
 #include <iostream>
 #include <memory>
+#include <chrono>
+#include <ratio>
+#define __cplusplus 201703L
+#include <filesystem>
+#include <dirent.h>
 #include <util/macros.hpp>
 #include <engine/hyperengine.hpp>
 // #include <entities/e_light.hpp>
 #include <entities/e_model.hpp>
+#include <entities/e_animatedmodel.hpp>
 #include <tree/node.hpp>
 #include <util/functions.hpp>
 

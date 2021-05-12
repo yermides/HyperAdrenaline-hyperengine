@@ -9,6 +9,11 @@
 
 namespace hyper {
 
+struct BoneInfo {
+    glm::mat4 offset    {1.0f}; // Por defecto la identidad
+    uint32_t id          { 0 }; // Por defecto cero
+};
+
 struct RMesh : public Resource
 {
     explicit RMesh();    

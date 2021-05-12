@@ -16,6 +16,18 @@ inline static void replaceCharacters(std::string& toformat, std::string const& o
     }
 }
 
+inline static std::string getCurrentFolderName(std::string const& toformat)
+{
+    auto pos = toformat.find_last_of("/") + 1;
+    return std::move(toformat.substr(pos));
+}
+
+inline static std::string getCurrentFileExtension(std::string const& toformat)
+{
+    auto pos = toformat.find_last_of(".") + 1;
+    return std::move(toformat.substr(pos));
+}
+
 inline static btVector3 glmVec3TobtVec3(glm::vec3 const& vec3)
 {
     return std::move( btVector3(vec3.x, vec3.y,vec3.z) );

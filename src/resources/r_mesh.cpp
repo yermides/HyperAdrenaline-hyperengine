@@ -51,7 +51,7 @@ RMesh::loadMesh(std::string const& filepath)
     if(!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
         ERRLOG(importer.GetErrorString());
     
-    LOG("Número de mallas: " << scene->mNumMeshes);
+    // LOG("Número de mallas: " << scene->mNumMeshes);
 
     m_meshes.reserve(scene->mNumMeshes);
 
@@ -60,7 +60,7 @@ RMesh::loadMesh(std::string const& filepath)
         LOG("-- [BEGIN] loadMesh() --");
 
         // Crear una malla nueva
-        auto mesh 	= new Mesh();
+        auto mesh 	= new Mesh;
         auto amesh 	= scene->mMeshes[i];
         auto n2Elements = amesh->mNumVertices * 2;
         auto n3Elements = amesh->mNumVertices * 3;
@@ -100,6 +100,27 @@ RMesh::loadMesh(std::string const& filepath)
             mesh->m_texture_coords.push_back(texcoordsarray->y);
             ++texcoordsarray;
         }
+
+        // // Huesos
+        // // auto bonearray = amesh->mBones[0];
+        
+        // INFOLOG(amesh->mNumBones)
+        // for (uint32_t j {0}; j < amesh->mNumBones; ++j)
+        // {
+        //     auto* bone = amesh->mBones[j];
+        //     INFOLOG("bone name " << bone->mName.C_Str())
+
+        //     INFOLOG("bone weight num " << bone->mNumWeights)
+
+        //     for(uint32_t k {0}; k < bone->mNumWeights; ++k)
+        //     {
+        //         uint32_t id = bone->mWeights[j].mVertexId;
+		// 	    float weight = bone->mWeights[j].mWeight;
+        //         // INFOLOG("id" << VAR(id))
+        //         // INFOLOG("weight" << VAR(weight))
+        //     }
+        //     // ++bonearray;
+        // }
         
 
         // Almacenar los índices de las caras
@@ -121,8 +142,13 @@ RMesh::loadMesh(std::string const& filepath)
         RMaterial* rmaterial = new RMaterial(amaterial, this->getDirectory());
         mesh->m_materials.push_back(rmaterial);
 
+        INFOLOG("LLego??????")
+
         // Inicializar valores de la malla en opengl
         mesh->initialize();
+
+        INFOLOG("LLego?????2?")
+
 
         // Guardar malla en el array
         m_meshes.push_back(mesh);

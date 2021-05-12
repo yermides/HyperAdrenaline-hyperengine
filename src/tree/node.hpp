@@ -19,6 +19,7 @@
 #include "entities/e_camera.hpp"
 #include "entities/e_light.hpp"
 #include "entities/e_model.hpp"
+#include "entities/e_animatedmodel.hpp"
 // #include "entities/e_skybox.hpp"
 
 #define default_node_id -1
@@ -54,6 +55,9 @@ struct Node
 
     constexpr EModel*             getEntityAsModel(void)                                const
         { return static_cast<EModel*>(m_entity); }
+
+    constexpr EAnimatedModel*     getEntityAsAnimatedModel(void)                        const
+        { return static_cast<EAnimatedModel*>(m_entity); }
 
     constexpr ECamera*            getEntityAsCamera(void)                               const
         { return static_cast<ECamera*>(m_entity); }
@@ -109,6 +113,12 @@ struct Node
     constexpr void setPhysicProperties(PhysicProperties* properties)
         { m_physicProperties = properties;  }
 
+    constexpr void                setPhysicOffset(glm::vec3 const& newOffset)           noexcept 
+        { m_physicOffset = newOffset; m_wantsUpdate = true; }
+
+    constexpr glm::vec3 const&    getPhysicOffset(void)                                 const noexcept 
+        { return m_physicOffset;                        }        
+
     void                translate(glm::vec3 const& accumulation);
     void                rotate(glm::vec3 const& accumulation);
     void                scale(glm::vec3 const& accumulation);
@@ -139,6 +149,7 @@ private:
     Node* m_parent                          { nullptr };    // Padre del nodo
     Entity* m_entity                        { nullptr };    // Entidad con datos importantes del nodo
     PhysicProperties *m_physicProperties    { nullptr };    // Propiedades físicas si tiene
+    glm::vec3 m_physicOffset { 0.0f };  // Vector de tres floats que hace de offset para su propiedad física
     NodeID m_name                           { default_node_id };  // Para compatibilidad, identificador del nodo
 };
 

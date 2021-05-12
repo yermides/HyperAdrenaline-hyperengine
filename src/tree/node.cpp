@@ -5,7 +5,7 @@ namespace hyper {
 
 Node::Node()
 {
-    INFOLOG("I am the node "<<VAR(this));
+    // INFOLOG("I am the node "<< VAR(this));
 }
 
 Node::~Node()
@@ -13,7 +13,7 @@ Node::~Node()
     // Cambiado el 6/5/2021, por si hay que volver a lo anterior
 
     // Borrado recursivo, TODO:: revisar, pues ha habido double frees
-    INFOLOG("Deleting entity from node "<< VAR(this));
+    // INFOLOG("Deleting entity from node "<< VAR(this));
 
     if(m_entity)
     {
@@ -21,7 +21,7 @@ Node::~Node()
         m_entity = nullptr;
     }
 
-    INFOLOG("Removing parent from node "<< VAR(this));
+    // INFOLOG("Removing parent from node "<< VAR(this));
 
     if(m_parent) {
         // necesario en algún momento llamar al removechild o hacer algo similar, pero de momento sirve
@@ -138,7 +138,7 @@ Node::traverse(glm::mat4 const& accumulatedTrans)
                 btTransform transform;
 
                 // Translación
-                auto trans = util::glmVec3TobtVec3(m_translation);
+                auto trans = util::glmVec3TobtVec3(m_translation + m_physicOffset);
                 transform.setOrigin(trans);
 
                 // Rotación
@@ -162,7 +162,7 @@ Node::traverse(glm::mat4 const& accumulatedTrans)
                 body->getMotionState()->getWorldTransform(transform);
 
                 // Translación
-                auto trans = util::glmVec3TobtVec3(this->getTranslation());
+                auto trans = util::glmVec3TobtVec3(getTranslation() + m_physicOffset);
                 transform.setOrigin( trans );
 
                 // Rotación
@@ -180,7 +180,7 @@ Node::traverse(glm::mat4 const& accumulatedTrans)
                 btPairCachingGhostObject* object { m_physicProperties->m_data.ghostObj };
                 btTransform& transform { object->getWorldTransform() };
                 glm::vec3 glmtrans { util::btVec3ToGlmVec3(transform.getOrigin()) };
-                setTranslation(glmtrans);
+                setTranslation(glmtrans - m_physicOffset);
             }
         }
     }

@@ -39,13 +39,12 @@
 #define default_createnode_params           nullptr, default_matrix_params
 // Cameras, lights, etc
 #define engine_invalid_id                   -1
-// Shader paths
+// Shader paths, totalmente useless porque ahora se cargan desde un const char* path en memoria
 
 // #define SHADER_DEFAULT_PATH                 "src/shaders/model-loading-m-v-p" 
 // #define SHADER_DEFAULT_PATH                 "src/shaders/materials" 
 // #define SHADER_DEFAULT_PATH                 "src/shaders/materials-and-lights" 
 #define SHADER_DEFAULT_PATH                 "src/shaders/multiple-lights" 
-
 #define SHADER_SKYBOX_PATH                  "src/shaders/skybox"
 #define SHADER_DEBUGDRAWER_PATH             "src/shaders/debugdrawer"
 
@@ -143,6 +142,25 @@ struct HyperEngine
             model->setShader(m_shaders[OpenGLShader::SHADER_DEFAULT]);
 
             node->setEntity(model);
+            return node;
+        }
+    
+    template <typename... Args>
+    Node* createAnimatedModel(
+            Node* const parent      = nullptr
+        ,   glm::vec3 const& trans  = {0.0f,0.0f,0.0f}
+        ,   glm::vec3 const& rot    = {0.0f,0.0f,0.0f}
+        ,   glm::vec3 const& scale  = {1.0f,1.0f,1.0f} 
+        ,   Args&&... args
+        )
+        {
+            auto node           = createNode(parent, trans, rot, scale);
+            auto animatedModel  = new EAnimatedModel(args...);
+
+            // Test, poner directamente el shader a usar
+            animatedModel->setShader(m_shaders[OpenGLShader::SHADER_DEFAULT]);
+
+            node->setEntity(animatedModel);
             return node;
         }
 
