@@ -58,6 +58,7 @@ RTexture::initialize()
 void 
 RTexture::loadTexture(std::string const& path) 
 {
+    INFOLOG("Quiero cargar la textura del path " << VAR(path))
     // Forzado a tratarla como 4 canales para el byte array
     m_textureImage = SOIL_load_image(
             path.c_str()

@@ -69,7 +69,6 @@ Mesh::initialize(void)
 
     glBindVertexArray(0);
 
-
     // Initialize materials
     for(auto material : m_materials)
         material->initialize();

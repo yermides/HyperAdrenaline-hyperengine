@@ -57,7 +57,7 @@ RMesh::loadMesh(std::string const& filepath)
 
     for(uint32_t i {0}; i < scene->mNumMeshes; ++i)
     {
-        LOG("-- [BEGIN] loadMesh() --");
+        LOG("-- [BEGIN] loadMesh() -- ("  << VAR(i + 1) << " out of " VAR(scene->mNumMeshes) << ")" );
 
         // Crear una malla nueva
         auto mesh 	= new Mesh;
@@ -70,12 +70,16 @@ RMesh::loadMesh(std::string const& filepath)
         mesh->m_normals.reserve(n3Elements);
         mesh->m_texture_coords.reserve(n2Elements);
         mesh->m_indices.reserve(n4Faces);           // asumimos que no hay más de cuatro vértices por cara
+        mesh->m_tangents.reserve(n3Elements);
+        mesh->m_bitangents.reserve(n3Elements);
 
         // Guardar vértices, normales y coordenadas de textura
         // Guardar índices
         auto* vertexarray       = amesh->mVertices;
         auto* normalsarray      = amesh->mNormals;
         auto* texcoordsarray    = amesh->mTextureCoords[0];
+        auto* tangentarray      = amesh->mTangents;
+        auto* bitangentarray    = amesh->mBitangents;
 
         bool hasTextureCoords = amesh->HasTextureCoords(0);
 
@@ -94,34 +98,28 @@ RMesh::loadMesh(std::string const& filepath)
             ++normalsarray;
             
             // Almacenar coordenadas de textura
-            if(!hasTextureCoords) continue;
+            if(hasTextureCoords)
+            {
+                mesh->m_texture_coords.push_back(texcoordsarray->x);
+                mesh->m_texture_coords.push_back(texcoordsarray->y);
+                ++texcoordsarray;
 
-            mesh->m_texture_coords.push_back(texcoordsarray->x);
-            mesh->m_texture_coords.push_back(texcoordsarray->y);
-            ++texcoordsarray;
+                mesh->m_tangents.push_back(tangentarray->x);
+                mesh->m_tangents.push_back(tangentarray->y);
+                mesh->m_tangents.push_back(tangentarray->z);
+                ++tangentarray;
+
+                mesh->m_bitangents.push_back(bitangentarray->x);
+                mesh->m_bitangents.push_back(bitangentarray->y);
+                mesh->m_bitangents.push_back(bitangentarray->z);
+                ++bitangentarray;
+            }
+            else
+            {
+                mesh->m_texture_coords.push_back(0.0f);
+                mesh->m_texture_coords.push_back(0.0f);
+            }
         }
-
-        // // Huesos
-        // // auto bonearray = amesh->mBones[0];
-        
-        // INFOLOG(amesh->mNumBones)
-        // for (uint32_t j {0}; j < amesh->mNumBones; ++j)
-        // {
-        //     auto* bone = amesh->mBones[j];
-        //     INFOLOG("bone name " << bone->mName.C_Str())
-
-        //     INFOLOG("bone weight num " << bone->mNumWeights)
-
-        //     for(uint32_t k {0}; k < bone->mNumWeights; ++k)
-        //     {
-        //         uint32_t id = bone->mWeights[j].mVertexId;
-		// 	    float weight = bone->mWeights[j].mWeight;
-        //         // INFOLOG("id" << VAR(id))
-        //         // INFOLOG("weight" << VAR(weight))
-        //     }
-        //     // ++bonearray;
-        // }
-        
 
         // Almacenar los índices de las caras
         auto* indexarray        = amesh->mFaces;
@@ -139,16 +137,11 @@ RMesh::loadMesh(std::string const& filepath)
         // Guardar texturas y materiales
         // TODO:: mejorar los materiales (irse al RMaterial::draw() y considerar más texturas aparte de la difusa)
         auto* amaterial = scene->mMaterials[amesh->mMaterialIndex];
-        RMaterial* rmaterial = new RMaterial(amaterial, this->getDirectory());
+        RMaterial* rmaterial = new RMaterial(amaterial, getDirectory());
         mesh->m_materials.push_back(rmaterial);
-
-        INFOLOG("LLego??????")
 
         // Inicializar valores de la malla en opengl
         mesh->initialize();
-
-        INFOLOG("LLego?????2?")
-
 
         // Guardar malla en el array
         m_meshes.push_back(mesh);

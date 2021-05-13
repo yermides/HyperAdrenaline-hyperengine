@@ -3,25 +3,36 @@
 namespace hyper {
 
 RMaterial::RMaterial()
-: Resource{}
+:   Resource{}
+,   m_Ka(default_material_ambient_color)
+,   m_Kd(default_material_diffuse_color)
+,   m_Ks(default_material_specular_color)
+,   m_Ns(default_material_specular_exponent)
+,   m_d(default_material_opacity)
 {
-    // Default material
-    m_Ka = default_material_ambient_color;
-    m_Kd = default_material_diffuse_color;
-    m_Ks = default_material_specular_color;
-    m_Ns = default_material_specular_exponent;
-    m_d = default_material_opacity;
 }
 
 RMaterial::RMaterial(std::string const& path)
-: Resource{}
+:   Resource{}
+,   m_Ka(default_material_ambient_color)
+,   m_Kd(default_material_diffuse_color)
+,   m_Ks(default_material_specular_color)
+,   m_Ns(default_material_specular_exponent)
+,   m_d(default_material_opacity)
 {
-    this->loadFromFile(path);
+    loadFromFile(path);
 }
 
 RMaterial::RMaterial(aiMaterial* amaterial, std::string const& search_directory)
+:   Resource{}
+,   m_Ka(default_material_ambient_color)
+,   m_Kd(default_material_diffuse_color)
+,   m_Ks(default_material_specular_color)
+,   m_Ns(default_material_specular_exponent)
+,   m_d(default_material_opacity)
 {
-    this->loadMaterial(amaterial, search_directory);
+    INFOLOG("RMaterial initialized");
+    loadMaterial(amaterial, search_directory);
 }
 
 RMaterial::~RMaterial()
@@ -31,6 +42,7 @@ RMaterial::~RMaterial()
     m_mapKa = nullptr;
     m_mapKd = nullptr;
     m_mapKs = nullptr;
+    m_mapKn = nullptr;
 }
 
 void 
@@ -39,6 +51,7 @@ RMaterial::initialize(void)
     if(m_mapKa) m_mapKa->initialize();
     if(m_mapKd) m_mapKd->initialize();
     if(m_mapKs) m_mapKs->initialize();
+    if(m_mapKn) m_mapKn->initialize();
 }
 
 void 
@@ -46,8 +59,7 @@ RMaterial::draw(RShader* const shader)
 {
     if(!shader) return;
     
-    // Solo le pasa su textura difusa, aumentar el indice de textura para cada una que se le pase al shader
-    // TODO:: mejorar MUCHO el uso de la struct del shader material.vs/fs
+    // Aumentar el indice de textura para cada una que se le pase al shader
     int i {0};
 
     shader->setVec3("material.ambientColor", m_Ka);
@@ -79,7 +91,7 @@ RMaterial::draw(RShader* const shader)
     //     shader->setInt("material.usesAmbientTexture", 0);
     // }
 
-    // Si hay textura difusa, de momento sólo usa esta
+    // Si hay textura difusa
     if(m_mapKd)
     {
         glActiveTexture(GL_TEXTURE0 + i);
@@ -93,7 +105,7 @@ RMaterial::draw(RShader* const shader)
         shader->setInt("material.usesDiffuseTexture", 0);
     }
 
-    // Si hay specular texture, de momento en progreso de usar en el shader
+    // Si hay specular texture
     if(m_mapKs)
     {
         glActiveTexture(GL_TEXTURE0 + i); // active proper texture unit before binding
@@ -106,6 +118,20 @@ RMaterial::draw(RShader* const shader)
     {
         shader->setInt("material.usesSpecularTexture", 0);
     }
+
+    // Si hay specular texture, de momento en progreso de usar en el nuevo shader
+    // if(m_mapKn)
+    // {
+    //     glActiveTexture(GL_TEXTURE0 + i); // active proper texture unit before binding
+    //     shader->setInt("material.usesNormalTexture", 1);
+    //     shader->setInt("material.normal", i);
+    //     glBindTexture(GL_TEXTURE_2D, m_mapKn->getProgramID());
+    //     ++i;
+    // }
+    // else
+    // {
+    //     shader->setInt("material.usesNormalTexture", 0);
+    // }
 }
 
 void 
@@ -165,7 +191,7 @@ RMaterial::loadMaterial(aiMaterial* amaterial, std::string const& search_directo
         m_mapKs = ResourceManager::getResource_t<RTexture>(search_directory +"/"+ formattedpath);
     }
 
-    // Nota: assimp no reconoce map_Bump, renombrar a mapKn dentro del .mtl
+    // Normales. Nota: assimp no reconoce map_Bump, renombrar a mapKn dentro del .mtl
     res = amaterial->GetTexture(aiTextureType_NORMALS, 0, &str);
 
     if(res == aiReturn_SUCCESS)

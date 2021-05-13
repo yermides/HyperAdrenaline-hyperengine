@@ -27,6 +27,8 @@ struct Mesh
     // Size = vertex count * 3
     std::vector<GLfloat>    m_vertices          ;
     std::vector<GLfloat>    m_normals           ;
+    std::vector<GLfloat>    m_tangents          ;
+    std::vector<GLfloat>    m_bitangents        ;
 
     // Size = vertex count * 2
     std::vector<GLfloat>    m_texture_coords    ;
@@ -34,13 +36,8 @@ struct Mesh
     // Size = vertex count
     std::vector<GLuint>     m_indices           ;
 
-    // Size = vertex count * 4
-    std::vector<GLfloat>    m_boneIDs           ;
-    std::vector<GLfloat>    m_boneWeights       ;
-
     // Size = undetermined
     std::vector<RMaterial*>  m_materials        ;
-
 private:
     // Handlers
     GLuint vao, *vbo, ebo;      
