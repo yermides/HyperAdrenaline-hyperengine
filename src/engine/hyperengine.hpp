@@ -27,6 +27,7 @@
 #include <entities/e_light.hpp>
 #include <entities/e_model.hpp>
 #include <entities/e_skybox.hpp>
+#include <engine/particles/system.hpp>
 #include <util/debugdrawer.hpp>
 
 // Create node params

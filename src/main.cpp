@@ -2467,6 +2467,144 @@ void test_normal_mapping(void) {
     }
 }
 
+void test_deltatime(void){
+    auto engine = std::make_unique<hyper::HyperEngine>(true);
+    engine->setWindowTitle("test_deltatime");
+    engine->setWindowIcon("assets/logo.jpg");
+
+    [[maybe_unused]] 
+    hyper::Node* camnode = engine->createCamera(
+            nullptr
+        ,   {0,0,-4}
+        ,   default_rot_and_scale
+    ); // tendrá la proyección por defecto    
+
+    hyper::Node* lightnode = engine->createLight(
+            nullptr
+        ,   {0,0,0}
+        ,   default_rot_and_scale
+        ,   hyper::LightType::Point
+        ,   hyper::LightIntensity   { .ambient{0.25f, 0.25f, 0.25f}, .diffuse{0.8f, 0.8f, 0.8f}, .specular{1.0f, 1.0f, 1.0f} }
+        ,   hyper::LightAttenuation { .constant{1.0f}, .linear{0.00009}, .quadratic{0.000032} }
+        ,   hyper::LightAperture    { .innerCutoff{0.0f}, .outerCutoff{0.0f} }
+        ,   hyper::LightDirection   { 0,0,0 }
+    );
+
+    [[maybe_unused]] 
+    hyper::Node* plane = engine->createModel(
+            nullptr
+        ,   {0,-1,0}
+        ,   {0,0,0}
+        ,   default_scale
+        ,   "assets/planes/semicube.obj"
+    );
+
+    const double fpsLimit = 1.0 / 60.0;
+    double lastUpdateTime = 0;  // number of seconds since the last loop
+    double lastFrameTime = 0;   // number of seconds since the last frame
+
+    while(engine->isWindowActive() && !engine->getKeyContinuousPress(GLFW_KEY_ESCAPE))
+    {
+        double now = glfwGetTime();
+        double deltaTime = now - lastUpdateTime;
+        float dt { static_cast<float>(deltaTime) }; 
+
+        // This if-statement only executes once every 60th of a second
+        if ((now - lastFrameTime) >= fpsLimit)
+        {
+            // Input controls, updatin positions
+            if(engine->getKeyContinuousPress(GLFW_KEY_LEFT))            camnode->translate(glm::vec3{ -5.0f,  0.0f,  0.0f} * dt);
+            if(engine->getKeyContinuousPress(GLFW_KEY_RIGHT))           camnode->translate(glm::vec3{  5.0f,  0.0f,  0.0f} * dt);
+            if(engine->getKeyContinuousPress(GLFW_KEY_UP))              camnode->translate(glm::vec3{  0.0f,  0.0f, -5.0f} * dt);
+            if(engine->getKeyContinuousPress(GLFW_KEY_DOWN))            camnode->translate(glm::vec3{  0.0f,  0.0f,  5.0f} * dt);
+            if(engine->getKeyContinuousPress(GLFW_KEY_SPACE))           camnode->translate(glm::vec3{  0.0f,  5.0f,  0.0f} * dt);
+            if(engine->getKeyContinuousPress(GLFW_KEY_LEFT_CONTROL))    camnode->translate(glm::vec3{  0.0f, -5.0f,  0.0f} * dt);
+
+            // updating stuff
+            camnode->setCameraTarget({0,0,0});
+            engine->updatePhysics(deltaTime);
+            
+            lastFrameTime = now;
+        }
+
+        // Render
+        engine->beginRender();
+        engine->drawScene();
+        engine->endRender();
+
+        lastUpdateTime = now;
+    }
+}
+
+void test_particle_system(void){
+    auto engine = std::make_unique<hyper::HyperEngine>(true);
+    engine->setWindowTitle("test_particle_system");
+    engine->setWindowIcon("assets/logo.jpg");
+
+    [[maybe_unused]] 
+    hyper::Node* camnode = engine->createCamera(
+            nullptr
+        ,   {0,0,-4}
+        ,   default_rot_and_scale
+    ); // tendrá la proyección por defecto    
+
+    hyper::Node* lightnode = engine->createLight(
+            nullptr
+        ,   {0,0,0}
+        ,   default_rot_and_scale
+        ,   hyper::LightType::Point
+        ,   hyper::LightIntensity   { .ambient{0.25f, 0.25f, 0.25f}, .diffuse{0.8f, 0.8f, 0.8f}, .specular{1.0f, 1.0f, 1.0f} }
+        ,   hyper::LightAttenuation { .constant{1.0f}, .linear{0.00009}, .quadratic{0.000032} }
+        ,   hyper::LightAperture    { .innerCutoff{0.0f}, .outerCutoff{0.0f} }
+        ,   hyper::LightDirection   { 0,0,0 }
+    );
+
+    [[maybe_unused]] 
+    hyper::Node* plane = engine->createModel(
+            nullptr
+        ,   {0,-1,0}
+        ,   {0,0,0}
+        ,   default_scale
+        ,   "assets/planes/semicube.obj"
+    );
+
+    const double fpsLimit = 1.0 / 60.0;
+    double lastUpdateTime = 0;  // number of seconds since the last loop
+    double lastFrameTime = 0;   // number of seconds since the last frame
+
+    while(engine->isWindowActive() && !engine->getKeyContinuousPress(GLFW_KEY_ESCAPE))
+    {
+        double now = glfwGetTime();
+        double deltaTime = now - lastUpdateTime;
+        float dt { static_cast<float>(deltaTime) }; 
+
+        // This if-statement only executes once every 60th of a second
+        if ((now - lastFrameTime) >= fpsLimit)
+        {
+            // Input controls, updatin positions
+            if(engine->getKeyContinuousPress(GLFW_KEY_LEFT))            camnode->translate(glm::vec3{ -5.0f,  0.0f,  0.0f} * dt);
+            if(engine->getKeyContinuousPress(GLFW_KEY_RIGHT))           camnode->translate(glm::vec3{  5.0f,  0.0f,  0.0f} * dt);
+            if(engine->getKeyContinuousPress(GLFW_KEY_UP))              camnode->translate(glm::vec3{  0.0f,  0.0f, -5.0f} * dt);
+            if(engine->getKeyContinuousPress(GLFW_KEY_DOWN))            camnode->translate(glm::vec3{  0.0f,  0.0f,  5.0f} * dt);
+            if(engine->getKeyContinuousPress(GLFW_KEY_SPACE))           camnode->translate(glm::vec3{  0.0f,  5.0f,  0.0f} * dt);
+            if(engine->getKeyContinuousPress(GLFW_KEY_LEFT_CONTROL))    camnode->translate(glm::vec3{  0.0f, -5.0f,  0.0f} * dt);
+
+            // updating stuff
+            camnode->setCameraTarget({0,0,0});
+            engine->updatePhysics(deltaTime);
+
+            lastFrameTime = now;
+        }
+
+        // Render
+        engine->beginRender();
+        engine->drawScene();
+        engine->endRender();
+
+        lastUpdateTime = now;
+    }
+}
+
 
 int main(void) {
 	// test_models_and_imgui();
@@ -2509,9 +2647,11 @@ int main(void) {
 
     ///////////////////////////////////////////////////////
 
-    test_animated_model();
+    // test_animated_model();
 
     // test_map2_error();
 
-    // test_normal_mapping();
+    // test_normal_mapping(); // halted
+
+    test_particle_system();
 }

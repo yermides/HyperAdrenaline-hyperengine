@@ -382,4 +382,243 @@ namespace Shader {
         }
     )";
 
+    /* **************** Partículas **************** */
+    
+    constexpr static Cstring particles_updater_vertex = R"(
+        #version 330
+
+        layout (location = 0) in vec3 vPosition;
+        layout (location = 1) in vec3 vVelocity;
+        layout (location = 2) in vec3 vColor;
+        layout (location = 3) in float fLifeTime;
+        layout (location = 4) in float fSize;
+        layout (location = 5) in int iType;
+
+        out vec3 vPositionPass;
+        out vec3 vVelocityPass;
+        out vec3 vColorPass;
+        out float fLifeTimePass;
+        out float fSizePass;
+        out int iTypePass;
+
+        void main()
+        {
+            vPositionPass = vPosition;
+            vVelocityPass = vVelocity;
+            vColorPass = vColor;
+            fLifeTimePass = fLifeTime;
+            fSizePass = fSize;
+            iTypePass = iType;
+        }
+
+    )";
+
+    constexpr static Cstring particles_updater_fragment = R"(
+        #version 330
+
+        out vec4 vColor;
+
+        void main()
+        {
+            vColor = vec4(1.0, 1.0, 1.0, 1.0);
+        }
+
+    )";
+
+    constexpr static Cstring particles_updater_geometry = R"(
+        #version 330
+
+        layout(points) in;
+        layout(points) out;
+        layout(max_vertices = 40) out;
+
+        // All that we get from vertex shader
+
+        in vec3 vPositionPass[];
+        in vec3 vVelocityPass[];
+        in vec3 vColorPass[];
+        in float fLifeTimePass[];
+        in float fSizePass[];
+        in int iTypePass[];
+
+        // All that we send further
+
+        out vec3 vPositionOut;
+        out vec3 vVelocityOut;
+        out vec3 vColorOut;
+        out float fLifeTimeOut;
+        out float fSizeOut;
+        out int iTypeOut;
+
+        uniform vec3 vGenPosition; // Position where new particles are spawned
+        uniform vec3 vGenGravityVector; // Gravity vector for particles - updates velocity of particles 
+        uniform vec3 vGenVelocityMin; // Velocity of new particle - from min to (min+range)
+        uniform vec3 vGenVelocityRange;
+
+        uniform vec3 vGenColor;
+        uniform float fGenSize; 
+
+        uniform float fGenLifeMin, fGenLifeRange; // Life of new particle - from min to (min+range)
+        uniform float fTimePassed; // Time passed since last frame
+
+        uniform vec3 vRandomSeed; // Seed number for our random number function
+        vec3 vLocalSeed;
+
+        uniform int iNumToGenerate; // How many particles will be generated next time, if greater than zero, particles are generated
+
+        // This function returns random number from zero to one
+        float randZeroOne()
+        {
+            uint n = floatBitsToUint(vLocalSeed.y * 214013.0 + vLocalSeed.x * 2531011.0 + vLocalSeed.z * 141251.0);
+            n = n * (n * n * 15731u + 789221u);
+            n = (n >> 9u) | 0x3F800000u;
+        
+            float fRes =  2.0 - uintBitsToFloat(n);
+            vLocalSeed = vec3(vLocalSeed.x + 147158.0 * fRes, vLocalSeed.y*fRes  + 415161.0 * fRes, vLocalSeed.z + 324154.0*fRes);
+            return fRes;
+        }
+
+        void main()
+        {
+            vLocalSeed = vRandomSeed;
+            
+            // gl_Position doesn't matter now, as rendering is discarded, so I don't set it at all
+
+            vPositionOut = vPositionPass[0];
+            vVelocityOut = vVelocityPass[0];
+            if(iTypePass[0] != 0)vPositionOut += vVelocityOut*fTimePassed;
+            if(iTypePass[0] != 0)vVelocityOut += vGenGravityVector*fTimePassed;
+
+            vColorOut = vColorPass[0];
+            fLifeTimeOut = fLifeTimePass[0]-fTimePassed;
+            fSizeOut = fSizePass[0];
+            iTypeOut = iTypePass[0];
+                
+            if(iTypeOut == 0)
+            {
+                EmitVertex();
+                EndPrimitive();
+                
+                for(int i = 0; i < iNumToGenerate; i++)
+                {
+                    vPositionOut = vGenPosition;
+                    vVelocityOut = vGenVelocityMin+vec3(vGenVelocityRange.x*randZeroOne(), vGenVelocityRange.y*randZeroOne(), vGenVelocityRange.z*randZeroOne());
+                    vColorOut = vGenColor;
+                    fLifeTimeOut = fGenLifeMin+fGenLifeRange*randZeroOne();
+                    fSizeOut = fGenSize;
+                    iTypeOut = 1;
+                    EmitVertex();
+                    EndPrimitive();
+                }
+            }
+            else if(fLifeTimeOut > 0.0)
+            {
+                EmitVertex();
+                EndPrimitive(); 
+            }
+        }
+
+    )";
+
+    constexpr static Cstring particles_renderer_vertex = R"(
+        #version 330
+        layout (location = 0) in vec3 vPosition;
+        layout (location = 2) in vec3 vColor;
+        layout (location = 3) in float fLifeTime;
+        layout (location = 4) in float fSize;
+        layout (location = 5) in int iType;
+
+        out vec3 vColorPass;
+        out float fLifeTimePass;
+        out float fSizePass;
+        out int iTypePass;
+
+        void main()
+        {
+            gl_Position = vec4(vPosition, 1.0);
+            vColorPass = vColor;
+            fSizePass = fSize;
+            fLifeTimePass = fLifeTime;
+            iTypePass = iType;
+        }
+
+    )";
+
+    constexpr static Cstring particles_renderer_fragment = R"(
+        #version 330
+
+        uniform sampler2D gSampler;
+
+        smooth in vec2 vTexCoord;
+        flat in vec4 vColorPart;
+
+        out vec4 FragColor;
+
+        void main()
+        {
+            vec4 vTexColor = texture2D(gSampler, vTexCoord);
+            FragColor = vec4(vTexColor.xyz, 1.0)*vColorPart;
+        }
+
+    )";
+
+    constexpr static Cstring particles_renderer_geometry = R"(
+        #version 330
+
+        uniform struct Matrices
+        {
+            mat4 mProj;
+            mat4 mView;
+        } matrices;
+
+        uniform vec3 vQuad1, vQuad2;
+
+        layout(points) in;
+        layout(triangle_strip) out;
+        layout(max_vertices = 4) out;
+
+        in vec3 vColorPass[];
+        in float fLifeTimePass[];
+        in float fSizePass[];
+        in int iTypePass[];
+
+        smooth out vec2 vTexCoord;
+        flat out vec4 vColorPart;
+
+        void main()
+        {
+            if(iTypePass[0] != 0)
+            {
+                vec3 vPosOld = gl_in[0].gl_Position.xyz;
+                float fSize = fSizePass[0];
+                mat4 mVP = matrices.mProj*matrices.mView;
+                
+                vColorPart = vec4(vColorPass[0], fLifeTimePass[0]);
+                
+                vec3 vPos = vPosOld+(-vQuad1-vQuad2)*fSize;
+                vTexCoord = vec2(0.0, 0.0);
+                gl_Position = mVP*vec4(vPos, 1.0);
+                EmitVertex();
+                
+                vPos = vPosOld+(-vQuad1+vQuad2)*fSize;
+                vTexCoord = vec2(0.0, 1.0);
+                gl_Position = mVP*vec4(vPos, 1.0);
+                EmitVertex();
+                
+                vPos = vPosOld+(vQuad1-vQuad2)*fSize;
+                vTexCoord = vec2(1.0, 0.0);
+                gl_Position = mVP*vec4(vPos, 1.0);
+                EmitVertex();
+                
+                vPos = vPosOld+(vQuad1+vQuad2)*fSize;
+                vTexCoord = vec2(1.0, 1.0);
+                gl_Position = mVP*vec4(vPos, 1.0);
+                EmitVertex();
+                
+                EndPrimitive();
+            }
+        }
+        
+    )";
+
 }
