@@ -2509,9 +2509,9 @@ int main(void) {
 
     ///////////////////////////////////////////////////////
 
-    // test_animated_model();
+    test_animated_model();
 
     // test_map2_error();
 
-    test_normal_mapping();
+    // test_normal_mapping();
 }
