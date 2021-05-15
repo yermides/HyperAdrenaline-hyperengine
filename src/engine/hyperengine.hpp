@@ -42,12 +42,12 @@
 #define engine_invalid_id                   -1
 // Shader paths, totalmente useless porque ahora se cargan desde un const char* path en memoria
 
-// #define SHADER_DEFAULT_PATH                 "src/shaders/model-loading-m-v-p" 
-// #define SHADER_DEFAULT_PATH                 "src/shaders/materials" 
-// #define SHADER_DEFAULT_PATH                 "src/shaders/materials-and-lights" 
-#define SHADER_DEFAULT_PATH                 "src/shaders/multiple-lights" 
-#define SHADER_SKYBOX_PATH                  "src/shaders/skybox"
-#define SHADER_DEBUGDRAWER_PATH             "src/shaders/debugdrawer"
+// #define Materials_PATH                 "src/shaders/model-loading-m-v-p" 
+// #define Materials_PATH                 "src/shaders/materials" 
+// #define Materials_PATH                 "src/shaders/materials-and-lights" 
+#define Materials_PATH                 "src/shaders/multiple-lights" 
+#define Skybox_PATH                  "src/shaders/skybox"
+#define Physics_PATH             "src/shaders/debugdrawer"
 
 template<typename T1, typename T2>
 using Hashmap = std::unordered_map<T1, T2>;
@@ -57,10 +57,12 @@ namespace hyper {
 namespace gui = ImGui;
 
 // Abstracción del nombre de la ruta de los shaders
-enum class OpenGLShader {
-        SHADER_DEFAULT
-    ,   SHADER_SKYBOX
-    ,   SHADER_DEBUGDRAWER
+enum class GLShader {
+    Materials
+,   Skybox
+,   Physics
+,   Particle_updater
+,   Particle_renderer
 };
 
 // Declaración de estructuras
@@ -98,7 +100,7 @@ struct HyperEngine
             auto camera     = new ECamera(args...);
 
             // Test, poner directamente el shader a usar
-            camera->setShader(m_shaders[OpenGLShader::SHADER_DEFAULT]);
+            camera->setShader(m_shaders.at(GLShader::Materials));
 
             node->setEntity(camera);
             registerCamera(node);
@@ -119,7 +121,7 @@ struct HyperEngine
             auto light  = new ELight(args...);
 
             // Test, poner directamente el shader a usar
-            light->setShader(m_shaders[OpenGLShader::SHADER_DEFAULT]);
+            light->setShader(m_shaders.at(GLShader::Materials));
 
             node->setEntity(light);
             auto id = registerLight(node);
@@ -140,7 +142,7 @@ struct HyperEngine
             auto model  = new EModel(args...);
 
             // Test, poner directamente el shader a usar
-            model->setShader(m_shaders[OpenGLShader::SHADER_DEFAULT]);
+            model->setShader(m_shaders.at(GLShader::Materials));
 
             node->setEntity(model);
             return node;
@@ -159,7 +161,7 @@ struct HyperEngine
             auto animatedModel  = new EAnimatedModel(args...);
 
             // Test, poner directamente el shader a usar
-            animatedModel->setShader(m_shaders[OpenGLShader::SHADER_DEFAULT]);
+            animatedModel->setShader(m_shaders.at(GLShader::Materials));
 
             node->setEntity(animatedModel);
             return node;
@@ -178,7 +180,7 @@ struct HyperEngine
             auto skybox     = new ESkybox(args...);
 
             // Usando un shader propio, aún en testeo
-            skybox->setShader(m_shaders[OpenGLShader::SHADER_SKYBOX]);
+            skybox->setShader(m_shaders.at(GLShader::Skybox));
 
             node->setEntity(skybox);
             registerSkybox(node);
@@ -403,8 +405,6 @@ struct HyperEngine
         ,   int collisionFilterMask = 2147483647
     );
 
-    bool checkRaycastCollisionWithNode(const btVector3 &startPosition, const btVector3 &direction);
-
     void drawDebugPhysics(glm::mat4 const& view, glm::mat4 const& projection);
 
     void enableDebugDraw(void);
@@ -414,6 +414,10 @@ struct HyperEngine
     DebugDrawer* const getDebugDrawer(void);
 
     void setDebugDrawer(DebugDrawer* debugDrawer);
+
+    // Partículas
+
+    void updateParticleSystem(float dt);
 
     void resetKeyStates(void);
     void resetMouseKeyStates(void);
@@ -433,7 +437,7 @@ private:
     Node* const     m_rootnode      { new Node   };
 
     // Administrador de shaders
-    Hashmap<OpenGLShader, RShader*> m_shaders;
+    Hashmap<GLShader, RShader*> m_shaders;
 
     // Administración del input de teclado
     Hashmap<int, int> m_keystates;
@@ -448,6 +452,7 @@ private:
     ,   m_active_viewport{engine_invalid_id};
 
     Node* m_skybox  { nullptr };
+    ParticleSystem * m_particleSystem { nullptr };
 
     // std::vector<LightData> m_lights;
     std::vector<Node*> m_lights;

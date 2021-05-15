@@ -677,6 +677,8 @@ void test_skybox_and_mouse_input() {
 
             INFOLOG("Diff: " VAR(diff.x) << VAR(diff.y) )
         }
+
+        camnode->setCameraTarget({0,0,0});
     }
 }
 
@@ -2592,6 +2594,7 @@ void test_particle_system(void){
             // updating stuff
             camnode->setCameraTarget({0,0,0});
             engine->updatePhysics(deltaTime);
+            // engine->updateParticleSystem(dt); // falta pasar matrices y renderizar en el drawScene
 
             lastFrameTime = now;
         }

@@ -1356,18 +1356,12 @@ HyperEngine::throwRaycastAllHits(
 	return false;
 }
 
-bool 
-HyperEngine::checkRaycastCollisionWithNode(const btVector3 &startPosition, const btVector3 &direction)
-{
-}
-
-
 void
 HyperEngine::drawDebugPhysics(glm::mat4 const& view, glm::mat4 const& projection)
 {
 	// INFOLOG("Dibujando fisicas (debug)");
 
-	auto debugdrawshader = m_shaders[OpenGLShader::SHADER_DEBUGDRAWER];
+	auto debugdrawshader = m_shaders.at(GLShader::Physics);
 
 	debugdrawshader->bind();
 	m_debugDrawer->setMatrices(view, projection, debugdrawshader);
@@ -1398,6 +1392,15 @@ HyperEngine::setDebugDrawer(DebugDrawer* debugDrawer)
 	m_debugDrawer = debugDrawer;
 	m_world->setDebugDrawer(m_debugDrawer);
 }
+
+void 
+HyperEngine::updateParticleSystem(float dt)
+{
+	if(!m_particleSystem) return;
+
+	m_particleSystem->update(dt);
+}
+
 
 // Funciones privadas
 
@@ -1487,13 +1490,67 @@ HyperEngine::initializeGraphics(void)
 	ImGui_ImplGlfw_InitForOpenGL(m_window, true);
 	ImGui_ImplOpenGL3_Init("#version 130");
 
+// 			,   Particle_updater
+// ,   Particle_renderer
+
 	// Load shaders here
 	m_shaders = {
-			{ OpenGLShader::SHADER_DEFAULT, new RShader(Shader::hypershader_vertex, 		Shader::hypershader_fragment) 	}
-		,	{ OpenGLShader::SHADER_SKYBOX,  new RShader(Shader::skybox_vertex, 				Shader::skybox_fragment)		}
-		,	{ OpenGLShader::SHADER_DEBUGDRAWER,  new RShader(Shader::debugdrawer_vertex, 	Shader::debugdrawer_fragment)	}
-	};
+		{ 
+			GLShader::Materials
+		, 	new RShader(
+				Shader::hypershader_vertex
+			, 	Shader::hypershader_fragment
+			) 	
+		}
+	,	{ 
+			GLShader::Skybox
+		,  	new RShader(
+				Shader::skybox_vertex
+			,	Shader::skybox_fragment
+			)		
+		}
+	,	{ 
+			GLShader::Physics
+		,  	new RShader(
+				Shader::debugdrawer_vertex
+			, 	Shader::debugdrawer_fragment
+			)	
+		}
+	,	{ 
+			GLShader::Particle_updater
+		,  	new RShader(
+				Shader::particles_updater_vertex
+			, 	Shader::particles_updater_fragment
+			, 	Shader::particles_updater_geometry
+			)	
+		}
+	,	{ 
+			GLShader::Particle_renderer
+		,  	new RShader(
+				Shader::particles_renderer_vertex
+			, 	Shader::particles_renderer_fragment
+			, 	Shader::particles_renderer_geometry
+			)	
+		}
+	}; // end m_shaders
 	
+	// TODO:: no crearlo aquí, sino desde fuera, y puede que sea un hashmap de systems
+	m_particleSystem = new ParticleSystem( 
+		m_shaders.at(GLShader::Particle_updater)
+	,  	m_shaders.at(GLShader::Particle_renderer)
+	);
+	m_particleSystem->setProperties(
+		glm::vec3(-10.0f, 17.5f, 0.0f), // Where the particles are generated
+		glm::vec3(-5, 0, -5), // Minimal velocity
+		glm::vec3(5, 20, 5), // Maximal velocity
+		glm::vec3(0, -5, 0), // Gravity force applied to particles
+		glm::vec3(0.0f, 0.5f, 1.0f), // Color (light blue)
+		1.5f, // Minimum lifetime in seconds
+		3.0f, // Maximum lifetime in seconds
+		0.75f, // Rendered size
+		0.02f, // Spawn every 0.05 seconds
+		30 // And spawn 30 particles
+	);
 }
 
 void 

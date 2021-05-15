@@ -37,6 +37,12 @@ struct ECamera : public Entity
 
 		m_projection = glm::ortho(-size_x, size_x, -size_y, size_y, 0.0f, 2.0f * distance );
 	}	
+
+	constexpr glm::vec3 const& getTarget(void) const noexcept
+		{ return m_target; 				}
+
+	constexpr void setTarget(glm::vec3 const& target) noexcept
+		{ m_target = target;			}
 		
 	constexpr glm::mat4 const& getViewMatrix(void) const noexcept
 		{ return m_view; 				}
@@ -57,6 +63,7 @@ private:
 	// Matriz perspectiva por defecto
 	glm::mat4 m_projection;
 	glm::mat4 m_view;
+	glm::vec3 m_target {0.0f};
 };
 
 }
