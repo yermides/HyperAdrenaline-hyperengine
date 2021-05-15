@@ -3,6 +3,7 @@
 
 namespace hyper {
 
+// Usada en el system1, que como no va, pues equis dé
 struct Particle
 {
     enum Type : int {
@@ -30,5 +31,11 @@ struct Particle
 	float m_size;
     Type m_type;
 };
+
+struct HyperParticle
+{
+    /* data */
+};
+
 
 }

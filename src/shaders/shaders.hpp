@@ -385,7 +385,7 @@ namespace Shader {
     /* **************** Partículas **************** */
     
     constexpr static Cstring particles_updater_vertex = R"(
-        #version 330
+        #version 330 core
 
         layout (location = 0) in vec3 vPosition;
         layout (location = 1) in vec3 vVelocity;
@@ -414,7 +414,7 @@ namespace Shader {
     )";
 
     constexpr static Cstring particles_updater_fragment = R"(
-        #version 330
+        #version 330 core
 
         out vec4 vColor;
 
@@ -426,7 +426,7 @@ namespace Shader {
     )";
 
     constexpr static Cstring particles_updater_geometry = R"(
-        #version 330
+        #version 330 core
 
         layout(points) in;
         layout(points) out;
@@ -521,7 +521,7 @@ namespace Shader {
     )";
 
     constexpr static Cstring particles_renderer_vertex = R"(
-        #version 330
+        #version 330 core
         layout (location = 0) in vec3 vPosition;
         layout (location = 2) in vec3 vColor;
         layout (location = 3) in float fLifeTime;
@@ -545,7 +545,7 @@ namespace Shader {
     )";
 
     constexpr static Cstring particles_renderer_fragment = R"(
-        #version 330
+        #version 330 core
 
         uniform sampler2D gSampler;
 
@@ -557,13 +557,14 @@ namespace Shader {
         void main()
         {
             vec4 vTexColor = texture2D(gSampler, vTexCoord);
-            FragColor = vec4(vTexColor.xyz, 1.0)*vColorPart;
+            // FragColor = vec4(vTexColor.xyz, 1.0)*vColorPart;
+            FragColor = vec4(1.0, 1.0, 1.0, 1.0);
         }
 
     )";
 
     constexpr static Cstring particles_renderer_geometry = R"(
-        #version 330
+        #version 330 core
 
         uniform struct Matrices
         {

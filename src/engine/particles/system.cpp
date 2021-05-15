@@ -1,5 +1,6 @@
 #include "system.hpp"
 #include <glm/gtc/matrix_transform.hpp>
+#include <managers/resource_manager.hpp>
 
 namespace hyper {
 
@@ -51,7 +52,7 @@ ParticleSystem::update(float deltatime)
 {
     m_updater->bind();
 
-    m_updater->setFloat("fTimePassed",      m_elapsedTime);
+    m_updater->setFloat("fTimePassed",          m_elapsedTime);
 
     m_updater->setVec3("vGenPosition",          m_generationPosition        );
     m_updater->setVec3("vGenVelocityMin",       m_generationVelocityMin     );
@@ -72,7 +73,8 @@ ParticleSystem::update(float deltatime)
         m_updater->setInt("iNumToGenerate",     m_generationQuantityToGen);
         m_elapsedTime -= m_nextGenerationTimestamp;
         
-        glm::vec3 randomSeed { grandf(-10.0f, 20.0f), grandf(-10.0f, 20.0f), grandf(-10.0f, 20.0f) };
+        // glm::vec3 randomSeed { grandf(-10.0f, 20.0f), grandf(-10.0f, 20.0f), grandf(-10.0f, 20.0f) };
+        glm::vec3 randomSeed { 0,0,0 };
         m_updater->setVec3("vRandomSeed",       randomSeed);
     }
 
@@ -100,20 +102,23 @@ ParticleSystem::update(float deltatime)
 
 	glBindTransformFeedback(GL_TRANSFORM_FEEDBACK, 0);
 
-    //  m_updater->unbind();
+    // m_updater->unbind();
 }
 
 void 
 ParticleSystem::render()
 {
     // Activar blend function para permitir la transparencia de las partículas
+	m_renderer->bind();
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, m_texture->getProgramID());
 
     glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE);
 	glDepthMask(0);
 
 	glDisable(GL_RASTERIZER_DISCARD);
-	m_renderer->bind();
 
     m_renderer->setMat4("matrices.mProj", m_projection);
     m_renderer->setMat4("matrices.mView", m_view);
@@ -128,6 +133,8 @@ ParticleSystem::render()
 
 	glDepthMask(1);	
 	glDisable(GL_BLEND);
+
+    // m_renderer->unbind();
 }
 
 void 
@@ -224,6 +231,11 @@ ParticleSystem::init(void)
 
     m_currentReadBuffer = 0;
 	m_numParticles = 1;
+
+    // m_texture = ResourceManager::getResource_t<RTexture>("assets/particles/particle.bmp");
+    m_texture = ResourceManager::getResource_t<RTexture>("assets/logo.jpg");
+    m_texture->initialize();
+    
 }
 
 

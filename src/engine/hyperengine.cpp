@@ -242,6 +242,15 @@ HyperEngine::drawScene(void)
 	if(m_useDebugDrawer)
 		this->drawDebugPhysics(view, projection);
 
+	// Nuevo, pintar partículas
+	// static bool drawparticles = true;
+	// if(drawparticles)
+	// {
+	// 	drawParticleSystem(projection, camnode->getTranslation(), camnode->getCameraTarget());
+	// 	// glfwSwapBuffers(m_window);
+	// 	// INFOLOG("DIBUJO PARTICULAS")
+	// }
+
 	// Ahora, pintar skybox si hay
 	if(!m_skybox) return;
 
@@ -1394,11 +1403,47 @@ HyperEngine::setDebugDrawer(DebugDrawer* debugDrawer)
 }
 
 void 
+HyperEngine::createParticleSystem(void)
+{
+	// Anterior comentario: TODO:: no crearlo aquí, sino desde fuera, y puede que sea un hashmap de systems
+	m_particleSystem = new ParticleSystem( 
+		m_shaders.at(GLShader::Particle_updater)
+	,  	m_shaders.at(GLShader::Particle_renderer)
+	);
+
+	m_particleSystem->setProperties(
+		glm::vec3(-10.0f, 17.5f, 0.0f), // Where the particles are generated
+		glm::vec3(-5, 0, -5), // Minimal velocity
+		glm::vec3(5, 20, 5), // Maximal velocity
+		glm::vec3(0, -5, 0), // Gravity force applied to particles
+		glm::vec3(0.0f, 0.5f, 1.0f), // Color (light blue)
+		1.5f, // Minimum lifetime in seconds
+		3.0f, // Maximum lifetime in seconds
+		0.75f, // Rendered size
+		0.02f, // Spawn every 0.05 seconds
+		30 // And spawn 30 particles
+	);
+}
+
+void 
 HyperEngine::updateParticleSystem(float dt)
 {
 	if(!m_particleSystem) return;
 
 	m_particleSystem->update(dt);
+}
+
+void 
+HyperEngine::drawParticleSystem(
+	glm::mat4 const& projection
+,   glm::vec3 const& campos
+,   glm::vec3 const& camtarget
+)
+{
+	if(!m_particleSystem) return;
+
+	m_particleSystem->setMatrices(projection, campos, camtarget);
+	m_particleSystem->render();
 }
 
 
@@ -1520,7 +1565,7 @@ HyperEngine::initializeGraphics(void)
 			GLShader::Particle_updater
 		,  	new RShader(
 				Shader::particles_updater_vertex
-			, 	Shader::particles_updater_fragment
+			, 	nullptr
 			, 	Shader::particles_updater_geometry
 			)	
 		}
@@ -1533,24 +1578,7 @@ HyperEngine::initializeGraphics(void)
 			)	
 		}
 	}; // end m_shaders
-	
-	// TODO:: no crearlo aquí, sino desde fuera, y puede que sea un hashmap de systems
-	m_particleSystem = new ParticleSystem( 
-		m_shaders.at(GLShader::Particle_updater)
-	,  	m_shaders.at(GLShader::Particle_renderer)
-	);
-	m_particleSystem->setProperties(
-		glm::vec3(-10.0f, 17.5f, 0.0f), // Where the particles are generated
-		glm::vec3(-5, 0, -5), // Minimal velocity
-		glm::vec3(5, 20, 5), // Maximal velocity
-		glm::vec3(0, -5, 0), // Gravity force applied to particles
-		glm::vec3(0.0f, 0.5f, 1.0f), // Color (light blue)
-		1.5f, // Minimum lifetime in seconds
-		3.0f, // Maximum lifetime in seconds
-		0.75f, // Rendered size
-		0.02f, // Spawn every 0.05 seconds
-		30 // And spawn 30 particles
-	);
+
 }
 
 void 

@@ -70,7 +70,7 @@ private:
     ;
 
     float 
-        m_elapsedTime
+        m_elapsedTime {0.0f}
     ,   m_nextGenerationTimestamp
     ,   m_generationLifespanMin
     ,   m_generationLifespanRange

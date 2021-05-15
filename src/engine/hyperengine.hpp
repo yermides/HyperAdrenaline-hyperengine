@@ -417,7 +417,16 @@ struct HyperEngine
 
     // Partículas
 
+    // Todo:: ser parametrizable
+    void createParticleSystem(void);
+
     void updateParticleSystem(float dt);
+
+    void drawParticleSystem(
+        glm::mat4 const& projection
+    ,   glm::vec3 const& campos
+    ,   glm::vec3 const& camtarget
+    );
 
     void resetKeyStates(void);
     void resetMouseKeyStates(void);
