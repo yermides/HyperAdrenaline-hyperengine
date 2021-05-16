@@ -2570,7 +2570,8 @@ void test_particle_system(void){
         ,   "assets/planes/semicube.obj"
     );
 
-    engine->createParticleSystem();
+    // engine->createParticleSystem();
+    engine->createParticleGenerator();
 
     const double fpsLimit = 1.0 / 60.0;
     double lastUpdateTime = 0;  // number of seconds since the last loop
@@ -2596,6 +2597,7 @@ void test_particle_system(void){
             // updating stuff
             camnode->setCameraTarget({0,0,0});
             engine->updatePhysics(deltaTime);
+            engine->updateParticleGenerator(dt);
             // engine->updateParticleSystem(dt);
 
             lastFrameTime = now;

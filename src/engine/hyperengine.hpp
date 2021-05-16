@@ -28,6 +28,7 @@
 #include <entities/e_model.hpp>
 #include <entities/e_skybox.hpp>
 #include <engine/particles/system.hpp>
+#include <engine/particles/generator.hpp>
 #include <util/debugdrawer.hpp>
 
 // Create node params
@@ -63,6 +64,7 @@ enum class GLShader {
 ,   Physics
 ,   Particle_updater
 ,   Particle_renderer
+,   Particle_generator
 };
 
 // Declaración de estructuras
@@ -428,6 +430,16 @@ struct HyperEngine
     ,   glm::vec3 const& camtarget
     );
 
+    // Lo de antes no vale, usar particle generator
+    void createParticleGenerator();
+    void setmatParticleGenerator(        
+        glm::mat4 const& projection
+    ,   glm::mat4 const& view
+    ,   glm::vec3 const& cameraPosition
+    );
+    void updateParticleGenerator(float dt);
+    void renderParticleGenerator();
+
     void resetKeyStates(void);
     void resetMouseKeyStates(void);
     void resetMouseWheelStatus(void);
@@ -462,6 +474,8 @@ private:
 
     Node* m_skybox  { nullptr };
     ParticleSystem * m_particleSystem { nullptr };
+
+    ParticleGenerator * m_generator {nullptr};
 
     // std::vector<LightData> m_lights;
     std::vector<Node*> m_lights;

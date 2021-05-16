@@ -2,7 +2,7 @@
 
 namespace hyper {
 
-Particle::Particle(
+SParticle::SParticle(
     glm::vec3 const& position
 ,   glm::vec3 const& velocity
 ,   glm::vec3 const& color

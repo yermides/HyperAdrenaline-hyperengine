@@ -4,16 +4,16 @@
 namespace hyper {
 
 // Usada en el system1, que como no va, pues equis dé
-struct Particle
+struct SParticle
 {
     enum Type : int {
         Generator    = 0
     ,   Normal
     };
 
-    explicit Particle() = default;
+    explicit SParticle() = default;
 
-    explicit Particle(
+    explicit SParticle(
         glm::vec3 const& position
     ,   glm::vec3 const& velocity
     ,   glm::vec3 const& color
@@ -22,7 +22,7 @@ struct Particle
     ,   Type type
     );
 
-    ~Particle() = default;
+    ~SParticle() = default;
 
     glm::vec3 m_position;
 	glm::vec3 m_velocity;
@@ -31,11 +31,5 @@ struct Particle
 	float m_size;
     Type m_type;
 };
-
-struct HyperParticle
-{
-    /* data */
-};
-
 
 }
