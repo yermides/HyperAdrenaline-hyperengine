@@ -12,7 +12,10 @@ ParticleGenerator::ParticleGenerator(RShader* shader, int size)
 {
     // anterior TODO:: falta cargar e initialize() de la textura
     // ahora:  pls parametrizar
-    m_texture = ResourceManager::getResource_t<RTexture>("assets/particles/particle.DDS");
+    // m_texture = ResourceManager::getResource_t<RTexture>("assets/particles/particle.DDS");
+    m_texture = ResourceManager::getResource_t<RTexture>("assets/particles/smoke.png");
+    // m_texture = ResourceManager::getResource_t<RTexture>("assets/particles/enlazame-esta.png");
+    
     m_texture->initialize();
 
     Particle base;
@@ -87,7 +90,8 @@ ParticleGenerator::update(float dt)
     // Generate 10 new particule each millisecond,
     // but limit this to 16 ms (60 fps), or if you have 1 long frame (1sec),
     // newparticles will be huge and the next frame even longer.
-    int newparticles = (int)(dt*10000.0);
+    // int newparticles = (int)(dt*10000.0);
+    int newparticles = (int)(dt*100.0);
     if (newparticles > (int)(0.016f*10000.0))
         newparticles = (int)(0.016f*10000.0);
     
@@ -96,27 +100,43 @@ ParticleGenerator::update(float dt)
     for(int i {0}; i < newparticles; ++i) 
     {
         float spread = 1.5f;
-        glm::vec3 maindir = glm::vec3(0.0f, 10.0f, 0.0f);
+        // glm::vec3 maindir = glm::vec3(0.0f, 10.0f, 0.0f);
+        glm::vec3 maindir = glm::vec3(0.0f, 1.0f, 0.0f);
         // Very bad way to generate a random direction; 
         // See for instance http://stackoverflow.com/questions/5408276/python-uniform-spherical-distribution instead,
         // combined with some user-controlled parameters (main direction, spread, etc)
+
+        // glm::vec3 randomdir = glm::vec3(
+        //     (rand()%2000 - 1000.0f)/1000.0f,
+        //     (rand()%2000 - 1000.0f)/1000.0f,
+        //     (rand()%2000 - 1000.0f)/1000.0f
+        // );
+
+        // El efecto este mola para una explosión
         glm::vec3 randomdir = glm::vec3(
-            (rand()%2000 - 1000.0f)/1000.0f,
-            (rand()%2000 - 1000.0f)/1000.0f,
-            (rand()%2000 - 1000.0f)/1000.0f
+            (rand()%2000 - 1000.0f)/100.0f,
+            (rand()%2000 - 1000.0f)/100.0f,
+            (rand()%2000 - 1000.0f)/100.0f
         );
         
         int particleIndex = findUnusedParticle();
         auto& particle { m_particles.at(particleIndex) };
 
         particle.life = 5.0f; // This particle will live 5 seconds.
-        particle.pos = glm::vec3(0,0,-20.0f); // Hardcoded
+        particle.pos = glm::vec3(0,0,0); // Hardcoded
         particle.speed = maindir + randomdir * spread;
-        particle.r = rand() % 256;  // Very bad way to generate a random color
-        particle.g = rand() % 256;
-        particle.b = rand() % 256;
-        particle.a = (rand() % 256) / 3;
-        particle.size = (rand()%1000)/2000.0f + 0.1f;
+        // particle.r = rand() % 256;  // Very bad way to generate a random color
+        // particle.g = rand() % 256;
+        // particle.b = rand() % 256;
+        // particle.a = (rand() % 256) / 3;
+        // particle.size = (rand()%1000)/2000.0f + 0.1f;
+
+        // por probar, son blancas y semi-transparentes
+        particle.r = 255;  
+        particle.g = 255;
+        particle.b = 255;
+        particle.a = 255;
+        particle.size = (rand()%1000)/200.0f + 0.1f;
     }
 
     // Simulate all particles
@@ -181,7 +201,11 @@ ParticleGenerator::render(void)
     glBufferSubData(GL_ARRAY_BUFFER, 0, m_particlesCount * sizeof(GLubyte) * 4, &m_colorBuffer.front());
 
     glEnable(GL_BLEND);
+
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    // glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+    glDepthMask(0);
+    glDisable(GL_RASTERIZER_DISCARD);
 
     // Use our shader(antes estaba aquí)
 
@@ -256,6 +280,9 @@ ParticleGenerator::render(void)
     glDisableVertexAttribArray(0);
     glDisableVertexAttribArray(1);
     glDisableVertexAttribArray(2);
+
+    glDepthMask(1);	
+    glDisable(GL_BLEND);
 
     // TODO::  comprobar si este cleanup es necesario 
     glBindVertexArray(0);
