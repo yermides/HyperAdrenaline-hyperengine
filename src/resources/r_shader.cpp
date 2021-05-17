@@ -13,10 +13,10 @@ RShader::RShader(std::string const& path)
 	loadFromFile(path);
 }
 
-RShader::RShader(Cstring path_vertex, Cstring path_fragment)
+RShader::RShader(Cstring path_vertex, Cstring path_fragment, Cstring path_geometry)
 : Resource{}
 {
-	loadShadersFromMemory(path_vertex, path_fragment);
+	loadShadersFromMemory(path_vertex, path_fragment, path_geometry);
 }
 
 RShader::~RShader()
@@ -126,34 +126,78 @@ RShader::loadShaders( Cstring path_vertex, Cstring path_fragment )
 }
 
 ProgramIdentifier 
-RShader::loadShadersFromMemory( Cstring path_vertex, Cstring path_fragment )
+RShader::loadShadersFromMemory( Cstring path_vertex, Cstring path_fragment, Cstring path_geometry )
 {
 	int success;
 	char info_log[512];
 	uint32_t
-		program = glCreateProgram(),
-		vShader = glCreateShader(GL_VERTEX_SHADER),
+		program = glCreateProgram()
+	,	vShader {0} 
+	,	fShader {0} 
+	,	gShader {0}
+	;
+
+	if(path_vertex)
+		vShader = glCreateShader(GL_VERTEX_SHADER);
+
+	if(path_fragment)
 		fShader = glCreateShader(GL_FRAGMENT_SHADER);
 
-	glShaderSource(vShader, 1, &path_vertex, 0);
-	glCompileShader(vShader);
-	glGetShaderiv(vShader, GL_COMPILE_STATUS, &success);
-	if (!success)
+	if(path_geometry)
+		gShader = glCreateShader(GL_GEOMETRY_SHADER);
+
+	// Compilar vertex shader
+
+	if(vShader)
 	{
-		glGetShaderInfoLog(vShader, 512, 0, info_log);
-		ERRLOG( "vertex shader compilation failed!\n" << info_log );
-	}
-	glShaderSource(fShader, 1, &path_fragment, 0);
-	glCompileShader(fShader);
-	glGetShaderiv(fShader, GL_COMPILE_STATUS, &success);
-	if (!success)
-	{
-		glGetShaderInfoLog(fShader, 512, 0, info_log);
-		ERRLOG( "fragment shader compilation failed!\n" << info_log );
+		glShaderSource(vShader, 1, &path_vertex, 0);
+		glCompileShader(vShader);
+		glGetShaderiv(vShader, GL_COMPILE_STATUS, &success);
+		if (!success)
+		{
+			glGetShaderInfoLog(vShader, 512, 0, info_log);
+			ERRLOG( "vertex shader compilation failed!\n" << info_log );
+		}
 	}
 
-	glAttachShader(program, vShader);
-	glAttachShader(program, fShader);
+	// Compilar fragment shader
+
+	if(fShader)
+	{
+		glShaderSource(fShader, 1, &path_fragment, 0);
+		glCompileShader(fShader);
+		glGetShaderiv(fShader, GL_COMPILE_STATUS, &success);
+		if (!success)
+		{
+			glGetShaderInfoLog(fShader, 512, 0, info_log);
+			ERRLOG( "fragment shader compilation failed!\n" << info_log );
+		}
+	}
+
+	// Compilar geometry shader
+
+	if(gShader)
+	{
+		glShaderSource(gShader, 1, &path_geometry, 0);
+		glCompileShader(gShader);
+		glGetShaderiv(gShader, GL_COMPILE_STATUS, &success);
+		if (!success)
+		{
+			glGetShaderInfoLog(gShader, 512, 0, info_log);
+			ERRLOG( "fragment shader compilation failed!\n" << info_log );
+		}
+	}
+
+	// Creando el programa a partir de los dos o tres programas de shader
+	if(vShader)
+		glAttachShader(program, vShader);
+
+	if(fShader)
+		glAttachShader(program, fShader);
+
+	if(gShader) 
+		glAttachShader(program, gShader);
+
 	glLinkProgram(program);
 	glGetProgramiv(program, GL_LINK_STATUS, &success);
 	if (!success)
@@ -161,11 +205,25 @@ RShader::loadShadersFromMemory( Cstring path_vertex, Cstring path_fragment )
 		glGetProgramInfoLog(program, 512, 0, info_log);
 		ERRLOG( "program linking failed!\n" << info_log );
 	}
-	glDetachShader(program, vShader);
-	glDeleteShader(vShader);
-	glDetachShader(program, fShader);
-	glDeleteShader(fShader);
-	
+
+	// Cleanup de los programas del shader
+	if(vShader)
+	{
+		glDetachShader(program, vShader);
+		glDeleteShader(vShader);
+	}
+	if(fShader)
+	{
+		glDetachShader(program, fShader);
+		glDeleteShader(fShader);
+	}
+	if(gShader)
+	{
+		glDetachShader(program, gShader);
+		glDeleteShader(gShader);
+	}
+
+	//  Recoger el id del programa
 	m_programID = program;
 
 	return program;

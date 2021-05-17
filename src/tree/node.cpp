@@ -230,6 +230,8 @@ void
 Node::setCameraTarget(glm::vec3 const& target)
 {
     m_target = target;
+    auto camera = getEntityAsCamera();
+    camera->setTarget(m_target);
 
     auto forcedViewMatrix = glm::lookAt(
             getTranslation()
@@ -241,7 +243,6 @@ Node::setCameraTarget(glm::vec3 const& target)
     // auto pos = glm::vec3(position);
     // setTranslation(position);
 
-    auto camera = static_cast<ECamera*>(m_entity);
     camera->setViewMatrix(forcedViewMatrix);
 
     

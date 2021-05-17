@@ -21,12 +21,12 @@ struct RShader : public Resource
 {
     explicit RShader();
     explicit RShader(std::string const& path);
-    explicit RShader(Cstring path_vertex, Cstring path_fragment);
+    explicit RShader(Cstring path_vertex, Cstring path_fragment, Cstring path_geometry = nullptr );
     ~RShader();
 
     // Cargar desde archivo .vs, .fs
     ProgramIdentifier loadShaders( Cstring path_vertex, Cstring path_fragment );
-    ProgramIdentifier loadShadersFromMemory( Cstring path_vertex, Cstring path_fragment );
+    ProgramIdentifier loadShadersFromMemory( Cstring path_vertex, Cstring path_fragment, Cstring path_geometry = nullptr );
     void loadFromFile( std::string const& path ) final;
 
     inline void bind() 
