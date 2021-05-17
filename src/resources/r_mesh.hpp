@@ -7,7 +7,7 @@
 #include <util/macros.hpp>
 #include <util/functions.hpp>
 
-namespace hyper {
+namespace hyen {
 
 struct BoneInfo {
     glm::mat4 offset    {1.0f}; // Por defecto la identidad

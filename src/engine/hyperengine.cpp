@@ -1,16 +1,24 @@
 #include "hyperengine.hpp"
 
-namespace hyper {
+namespace hyen {
 
 HyperEngine::HyperEngine(bool const init)
 {
 	if(init)
-		this->initialize();
+		initialize();
 }
 
 HyperEngine::~HyperEngine()
 {
+	// Hyperengine
 	Node::deleteBranch(m_rootnode);
+
+	for(auto iter = m_shaders.begin(); iter != m_shaders.end(); ++iter)
+	{
+		delete iter->second;
+		iter->second = nullptr;
+	}
+
 	m_shaders.clear();
 	m_keystates.clear();
 	m_mousekeystates.clear();
@@ -18,12 +26,19 @@ HyperEngine::~HyperEngine()
 	m_lights.clear();
 	m_active_lights.clear();
 	m_cameras.clear();
+	
+	// Físicas
 	m_collisionPairs.clear(); 
+	deleteAllWorldPhysics();
 	delete m_debugDrawer;
 	delete m_world;
+	
+	// ImGui
 	ImGui_ImplOpenGL3_Shutdown();
 	ImGui_ImplGlfw_Shutdown();
 	gui::DestroyContext();
+
+	// OpenGL
 	glfwDestroyWindow(m_window);
 	glfwTerminate();
 }
@@ -31,8 +46,8 @@ HyperEngine::~HyperEngine()
 void 
 HyperEngine::initialize(void)
 {
-	this->initializeGraphics();
-	this->initializePhysics();
+	initializeGraphics();
+	initializePhysics();
 }
 
 Node* 
@@ -60,6 +75,8 @@ void
 HyperEngine::clearTree(void)
 {
 	// Todo:: revisar implementación
+	
+	// this->deleteAllWorldPhysics();
 	Node::deleteBranchChilds(m_rootnode);
 	m_cameras.clear();
 	m_active_camera = engine_invalid_id;
@@ -84,10 +101,10 @@ void
 HyperEngine::beginRender(void)
 {
 	// Clear screen and reset keys
-	this->clearScreen();
-	this->resetKeyStates();
-	this->resetMouseKeyStates();
-	this->resetMouseWheelStatus();
+	clearScreen();
+	resetKeyStates();
+	resetMouseKeyStates();
+	resetMouseWheelStatus();
 
 	// Imgui
 	ImGui_ImplOpenGL3_NewFrame();
@@ -102,8 +119,8 @@ HyperEngine::drawScene(void)
 	if(m_active_camera == engine_invalid_id)
 		return;
 
-	auto camnode = this->m_cameras[m_active_camera];
-	auto camentity = static_cast<ECamera*>(camnode->getEntity());
+	auto camnode = this->m_cameras.at(m_active_camera);
+	auto camentity = camnode->getEntityAsCamera();
 	auto camerashader = camentity->getShader();
 
 	// TODO:: luces
@@ -242,16 +259,7 @@ HyperEngine::drawScene(void)
 	if(m_useDebugDrawer)
 		this->drawDebugPhysics(view, projection);
 
-	// Nuevo, pintar partículas
-	// static bool drawparticles = true;
-	// if(drawparticles)
-	// {
-	// 	drawParticleSystem(projection, camnode->getTranslation(), camnode->getCameraTarget());
-	// 	// glfwSwapBuffers(m_window);
-	// 	// INFOLOG("DIBUJO PARTICULAS")
-	// }
-
-	// Nuevo, pintar partículas 2, it works!
+	// Nuevo, pintar partículas 2, it works! Aunque no debería tener el hyperengine un hold de un solo generador, mirar lo de registrar generadores
 	if(m_generator)
 	{
 		m_generator->setMatrices(projection, view, camnode->getTranslation());
@@ -280,15 +288,6 @@ HyperEngine::drawScene(void)
 	glDrawArrays(GL_TRIANGLES, 0, 36);
 	glBindVertexArray(0);
 	glDepthFunc(GL_LESS); // set depth function back to default
-}
-
-void 
-HyperEngine::drawExampleWindowGUI(void)
-{
-	// TODO:: temporal, solo es un pequeño ejemplo de ventana
-	gui::Begin("Ventana temporal - HyperEngine::drawExampleWindowGUI()");
-	gui::Button("Hola mundo!");
-	gui::End();
 }
 
 void 
@@ -1077,197 +1076,6 @@ HyperEngine::deleteAllWorldPhysics(void)
 	// delete m_collisionConfiguration;
 }
 
-// Old functions for physics
-
-void 
-HyperEngine::createRigidbody(Node * const node)
-{
-	static int cinematic_mass = 0;
-
-	auto prop = node->getPhysicProperties();
-	
-	if(prop) return;
-
-	// Setup de variables necesarias para la creación del rigidbody
-	btTransform transform;
-	transform.setIdentity();
-	auto trans = node->getTranslation();
-	transform.setOrigin( btVector3(trans.x, trans.y, trans.z) );
-	btDefaultMotionState *motionState = new btDefaultMotionState(transform);
-	// Definiendo las dimensiones de la bounding box, hardcoded as fck boiii // TODO:: parametrizar
-	btCollisionShape *shape = new btBoxShape( btVector3(1,1,1) );
-
-	btVector3 localInertia;
-	shape->calculateLocalInertia(cinematic_mass, localInertia);
-
-	// Creando finalmente el rigidbody y seteando parámetros
-	btRigidBody *body = new btRigidBody(cinematic_mass, motionState, shape, localInertia);
-
-	using CO = btCollisionObject;
-	// TODO:: parametrizar, solo son cinemáticos de momento
-	body->setCollisionFlags(body->getCollisionFlags() | CO::CF_KINEMATIC_OBJECT); 
-	// Esto desactiva totalmente el estado de colisiones, ya no colisionará con nada, WARNING!!!!!1!!!!111!
-	body->setActivationState(DISABLE_DEACTIVATION);
-
-	// Pasárselo al nodo
-	PhysicProperties* properties = new PhysicProperties;
-	properties->m_data.body = body;
-	node->setPhysicProperties(properties);
-
-	// Y finalmente al mundo
-	m_world->addRigidBody(body);
-
-	// Debug, TODO:: borrar
-	btTransform nodetransform;
-	body->getMotionState()->getWorldTransform(nodetransform);
-	auto pos = nodetransform.getOrigin();
-	INFOLOG("Posición del nodo: " << VAR(pos.x()) << VAR(pos.y()) << VAR(pos.z()) );
-}
-
-void 
-HyperEngine::createRigidBodyConvexHull(Node * const node)
-{
-	static int cinematic_mass = 0;
-
-	auto prop = node->getPhysicProperties();
-	
-	if(prop) return;
-
-	// Setup de variables necesarias para la creación del rigidbody
-	btTransform transform;
-	transform.setIdentity();
-	auto trans = node->getTranslation();
-	transform.setOrigin( btVector3(trans.x, trans.y, trans.z) );
-	btDefaultMotionState *motionState = new btDefaultMotionState(transform);
-	// Definiendo las dimensiones de la bounding box, hardcoded as fck boiii // TODO:: parametrizar
-	auto convexhull = new btConvexHullShape;
-
-	auto model = static_cast<EModel*>(node->getEntity());
-	auto vertices = model->getVertexPositions();
-
-	for(std::size_t i {0}; i< vertices.size(); i=i+3) {
-		convexhull->addPoint(btVector3(vertices[i], vertices[i+1], vertices[i+2]));
-	}
-
-	btCollisionShape *shape = convexhull;
-
-
-	btVector3 localInertia;
-	shape->calculateLocalInertia(cinematic_mass, localInertia);
-
-	// Creando finalmente el rigidbody y seteando parámetros
-	btRigidBody *body = new btRigidBody(cinematic_mass, motionState, shape, localInertia);
-
-	using CO = btCollisionObject;
-	// TODO:: parametrizar, solo son cinemáticos de momento
-	body->setCollisionFlags(body->getCollisionFlags() | CO::CF_KINEMATIC_OBJECT); 
-	body->setActivationState(DISABLE_DEACTIVATION);
-
-	// Pasárselo al nodo
-	PhysicProperties* properties = new PhysicProperties;
-	properties->m_data.body = body;
-	node->setPhysicProperties(properties);
-
-	// Y finalmente al mundo
-	m_world->addRigidBody(body);
-
-	// Debug, TODO:: borrar
-	btTransform nodetransform;
-	body->getMotionState()->getWorldTransform(nodetransform);
-	auto pos = nodetransform.getOrigin();
-	INFOLOG("Posición del nodo: " << VAR(pos.x()) << VAR(pos.y()) << VAR(pos.z()) );
-}
-
-void 
-HyperEngine::createRigidBodyDynamic(Node * const node)
-{
-	static float dynamic_mass = 1.0f;
-
-	// auto prop = node->getPhysicProperties();
-	// if(prop) return;
-
-	// Setup de variables necesarias para la creación del rigidbody
-	btTransform transform;
-	transform.setIdentity();
-	// auto trans = node->getTranslation();
-	transform.setOrigin( btVector3(0, 2, 0) );
-	btDefaultMotionState *motionState = new btDefaultMotionState(transform);
-
-	// Definiendo las dimensiones de la bounding box, de momento aquí es una tremenda esfera
-	btCollisionShape *shape = new btSphereShape(1);
-
-	btVector3 localInertia;
-	shape->calculateLocalInertia(dynamic_mass, localInertia);
-
-	// Creando finalmente el rigidbody y seteando parámetros
-	btRigidBody *body = new btRigidBody(dynamic_mass, motionState, shape, localInertia);
-
-	// using CO = btCollisionObject;
-	// TODO:: parametrizar, solo son cinemáticos de momento
-	// body->setCollisionFlags(body->getCollisionFlags() | CO::CF_KINEMATIC_OBJECT | CO::CF_DYNAMIC_OBJECT); 
-	// body->setActivationState(DISABLE_DEACTIVATION);
-
-	// Pasárselo al nodo
-	// PhysicProperties* properties = new PhysicProperties;
-	// properties->body = body;
-	// node->setPhysicProperties(properties);
-
-	// Y finalmente al mundo
-	m_world->addRigidBody(body);
-}
-
-void 
-HyperEngine::createTriangleMeshShape(Node * const node)
-{
-	static int cinematic_mass = 0;
-
-	auto prop = node->getPhysicProperties();
-	
-	if(prop) return;
-
-	// Setup de variables necesarias para la creación del rigidbody
-	btTransform transform;
-	transform.setIdentity();
-	auto trans = node->getTranslation();
-	transform.setOrigin( btVector3(trans.x, trans.y, trans.z) );
-	btDefaultMotionState *motionState = new btDefaultMotionState(transform);
-
-	// Definiendo la triangle mesh
-
-	auto model 			= static_cast<EModel*>(node->getEntity());
-	auto trianglemesh	= new btTriangleMesh;
-	auto vertices 		= model->getVertexPositions();
-
-	for(std::size_t i {0}; i<vertices.size(); i=i+9) {
-		trianglemesh->addTriangle(
-				btVector3(vertices[i], vertices[i+1], vertices[i+2])
-			,	btVector3(vertices[i+3], vertices[i+4], vertices[i+5])
-			,	btVector3(vertices[i+6], vertices[i+7], vertices[i+8])
-		);
-	}
-
-	auto shape	= new btBvhTriangleMeshShape(trianglemesh, false);
-
-	btVector3 localInertia;
-	shape->calculateLocalInertia(cinematic_mass, localInertia);
-
-	// Creando finalmente el rigidbody y seteando parámetros
-	btRigidBody *body = new btRigidBody(cinematic_mass, motionState, shape, localInertia);
-
-	using CO = btCollisionObject;
-	// TODO:: parametrizar, solo son cinemáticos de momento
-	body->setCollisionFlags(body->getCollisionFlags() | CO::CF_KINEMATIC_OBJECT); 
-	body->setActivationState(DISABLE_DEACTIVATION);
-
-	// Pasárselo al nodo
-	PhysicProperties* properties = new PhysicProperties;
-	properties->m_data.body = body;
-	node->setPhysicProperties(properties);
-
-	// Y finalmente al mundo
-	m_world->addRigidBody(body);
-}
-
 bool 
 HyperEngine::throwRaycast(
 	const btVector3 &startPosition
@@ -1408,51 +1216,6 @@ HyperEngine::setDebugDrawer(DebugDrawer* debugDrawer)
 	m_debugDrawer = debugDrawer;
 	m_world->setDebugDrawer(m_debugDrawer);
 }
-
-void 
-HyperEngine::createParticleSystem(void)
-{
-	// Anterior comentario: TODO:: no crearlo aquí, sino desde fuera, y puede que sea un hashmap de systems
-	m_particleSystem = new ParticleSystem( 
-		m_shaders.at(GLShader::Particle_updater)
-	,  	m_shaders.at(GLShader::Particle_renderer)
-	);
-
-	m_particleSystem->setProperties(
-		glm::vec3(-10.0f, 17.5f, 0.0f), // Where the particles are generated
-		glm::vec3(-5, 0, -5), // Minimal velocity
-		glm::vec3(5, 20, 5), // Maximal velocity
-		glm::vec3(0, -5, 0), // Gravity force applied to particles
-		glm::vec3(0.0f, 0.5f, 1.0f), // Color (light blue)
-		1.5f, // Minimum lifetime in seconds
-		3.0f, // Maximum lifetime in seconds
-		0.75f, // Rendered size
-		0.02f, // Spawn every 0.05 seconds
-		30 // And spawn 30 particles
-	);
-}
-
-void 
-HyperEngine::updateParticleSystem(float dt)
-{
-	if(!m_particleSystem) return;
-
-	m_particleSystem->update(dt);
-}
-
-void 
-HyperEngine::drawParticleSystem(
-	glm::mat4 const& projection
-,   glm::vec3 const& campos
-,   glm::vec3 const& camtarget
-)
-{
-	if(!m_particleSystem) return;
-
-	m_particleSystem->setMatrices(projection, campos, camtarget);
-	m_particleSystem->render();
-}
-
 
 // Funciones privadas
 

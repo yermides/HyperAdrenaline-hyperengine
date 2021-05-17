@@ -1,6 +1,6 @@
 #include "r_mesh.hpp"
 
-namespace hyper {
+namespace hyen {
 
 RMesh::RMesh()
 : Resource{}

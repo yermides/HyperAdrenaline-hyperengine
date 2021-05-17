@@ -27,7 +27,6 @@
 #include <entities/e_light.hpp>
 #include <entities/e_model.hpp>
 #include <entities/e_skybox.hpp>
-#include <engine/particles/system.hpp>
 #include <engine/particles/generator.hpp>
 #include <util/debugdrawer.hpp>
 
@@ -53,7 +52,7 @@
 template<typename T1, typename T2>
 using Hashmap = std::unordered_map<T1, T2>;
 
-namespace hyper {
+namespace hyen {
 
 namespace gui = ImGui;
 
@@ -200,8 +199,6 @@ struct HyperEngine
     void beginRender(void);
 
     void drawScene(void);
-
-    void drawExampleWindowGUI(void);    // TODO:: borrar, es solo un ejemplo
 
     void endRender(void) const;
 
@@ -373,24 +370,6 @@ struct HyperEngine
 
     void deleteAllWorldPhysics(void);
 
-    // ************************************************
-
-    // Funciones patateras, mejoradas arriba
-    void createRigidbody(Node * const node);
-
-    // Realmente no es convex hull, es la geometría pura (todo es por el testing)
-    void createRigidBodyConvexHull(Node * const node);
-
-    // habría que parametrizar, equis dé
-    void createRigidBodyDynamic(Node * const node = nullptr);
-
-    // Las colisiones que usarán los mapas
-    void createTriangleMeshShape(Node * const node);
-
-    // ************************************************
-
-
-    // Funciones necesarias para el raycast (2/2)
     bool throwRaycast(
             const btVector3 &startPosition
         ,   const btVector3 &direction
@@ -419,25 +398,16 @@ struct HyperEngine
 
     // Partículas
 
-    // Todo:: ser parametrizable
-    void createParticleSystem(void);
-
-    void updateParticleSystem(float dt);
-
-    void drawParticleSystem(
-        glm::mat4 const& projection
-    ,   glm::vec3 const& campos
-    ,   glm::vec3 const& camtarget
-    );
-
-    // Lo de antes no vale, usar particle generator
     void createParticleGenerator();
+
     void setmatParticleGenerator(        
         glm::mat4 const& projection
     ,   glm::mat4 const& view
     ,   glm::vec3 const& cameraPosition
     );
+
     void updateParticleGenerator(float dt);
+
     void renderParticleGenerator();
 
     void resetKeyStates(void);
@@ -473,8 +443,6 @@ private:
     ,   m_active_viewport{engine_invalid_id};
 
     Node* m_skybox  { nullptr };
-    ParticleSystem * m_particleSystem { nullptr };
-
     ParticleGenerator * m_generator {nullptr};
 
     // std::vector<LightData> m_lights;

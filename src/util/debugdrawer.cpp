@@ -2,7 +2,7 @@
 // Opengl
 #include <GL/gl.h>
 
-namespace hyper {
+namespace hyen {
 
 DebugDrawer::DebugDrawer()
 : m_debugMode(DBG_NoDebug)

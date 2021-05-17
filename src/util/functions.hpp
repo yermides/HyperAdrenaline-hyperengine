@@ -2,7 +2,7 @@
 #include <string>
 #include <bullet/LinearMath/btVector3.h>
 
-namespace hyper {
+namespace hyen {
 
 namespace util {
 

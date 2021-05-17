@@ -4,7 +4,7 @@
 #include <util/typealiases.hpp>
 #include <util/macros.hpp>
 
-namespace hyper {
+namespace hyen {
 
 struct Entity
 {

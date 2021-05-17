@@ -5,7 +5,7 @@
 #include <resources/resource.hpp>
 // #include <resources/helpers/texture.hpp>
 
-namespace hyper {
+namespace hyen {
 
 struct RTexture : public Resource
 {

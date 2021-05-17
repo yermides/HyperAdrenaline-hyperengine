@@ -1,6 +1,6 @@
 #include "e_light.hpp"
 
-namespace hyper {
+namespace hyen {
 
 ELight::ELight()
 :	Entity{}

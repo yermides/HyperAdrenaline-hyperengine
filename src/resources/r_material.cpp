@@ -1,6 +1,6 @@
 #include "r_material.hpp"
 
-namespace hyper {
+namespace hyen {
 
 RMaterial::RMaterial()
 :   Resource{}

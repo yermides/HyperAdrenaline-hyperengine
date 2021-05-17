@@ -1,6 +1,6 @@
 #include "r_texture.hpp"
 
-namespace hyper {
+namespace hyen {
 
 RTexture::RTexture()
 : Resource{}

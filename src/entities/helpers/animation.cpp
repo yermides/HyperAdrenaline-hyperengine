@@ -1,6 +1,6 @@
 #include "animation.hpp"
 
-namespace hyper {
+namespace hyen {
     
 Animation::Animation()
 {
@@ -151,4 +151,4 @@ Animation::reset(void) noexcept
     m_paused = m_done = false;
 }
 
-} // namespace hyper
+} // namespace hyen

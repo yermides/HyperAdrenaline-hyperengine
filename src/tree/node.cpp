@@ -1,7 +1,7 @@
 #include "node.hpp"
 #include <util/macros.hpp>
 
-namespace hyper {
+namespace hyen {
 
 Node::Node()
 {

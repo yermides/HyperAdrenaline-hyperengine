@@ -5,7 +5,7 @@
 #include <resources/r_shader.hpp>
 #include <resources/r_mesh.hpp>
 
-namespace hyper {
+namespace hyen {
 
 struct Animation
 {

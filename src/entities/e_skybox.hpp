@@ -6,7 +6,7 @@
 
 using SkyboxNamelist = std::array<std::string, 6>;
 
-namespace hyper {
+namespace hyen {
 
 struct ESkybox : public Entity
 {

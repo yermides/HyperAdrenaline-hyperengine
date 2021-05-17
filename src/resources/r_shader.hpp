@@ -15,7 +15,7 @@
 #include "resource.hpp"
 #include <shaders/shaders.hpp>
 
-namespace hyper {
+namespace hyen {
 
 struct RShader : public Resource
 {

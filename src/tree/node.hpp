@@ -24,7 +24,7 @@
 
 #define default_node_id -1
 
-namespace hyper {
+namespace hyen {
 
 struct Node
 {

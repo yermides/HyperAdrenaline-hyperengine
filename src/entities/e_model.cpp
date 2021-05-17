@@ -1,6 +1,6 @@
 #include "e_model.hpp"
 
-namespace hyper {
+namespace hyen {
 
 EModel::EModel() 
 : Entity{}

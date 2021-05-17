@@ -1,6 +1,6 @@
 #include "e_skybox.hpp"
 
-namespace hyper {
+namespace hyen {
     
 ESkybox::ESkybox() 
 : Entity{}

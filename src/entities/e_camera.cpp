@@ -1,6 +1,6 @@
 #include "e_camera.hpp"
 
-namespace hyper {
+namespace hyen {
 
 ECamera::ECamera(glm::mat4 const& projection)
 : Entity{}, m_projection(projection)

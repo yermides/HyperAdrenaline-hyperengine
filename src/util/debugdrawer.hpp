@@ -9,7 +9,7 @@
 
 #define default_max_lines_debug 200
 
-namespace hyper {
+namespace hyen {
 
 struct DebugDrawer : public btIDebugDraw
 {

@@ -1,10 +1,12 @@
 #pragma once
 #include <vector>
+#include <string>
 #include <glm/vec3.hpp>
 #include <glm/matrix.hpp>
 #include <util/typealiases.hpp>
+#include <engine/particles/functions.hpp>
 
-namespace hyper {
+namespace hyen {
     
 struct RShader;
 struct RTexture;
@@ -12,7 +14,7 @@ struct RTexture;
 struct Particle
 {
     glm::vec3 pos, speed;
-	unsigned char r, g, b, a; // Color
+	uint8_t r, g, b, a; // Color
 	float size, angle, weight;
 	float life {-1.0f}; // Remaining life of the particle. if <0 : dead and unused.
 	float cameradistance {-1.0f}; // *Squared* distance to the camera. if dead : -1.0f
@@ -28,6 +30,14 @@ struct ParticleGenerator
     template <typename T>
     using Container = std::vector<T>;
     using Index = int;
+
+    struct CInfo {
+        std::string texturePath;
+        glm::vec3 mainDirection;
+        float spreadFactor;
+        float lifeSpan;
+        glm::vec3 gravity;
+    };
 
     explicit ParticleGenerator(RShader* shader, int size = 10000);
     ~ParticleGenerator();
@@ -63,6 +73,7 @@ private:
 
     Index m_index { 0 };
     int m_particlesCount { 0 }; // Se resetea cada vez que se actualiza, comprueba cúantas partículas vivas hay
+    float m_particlesPerSecond { 100.0f }; // TODO:: parametrizable
 
     GLuint
     	m_vertexArrayVAO
@@ -71,6 +82,10 @@ private:
     ,   m_colorsVBO
     ;
 
+    // RandomDirFunc m_dirFunc { &randomDirFunc_Outburst };
+    RandomDirFunc m_dirFunc { &randomDirFunc_Snowwarning };
 };
 
-} // namespace hyper
+
+
+} // namespace hyen

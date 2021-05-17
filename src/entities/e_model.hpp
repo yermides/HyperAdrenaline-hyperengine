@@ -3,7 +3,7 @@
 #include <resources/r_mesh.hpp>
 #include <entities/entity.hpp>
 
-namespace hyper {
+namespace hyen {
 
 struct EModel : public Entity
 {

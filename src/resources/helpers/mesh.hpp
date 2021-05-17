@@ -14,7 +14,7 @@
 #include <resources/r_material.hpp>
 #include <resources/r_shader.hpp>
 
-namespace hyper {
+namespace hyen {
 
 struct Mesh 
 {

@@ -1,6 +1,6 @@
 #include "e_animatedmodel.hpp"
 
-namespace hyper {
+namespace hyen {
 
 EAnimatedModel::EAnimatedModel()
 : Entity{}
@@ -43,7 +43,7 @@ EAnimatedModel::loadAnimations(std::string const& directory, double const& durat
     {
         if (p.is_directory())
         {
-            Animation::Key key = hyper::util::getCurrentFolderName(p.path().string());
+            Animation::Key key = hyen::util::getCurrentFolderName(p.path().string());
             std::vector<std::string> frames;
             auto const& path { p.path().string() };
 
@@ -57,7 +57,7 @@ EAnimatedModel::loadAnimations(std::string const& directory, double const& durat
                     INFOLOG(filename);
                     // INFOLOG(filename.length());
 
-                    auto extension = hyper::util::getCurrentFileExtension(diread->d_name);
+                    auto extension = hyen::util::getCurrentFileExtension(diread->d_name);
                     // INFOLOG(extension);
 
                     if(filename.length() > 2 && extension == "obj")

@@ -4,7 +4,7 @@
 #include <util/macros.hpp>
 #include <resources/resource.hpp>
 
-namespace hyper {
+namespace hyen {
 
 struct ResourceManager
 {

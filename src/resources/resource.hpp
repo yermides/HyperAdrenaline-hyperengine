@@ -5,7 +5,7 @@
 
 #define define_default_resource_name ""
 
-namespace hyper {
+namespace hyen {
 
 struct Resource
 {

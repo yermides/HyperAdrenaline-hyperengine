@@ -1,6 +1,6 @@
 #include "r_shader.hpp"
 
-namespace hyper {
+namespace hyen {
 
 RShader::RShader() 
 : Resource{}

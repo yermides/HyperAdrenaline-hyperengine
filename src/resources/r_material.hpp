@@ -13,7 +13,7 @@
 #define default_material_specular_exponent  1.45f
 #define default_material_opacity            1.0f
 
-namespace hyper {
+namespace hyen {
 
 struct RMaterial : public Resource
 {

@@ -1,6 +1,6 @@
 #include <resources/helpers/mesh.hpp>
 
-namespace hyper {
+namespace hyen {
 
 Mesh::Mesh()
 {

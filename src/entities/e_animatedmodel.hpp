@@ -12,7 +12,7 @@
 template<typename T1, typename T2>
 using Hashmap = std::unordered_map<T1, T2>;
 
-namespace hyper {
+namespace hyen {
 
 struct EAnimatedModel : public Entity
 {

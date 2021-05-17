@@ -1,7 +1,7 @@
 #pragma once
 #include "entity.hpp"
 
-namespace hyper {
+namespace hyen {
 
 enum class LightType {
         Directional
