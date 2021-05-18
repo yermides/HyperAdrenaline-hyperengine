@@ -976,7 +976,47 @@ void test_particle_system_2(void) {
         ,   "assets/missile-launcher.obj"
     );
 
-    auto generator = engine->createParticleGenerator(10000);
+    hyen::ParticleGenerator::CInfo cInfo
+    {
+        .maxParticles{10000}
+    ,   .texturePath{"assets/particles/enlazame-esta.png"}
+    ,   .origin{0,0,0}
+    ,   .gravity{0.0f, -9.81f, 0.0f}
+    ,   .mainDir{0.0f,  10.0f, 0.0f}
+    ,   .particlesPerSecond{100.0f}
+    ,   .spreadFactor{1.5f}
+    ,   .lifeSpan{5.0f}
+    ,   .minParticleSize{0.15f}
+    ,   .maxParticleSize{0.5f}
+    ,   .shapeRadius{3.f}
+    ,   .funcColor{&hyen::PGF::generateParticleColorsStandard}
+    ,   .funcSize{&hyen::PGF::generateParticleSizeBetween}
+    ,   .funcRandomdir{&hyen::PGF::generateRandomDirectionSoftInfluence}
+    ,   .funcPos{&hyen::PGF::generatePositionCameraTarget}
+    ,   .funcMaindir{&hyen::PGF::generateMainDirectionCameraTarget}
+    };
+
+    // hyen::ParticleGenerator::CInfo cInfo
+    // {
+    //     .maxParticles{10000}
+    // ,   .texturePath{"assets/particles/particle.DDS"}
+    // ,   .origin{0,0,0}
+    // ,   .gravity{0.0f, 0.0f, 0.0f}
+    // ,   .mainDir{0.0f, 0.0f, 0.0f}
+    // ,   .particlesPerSecond{100.0f}
+    // ,   .spreadFactor{1.5f}
+    // ,   .lifeSpan{5.0f}
+    // ,   .minParticleSize{0.15f}
+    // ,   .maxParticleSize{0.5f}
+    // ,   .shapeRadius{5.f}
+    // ,   .funcColor{&hyen::PGF::generateParticleColorsRandomly}
+    // ,   .funcSize{&hyen::PGF::generateParticleSizeBetween}
+    // ,   .funcRandomdir{&hyen::PGF::generateRandomDirectionStandard}
+    // ,   .funcPos{&hyen::PGF::generateRandomPositionBoxShape}
+    // ,   .funcMaindir{&hyen::PGF::generateMainDirectionStandard}
+    // };
+
+    auto generator = engine->createParticleGenerator(cInfo);
 
     const double fpsLimit = 1.0 / 60.0;
     double lastUpdateTime = 0;  // number of seconds since the last loop

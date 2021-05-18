@@ -61,6 +61,68 @@ ParticleGenerator::ParticleGenerator(RShader* shader, int size)
     m_shader->unbind();
 }
 
+ParticleGenerator::ParticleGenerator(RShader* shader, CInfo const& cInfo)
+:   m_shader(shader)
+,   m_maxsize(cInfo.maxParticles)
+,   m_particlesPerSecond(cInfo.particlesPerSecond)
+,   m_origin(cInfo.origin)
+,   m_gravity(cInfo.gravity)
+,   m_mainDir(cInfo.mainDir)
+,   m_spreadFactor(cInfo.spreadFactor)
+,   m_lifeSpan(cInfo.lifeSpan)
+,   m_minParticleSize(cInfo.minParticleSize)
+,   m_maxParticleSize(cInfo.maxParticleSize)
+,   m_shapeRadius(cInfo.shapeRadius)
+,   m_funcColor(cInfo.funcColor)
+,   m_funcSize(cInfo.funcSize)
+,   m_funcRandomdir(cInfo.funcRandomdir)
+,   m_funcPos(cInfo.funcPos)
+,   m_funcMaindir(cInfo.funcMaindir)
+{
+    m_texture = ResourceManager::getResource_t<RTexture>(cInfo.texturePath);
+    m_texture->initialize();
+
+    Particle base;
+    m_particles         = Container<Particle>(m_maxsize, base);
+    m_positionBuffer    = Container<GLfloat>(m_maxsize * 4);
+    m_colorBuffer       = Container<GLubyte>(m_maxsize * 4);
+
+    // Inicializar valores a pasar a OpenGL
+    m_shader->bind();
+
+    glGenVertexArrays(1, &m_vertexArrayVAO);
+	glBindVertexArray(m_vertexArrayVAO);
+
+	// The VBO containing the 4 vertices of the particles.
+	// Thanks to instancing, they will be shared by all particles.
+
+    static const GLfloat g_vertex_buffer_data[] = { 
+		 -0.5f, -0.5f, 0.0f,
+		  0.5f, -0.5f, 0.0f,
+		 -0.5f,  0.5f, 0.0f,
+		  0.5f,  0.5f, 0.0f,
+	};
+
+	glGenBuffers(1, &m_billboardVBO);
+	glBindBuffer(GL_ARRAY_BUFFER, m_billboardVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW);
+
+	// The VBO containing the positions and sizes of the particles
+	glGenBuffers(1, &m_positionsVBO);
+	glBindBuffer(GL_ARRAY_BUFFER, m_positionsVBO);
+	// Initialize with empty (NULL) buffer : it will be updated later, each frame.
+	glBufferData(GL_ARRAY_BUFFER, m_maxsize * 4 * sizeof(GLfloat), NULL, GL_STREAM_DRAW);
+
+	// The VBO containing the colors of the particles
+	glGenBuffers(1, &m_colorsVBO);
+	glBindBuffer(GL_ARRAY_BUFFER, m_colorsVBO);
+	// Initialize with empty (NULL) buffer : it will be updated later, each frame.
+	glBufferData(GL_ARRAY_BUFFER, m_maxsize * 4 * sizeof(GLubyte), NULL, GL_STREAM_DRAW);
+
+    m_shader->unbind();
+}
+
+
 ParticleGenerator::~ParticleGenerator()
 {
     // delete[] g_particule_position_size_data;
@@ -108,9 +170,11 @@ ParticleGenerator::update(float dt)
         float spread = m_spreadFactor;
 
         // glm::vec3 maindir = PGF::generateMainDirectionStandard(*this);
-        glm::vec3 maindir = PGF::generateMainDirectionCameraTarget(*this);
+        // glm::vec3 maindir = PGF::generateMainDirectionCameraTarget(*this);
+        glm::vec3 maindir = m_funcMaindir(*this);
 
-        glm::vec3 randomdir = PGF::generateRandomDirectionSoftInfluence();
+        // glm::vec3 randomdir = PGF::generateRandomDirectionSoftInfluence();
+        glm::vec3 randomdir = m_funcRandomdir();
         
         int particleIndex = findUnusedParticle();
         auto& particle { m_particles.at(particleIndex) };
@@ -120,12 +184,16 @@ ParticleGenerator::update(float dt)
         // PGF::generateRandomPositionBoxShape(particle.pos, m_origin, 1.0f);
 
         // PGF::generatePositionStatic(*this, particle, maindir);
-        PGF::generatePositionCameraTarget(*this, particle, maindir);
+        // PGF::generatePositionCameraTarget(*this, particle, maindir);
+
+        m_funcPos(*this, particle, maindir);
 
         particle.speed = maindir + randomdir * spread;
 
-        PGF::generateParticleColorsRandomly(particle);
-        PGF::generateParticleSizeBetween(particle, m_minParticleSize, m_maxParticleSize);
+        // PGF::generateParticleColorsRandomly(particle);
+        m_funcColor(particle);
+        // PGF::generateParticleSizeBetween(particle, m_minParticleSize, m_maxParticleSize);
+        m_funcSize(particle, m_minParticleSize, m_maxParticleSize);
     }
 
     // Simulate all particles

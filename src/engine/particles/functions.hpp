@@ -22,7 +22,7 @@ struct ParticleGeneratorFunctions {
     static glm::vec3 generateRandomDirectionStandard();          // Cero influencia
     static glm::vec3 generateRandomDirectionSoftInfluence();     // Fountain
     static glm::vec3 generateRandomDirectionHeavyInfluence();    // Outburst
-    using GeneratorRandomDir = void(*)();
+    using GeneratorRandomDir = glm::vec3(*)();
 
     // Generar distribución de la posición
     static void generateRandomPositionBoxShape(ParticleGenerator& generator, Particle& p, glm::vec3 const& mainDir);
@@ -35,7 +35,7 @@ struct ParticleGeneratorFunctions {
     // Generar main direction
     static glm::vec3 generateMainDirectionStandard(ParticleGenerator& generator);
     static glm::vec3 generateMainDirectionCameraTarget(ParticleGenerator& generator);
-    using GeneratorMainDir = void(*)(ParticleGenerator& generator);
+    using GeneratorMainDir = glm::vec3(*)(ParticleGenerator& generator);
 };
 
 using PGF = ParticleGeneratorFunctions;

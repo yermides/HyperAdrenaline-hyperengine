@@ -34,16 +34,33 @@ struct ParticleGenerator
     using Index = int;
 
     struct CInfo {
+        int maxParticles;
         std::string texturePath;
-        glm::vec3 mainDirection;
-        glm::vec3 gravity;
-        float spreadFactor;
-        float lifeSpan;
 
-        // function pointers pls
+        glm::vec3
+            origin
+        ,   gravity
+        ,   mainDir
+        ;
+
+        float 
+            particlesPerSecond
+        ,   spreadFactor
+        ,   lifeSpan
+        ,   minParticleSize
+        ,   maxParticleSize
+        ,   shapeRadius
+        ;
+
+        PGF::ParticleColor funcColor         ;
+        PGF::ParticleSize funcSize           ;
+        PGF::GeneratorRandomDir funcRandomdir;
+        PGF::ParticleStartingPosition funcPos;
+        PGF::GeneratorMainDir funcMaindir    ;
     };
 
     explicit ParticleGenerator(RShader* shader, int size = 10000);
+    explicit ParticleGenerator(RShader* shader, CInfo const& cInfo);
     ~ParticleGenerator();
 
     void setMatrices(
@@ -67,7 +84,6 @@ private:
     void sortParticles();
 
     RShader* m_shader   { nullptr };
-    int const m_maxsize;
 
     glm::mat4 
         m_projection
@@ -81,11 +97,9 @@ private:
     Container<GLfloat> m_positionBuffer;
     Container<GLubyte> m_colorBuffer;
 
-    RTexture* m_texture { nullptr };
 
     Index m_index { 0 };
     int m_particlesCount { 0 }; // Se resetea cada vez que se actualiza, comprueba cúantas partículas vivas hay
-    float m_particlesPerSecond { 100.0f }; // TODO:: parametrizable
 
     GLuint
     	m_vertexArrayVAO
@@ -94,18 +108,19 @@ private:
     ,   m_colorsVBO
     ;
 
-    glm::vec3 m_origin  { 0.0f,   0.0f, 0.0f };
-    // glm::vec3 m_gravity { 0.0f, -9.81f, 0.0f };
-    glm::vec3 m_gravity { 0.0f, 0.0f, 0.0f };
+    // Parametrizables según en cInfo
+    RTexture* m_texture { nullptr };
+
+    int m_maxsize { 10000 };
+    float m_particlesPerSecond { 100.0f }; 
+    glm::vec3 m_origin { 0.0f, 0.0f, 0.0f };
+    glm::vec3 m_gravity { 0.0f, -9.81f, 0.0f };
     glm::vec3 m_mainDir { 0.0f,  10.0f, 0.0f };
     float m_spreadFactor {1.5f};
     float m_lifeSpan {5.0f};
     float m_minParticleSize {0.15f};
     float m_maxParticleSize {0.5f};
-
-    // glm::vec3 m_shapeOffset;
     float m_shapeRadius { 3.f }; // pls parametrizar
-
     PGF::ParticleColor m_funcColor          { nullptr };
     PGF::ParticleSize m_funcSize            { nullptr };
     PGF::GeneratorRandomDir m_funcRandomdir { nullptr };
