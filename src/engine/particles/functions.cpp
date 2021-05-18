@@ -1,7 +1,17 @@
 #include "functions.hpp"
 #include <stdlib.h>
+#include <engine/particles/generator.hpp>
 
 namespace hyen {
+
+void
+ParticleGeneratorFunctions::generateRandomColors(Particle& p)
+{
+    p.r = rand() % 256;
+    p.g = rand() % 256;
+    p.b = rand() % 256;
+    p.a = 255;
+}
 
 void 
 randomDirFunc_Outburst(glm::vec3& v)
@@ -56,5 +66,12 @@ randomPosFunc_spawnInsideBox(glm::vec3& output, glm::vec3 const& offset, glm::ve
     ,   offset.z + (rand()%(int)boxBounds.z)
     );
 }
+
+void 
+mainDirFunc_followCameraTarget(ParticleGenerator& generator, glm::vec3 const&)
+{
+    // generator.m_mainDir = generator.m_cameraTarget - generator.m_cameraPosition;
+}
+
 
 }

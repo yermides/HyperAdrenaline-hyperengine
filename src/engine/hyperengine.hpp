@@ -89,7 +89,7 @@ struct HyperEngine
         );
 
     template <typename... Args>
-    Node* createCamera(
+    constexpr Node* createCamera(
             Node* const parent      = nullptr
         ,   glm::vec3 const& trans  = {0.0f,0.0f,0.0f}
         ,   glm::vec3 const& rot    = {0.0f,0.0f,0.0f}
@@ -110,7 +110,7 @@ struct HyperEngine
         }
     
     template <typename... Args>
-    Node* createLight(
+    constexpr Node* createLight(
             Node* const parent      = nullptr
         ,   glm::vec3 const& trans  = {0.0f,0.0f,0.0f}
         ,   glm::vec3 const& rot    = {0.0f,0.0f,0.0f}
@@ -131,7 +131,7 @@ struct HyperEngine
         }
 
     template <typename... Args>
-    Node* createModel(
+    constexpr Node* createModel(
             Node* const parent      = nullptr
         ,   glm::vec3 const& trans  = {0.0f,0.0f,0.0f}
         ,   glm::vec3 const& rot    = {0.0f,0.0f,0.0f}
@@ -150,7 +150,7 @@ struct HyperEngine
         }
     
     template <typename... Args>
-    Node* createAnimatedModel(
+    constexpr Node* createAnimatedModel(
             Node* const parent      = nullptr
         ,   glm::vec3 const& trans  = {0.0f,0.0f,0.0f}
         ,   glm::vec3 const& rot    = {0.0f,0.0f,0.0f}
@@ -169,7 +169,7 @@ struct HyperEngine
         }
 
     template <typename... Args>
-    Node* createSkybox(
+    constexpr Node* createSkybox(
             Node* const parent      = nullptr
         ,   glm::vec3 const& trans  = {0.0f,0.0f,0.0f}
         ,   glm::vec3 const& rot    = {0.0f,0.0f,0.0f}
@@ -187,6 +187,12 @@ struct HyperEngine
             registerSkybox(node);
             return node;
         }
+
+    template <typename... Args>
+    constexpr ParticleGenerator* createParticleGenerator(Args&&... args)
+    {
+        return new ParticleGenerator(m_shaders.at(GLShader::Particle_generator), args...);
+    }
 
     // Relacionado con la estructura
 
@@ -213,6 +219,8 @@ struct HyperEngine
     int registerSkybox(Node* const skybox);
 
     void setActiveCamera(int const camID);
+
+    Node* getActiveCamera(void);
 
     void setActiveLight(int const lightID, bool const isActive);
 
@@ -398,17 +406,6 @@ struct HyperEngine
 
     // Partículas
 
-    void createParticleGenerator();
-
-    void setmatParticleGenerator(        
-        glm::mat4 const& projection
-    ,   glm::mat4 const& view
-    ,   glm::vec3 const& cameraPosition
-    );
-
-    void updateParticleGenerator(float dt);
-
-    void renderParticleGenerator();
 
     void resetKeyStates(void);
     void resetMouseKeyStates(void);

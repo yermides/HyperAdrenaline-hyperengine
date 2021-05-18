@@ -861,7 +861,7 @@ void test_deltatime(void){
     }
 }
 
-void test_particle_system(void){
+void test_particle_system(void) {
     auto engine = std::make_unique<hyen::HyperEngine>(true);
     engine->setWindowTitle("test_particle_system");
     engine->setWindowIcon("assets/logo.jpg");
@@ -920,7 +920,7 @@ void test_particle_system(void){
             // updating stuff
             camnode->setCameraTarget({0,0,0});
             engine->updatePhysics(deltaTime);
-            engine->updateParticleGenerator(dt);
+            // engine->updateParticleGenerator(dt);
             // engine->updateParticleSystem(dt);
 
             lastFrameTime = now;
@@ -935,6 +935,91 @@ void test_particle_system(void){
     }
 }
 
+void test_particle_system_2(void) {
+    auto engine = std::make_unique<hyen::HyperEngine>(true);
+    engine->setWindowTitle("test_particle_system_2");
+    engine->setWindowIcon("assets/logo.jpg");
+
+    [[maybe_unused]] 
+    hyen::Node* camnode = engine->createCamera(
+            nullptr
+        ,   {0,0,-4}
+        ,   default_rot_and_scale
+    ); // tendrá la proyección por defecto    
+
+    hyen::Node* lightnode = engine->createLight(
+            nullptr
+        ,   {0,0,0}
+        ,   default_rot_and_scale
+        ,   hyen::LightType::Point
+        ,   hyen::LightIntensity   { .ambient{0.25f, 0.25f, 0.25f}, .diffuse{0.8f, 0.8f, 0.8f}, .specular{1.0f, 1.0f, 1.0f} }
+        ,   hyen::LightAttenuation { .constant{1.0f}, .linear{0.00009}, .quadratic{0.000032} }
+        ,   hyen::LightAperture    { .innerCutoff{0.0f}, .outerCutoff{0.0f} }
+        ,   hyen::LightDirection   { 0,0,0 }
+    );
+
+    [[maybe_unused]] 
+    hyen::Node* plane = engine->createModel(
+            nullptr
+        ,   {0,0,0}
+        ,   {0,0,0}
+        ,   default_scale
+        ,   "assets/planes/semicube.obj"
+    );
+
+    [[maybe_unused]]
+    hyen::Node* missile_launcher = engine->createModel(
+            camnode
+        ,   camnode->getTranslation() + glm::vec3{1.5,-.8,0}
+        ,   {0,180,0}
+        ,   default_scale
+        ,   "assets/missile-launcher.obj"
+    );
+
+    auto generator = engine->createParticleGenerator(10000);
+
+    const double fpsLimit = 1.0 / 60.0;
+    double lastUpdateTime = 0;  // number of seconds since the last loop
+    double lastFrameTime = 0;   // number of seconds since the last frame
+
+    while(engine->isWindowActive() && !engine->getKeyContinuousPress(GLFW_KEY_ESCAPE))
+    {
+        double now = glfwGetTime();
+        double deltaTime = now - lastUpdateTime;
+        float dt { static_cast<float>(deltaTime) }; 
+
+        // This if-statement only executes once every 60th of a second
+        if ((now - lastFrameTime) >= fpsLimit)
+        {
+            // Input controls, updatin positions
+            if(engine->getKeyContinuousPress(GLFW_KEY_LEFT))            camnode->translate(glm::vec3{ -5.0f,  0.0f,  0.0f} * dt);
+            if(engine->getKeyContinuousPress(GLFW_KEY_RIGHT))           camnode->translate(glm::vec3{  5.0f,  0.0f,  0.0f} * dt);
+            if(engine->getKeyContinuousPress(GLFW_KEY_UP))              camnode->translate(glm::vec3{  0.0f,  0.0f, -5.0f} * dt);
+            if(engine->getKeyContinuousPress(GLFW_KEY_DOWN))            camnode->translate(glm::vec3{  0.0f,  0.0f,  5.0f} * dt);
+            if(engine->getKeyContinuousPress(GLFW_KEY_SPACE))           camnode->translate(glm::vec3{  0.0f,  5.0f,  0.0f} * dt);
+            if(engine->getKeyContinuousPress(GLFW_KEY_LEFT_CONTROL))    camnode->translate(glm::vec3{  0.0f, -5.0f,  0.0f} * dt);
+
+            // updating stuff
+            camnode->setCameraTarget({0,0,0});
+            engine->updatePhysics(deltaTime);
+
+            generator->setMatrices(camnode);
+            generator->update(dt);
+
+            lastFrameTime = now;
+        }
+
+        // Render
+        engine->beginRender();
+        engine->drawScene();
+
+        generator->render();
+
+        engine->endRender();
+
+        lastUpdateTime = now;
+    }
+}
 
 int main(void) {
     // test_multiple_lights();
@@ -955,5 +1040,7 @@ int main(void) {
 
     ///////////////////////////////////////////////////////
 
-    test_particle_system();
+    // test_particle_system();
+
+    test_particle_system_2();
 }

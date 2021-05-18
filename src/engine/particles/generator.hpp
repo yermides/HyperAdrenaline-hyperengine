@@ -10,6 +10,7 @@ namespace hyen {
     
 struct RShader;
 struct RTexture;
+struct Node;
 
 struct Particle
 {
@@ -34,9 +35,16 @@ struct ParticleGenerator
     struct CInfo {
         std::string texturePath;
         glm::vec3 mainDirection;
+        glm::vec3 gravity;
         float spreadFactor;
         float lifeSpan;
-        glm::vec3 gravity;
+
+        RandomColorFunc redColorFunc;
+        RandomColorFunc greenColorFunc;
+        RandomColorFunc blueColorFunc;
+        RandomColorFunc alphaColorFunc;
+
+        RandomDirFunc randomDirFunc;
     };
 
     explicit ParticleGenerator(RShader* shader, int size = 10000);
@@ -48,9 +56,16 @@ struct ParticleGenerator
     ,   glm::vec3 const& cameraPosition
     );
 
+    void setMatrices(Node* const camnode);
+
     void update(float dt);
 
     void render(void);
+
+    // funciones amigas para que las funciones de cálculo puedan acceder a las variables privadas
+    friend void mainDirFunc_followCameraTarget(ParticleGenerator&);
+    friend struct ParticleGeneratorFunctions;
+
 private:
     Index findUnusedParticle();
     void sortParticles();
@@ -63,7 +78,8 @@ private:
     ,   m_view
     ;
     
-    glm::vec3 m_cameraPosition;
+    glm::vec3 m_cameraPosition  {0};
+    glm::vec3 m_cameraTarget    {0};
 
     Container<Particle> m_particles;
     Container<GLfloat> m_positionBuffer;
@@ -84,6 +100,12 @@ private:
 
     // RandomDirFunc m_dirFunc { &randomDirFunc_Outburst };
     RandomDirFunc m_dirFunc { &randomDirFunc_Snowwarning };
+
+    glm::vec3 m_gravity { 0.0f, -9.81f, 0.0f };
+    glm::vec3 m_mainDir { 0.0f, 10.0f, 0.0f };
+    float m_spreadFactor {1.5f};
+    float m_lifeSpan {5.0f};
+
 };
 
 

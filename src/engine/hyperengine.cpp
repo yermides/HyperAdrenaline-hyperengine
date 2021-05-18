@@ -260,11 +260,11 @@ HyperEngine::drawScene(void)
 		this->drawDebugPhysics(view, projection);
 
 	// Nuevo, pintar partículas 2, it works! Aunque no debería tener el hyperengine un hold de un solo generador, mirar lo de registrar generadores
-	if(m_generator)
-	{
-		m_generator->setMatrices(projection, view, camnode->getTranslation());
-		m_generator->render();
-	}
+	// if(m_generator)
+	// {
+	// 	m_generator->setMatrices(projection, view, camnode->getTranslation());
+	// 	m_generator->render();
+	// }
 
 	// Ahora, pintar skybox si hay
 	if(!m_skybox) return;
@@ -346,6 +346,12 @@ void
 HyperEngine::setActiveCamera(int const camID) 
 {
 	m_active_camera = camID;
+}
+
+Node* 
+HyperEngine::getActiveCamera(void)
+{
+	return m_cameras.at(m_active_camera);
 }
 
 void 
@@ -1466,34 +1472,6 @@ HyperEngine::setMouseWheelStatus(float const offsetX, float const offsetY)
 {
 	m_mouseWheelStatus.offsetX = offsetX;
 	m_mouseWheelStatus.offsetY = offsetY;
-}
-
-void 
-HyperEngine::createParticleGenerator()
-{
-	m_generator = new ParticleGenerator(m_shaders.at(GLShader::Particle_generator));
-}
-
-void 
-HyperEngine::setmatParticleGenerator(        
-	glm::mat4 const& projection
-,   glm::mat4 const& view
-,   glm::vec3 const& cameraPosition
-)
-{
-	m_generator->setMatrices(projection, view, cameraPosition);
-}
-
-void 
-HyperEngine::updateParticleGenerator(float dt)
-{
-	m_generator->update(dt);
-}
-
-void 
-HyperEngine::renderParticleGenerator()
-{
-	m_generator->render();
 }
 
 void 

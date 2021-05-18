@@ -3,6 +3,7 @@
 #include <resources/r_shader.hpp>
 #include <resources/r_texture.hpp>
 #include <managers/resource_manager.hpp>
+#include <tree/node.hpp>
 
 namespace hyen {
 
@@ -86,6 +87,17 @@ ParticleGenerator::setMatrices(
 }
 
 void 
+ParticleGenerator::setMatrices(Node* const camnode)
+{
+    auto& camera = *camnode->getEntityAsCamera();
+
+    m_projection = camera.getProjectionMatrix();
+    m_view = camera.getViewMatrix();
+    m_cameraPosition = camnode->getTranslation();
+    m_cameraTarget = camnode->getCameraTarget();
+}
+
+void 
 ParticleGenerator::update(float dt)
 {
     // Generate 10 new particule each millisecond,
@@ -101,38 +113,24 @@ ParticleGenerator::update(float dt)
     //  Por la cantidad que se generen, 
     for(int i {0}; i < newparticles; ++i) 
     {
-        float spread = 1.5f;
-        // glm::vec3 maindir = glm::vec3(0.0f, 10.0f, 0.0f);
-        glm::vec3 maindir = glm::vec3(0.0f, 10.0f, 0.0f);
-        // Very bad way to generate a random direction; 
-        // See for instance http://stackoverflow.com/questions/5408276/python-uniform-spherical-distribution instead,
-        // combined with some user-controlled parameters (main direction, spread, etc)
-
-        // glm::vec3 randomdir = glm::vec3(
-        //     (rand()%2000 - 1000.0f)/1000.0f,
-        //     (rand()%2000 - 1000.0f)/1000.0f,
-        //     (rand()%2000 - 1000.0f)/1000.0f
-        // );
-
-        // El efecto este mola para una explosión
-        // glm::vec3 randomdir = glm::vec3(
-        //     (rand()%2000 - 1000.0f)/100.0f,
-        //     (rand()%2000 - 1000.0f)/100.0f,
-        //     (rand()%2000 - 1000.0f)/100.0f
-        // );
+        float spread = m_spreadFactor;
+        // m_mainDir = m_cameraTarget - m_cameraPosition;
+        m_mainDir = glm::vec3(0.0f, 10.0f, 0.0f);
+        // mainDirFunc_followCameraTarget(*this);
 
         glm::vec3 randomdir;
-        // m_dirFunc(randomdir);
         randomDirFunc_Outburst(randomdir);
+        // m_dirFunc(randomdir);
         
         int particleIndex = findUnusedParticle();
         auto& particle { m_particles.at(particleIndex) };
 
-        particle.life = 5.0f; // This particle will live 5 seconds.
-        // particle.life = 0.3f; 
-        // particle.pos = glm::vec3(0,0,0); // Hardcoded
-        randomPosFunc_spawnInsideBox(particle.pos, {0,0,0}, {2,2,2});
-        particle.speed = maindir + randomdir * spread;
+        particle.life = m_lifeSpan; // This particle will live 5 seconds.
+        particle.pos = glm::vec3(0,0,0); // Hardcoded
+
+        // particle.pos = m_cameraPosition + ( glm::normalize(m_mainDir) * 2.0f) ; // Hardcoded
+        // randomPosFunc_spawnInsideBox(particle.pos, {0,0,0}, {2,2,2});
+        particle.speed = m_mainDir + randomdir * spread;
         // particle.r = rand() % 256;  // Very bad way to generate a random color
         // particle.g = rand() % 256;
         // particle.b = rand() % 256;
@@ -140,10 +138,13 @@ ParticleGenerator::update(float dt)
         particle.size = (rand()%1000)/2000.0f + 0.1f;
 
         // por probar, punteros a función
-        randomColorFunc_random255(particle.r);
-        randomColorFunc_random255(particle.g);
-        randomColorFunc_random255(particle.b);
-        randomColorFunc_setTo255(particle.a);
+        // randomColorFunc_random255(particle.r);
+        // randomColorFunc_random255(particle.g);
+        // randomColorFunc_random255(particle.b);
+        // randomColorFunc_setTo255(particle.a);
+
+        PGF::generateRandomColors(particle);
+
         // particle.size = (rand()%1000)/200.0f + 0.1f;
     }
 
@@ -161,7 +162,7 @@ ParticleGenerator::update(float dt)
             if (p.life > 0.0f) 
             {
                 // Simulate simple physics : gravity only, no collisions
-                p.speed += glm::vec3(0.0f,-9.81f, 0.0f) * (float)dt * 0.5f;
+                // p.speed += glm::vec3(0.0f,-9.81f, 0.0f) * (float)dt * 0.5f;
                 // p.speed = glm::vec3(0.0f, 0.0f, 0.0f);
                 p.pos += p.speed * (float)dt;
                 p.cameradistance = glm::length2( p.pos - m_cameraPosition );
