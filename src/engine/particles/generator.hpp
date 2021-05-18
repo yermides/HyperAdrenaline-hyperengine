@@ -17,6 +17,7 @@ struct Particle
     glm::vec3 pos, speed;
 	uint8_t r, g, b, a; // Color
 	float size, angle, weight;
+	float maxLife {-1.0f}; // Remaining life of the particle. if <0 : dead and unused.
 	float life {-1.0f}; // Remaining life of the particle. if <0 : dead and unused.
 	float cameradistance {-1.0f}; // *Squared* distance to the camera. if dead : -1.0f
 
@@ -39,12 +40,7 @@ struct ParticleGenerator
         float spreadFactor;
         float lifeSpan;
 
-        RandomColorFunc redColorFunc;
-        RandomColorFunc greenColorFunc;
-        RandomColorFunc blueColorFunc;
-        RandomColorFunc alphaColorFunc;
-
-        RandomDirFunc randomDirFunc;
+        // function pointers pls
     };
 
     explicit ParticleGenerator(RShader* shader, int size = 10000);
@@ -98,16 +94,23 @@ private:
     ,   m_colorsVBO
     ;
 
-    // RandomDirFunc m_dirFunc { &randomDirFunc_Outburst };
-    RandomDirFunc m_dirFunc { &randomDirFunc_Snowwarning };
-
-    glm::vec3 m_gravity { 0.0f, -9.81f, 0.0f };
-    glm::vec3 m_mainDir { 0.0f, 10.0f, 0.0f };
+    glm::vec3 m_origin  { 0.0f,   0.0f, 0.0f };
+    // glm::vec3 m_gravity { 0.0f, -9.81f, 0.0f };
+    glm::vec3 m_gravity { 0.0f, 0.0f, 0.0f };
+    glm::vec3 m_mainDir { 0.0f,  10.0f, 0.0f };
     float m_spreadFactor {1.5f};
     float m_lifeSpan {5.0f};
+    float m_minParticleSize {0.15f};
+    float m_maxParticleSize {0.5f};
 
+    // glm::vec3 m_shapeOffset;
+    float m_shapeRadius { 3.f }; // pls parametrizar
+
+    PGF::ParticleColor m_funcColor          { nullptr };
+    PGF::ParticleSize m_funcSize            { nullptr };
+    PGF::GeneratorRandomDir m_funcRandomdir { nullptr };
+    PGF::ParticleStartingPosition m_funcPos { nullptr };
+    PGF::GeneratorMainDir m_funcMaindir     { nullptr };
 };
-
-
 
 } // namespace hyen

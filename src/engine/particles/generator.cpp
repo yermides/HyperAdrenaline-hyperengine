@@ -100,52 +100,32 @@ ParticleGenerator::setMatrices(Node* const camnode)
 void 
 ParticleGenerator::update(float dt)
 {
-    // Generate 10 new particule each millisecond,
-    // but limit this to 16 ms (60 fps), or if you have 1 long frame (1sec),
-    // newparticles will be huge and the next frame even longer.
-    // int newparticles = (int)(dt*10000.0);
-
     int newparticles = (int)(dt * m_particlesPerSecond);
-    // if (newparticles > (int)(0.016f*10000.0))
-    //     newparticles = (int)(0.016f*10000.0);
-    
 
     //  Por la cantidad que se generen, 
     for(int i {0}; i < newparticles; ++i) 
     {
         float spread = m_spreadFactor;
-        // m_mainDir = m_cameraTarget - m_cameraPosition;
-        m_mainDir = glm::vec3(0.0f, 10.0f, 0.0f);
-        // mainDirFunc_followCameraTarget(*this);
 
-        glm::vec3 randomdir;
-        randomDirFunc_Outburst(randomdir);
-        // m_dirFunc(randomdir);
+        // glm::vec3 maindir = PGF::generateMainDirectionStandard(*this);
+        glm::vec3 maindir = PGF::generateMainDirectionCameraTarget(*this);
+
+        glm::vec3 randomdir = PGF::generateRandomDirectionSoftInfluence();
         
         int particleIndex = findUnusedParticle();
         auto& particle { m_particles.at(particleIndex) };
 
-        particle.life = m_lifeSpan; // This particle will live 5 seconds.
-        particle.pos = glm::vec3(0,0,0); // Hardcoded
+        particle.maxLife = particle.life = m_lifeSpan; // Un tiempo de vida promedio asignado por el generador
 
-        // particle.pos = m_cameraPosition + ( glm::normalize(m_mainDir) * 2.0f) ; // Hardcoded
-        // randomPosFunc_spawnInsideBox(particle.pos, {0,0,0}, {2,2,2});
-        particle.speed = m_mainDir + randomdir * spread;
-        // particle.r = rand() % 256;  // Very bad way to generate a random color
-        // particle.g = rand() % 256;
-        // particle.b = rand() % 256;
-        // particle.a = (rand() % 256) / 3;
-        particle.size = (rand()%1000)/2000.0f + 0.1f;
+        // PGF::generateRandomPositionBoxShape(particle.pos, m_origin, 1.0f);
 
-        // por probar, punteros a función
-        // randomColorFunc_random255(particle.r);
-        // randomColorFunc_random255(particle.g);
-        // randomColorFunc_random255(particle.b);
-        // randomColorFunc_setTo255(particle.a);
+        // PGF::generatePositionStatic(*this, particle, maindir);
+        PGF::generatePositionCameraTarget(*this, particle, maindir);
 
-        PGF::generateRandomColors(particle);
+        particle.speed = maindir + randomdir * spread;
 
-        // particle.size = (rand()%1000)/200.0f + 0.1f;
+        PGF::generateParticleColorsRandomly(particle);
+        PGF::generateParticleSizeBetween(particle, m_minParticleSize, m_maxParticleSize);
     }
 
     // Simulate all particles
@@ -162,9 +142,8 @@ ParticleGenerator::update(float dt)
             if (p.life > 0.0f) 
             {
                 // Simulate simple physics : gravity only, no collisions
-                // p.speed += glm::vec3(0.0f,-9.81f, 0.0f) * (float)dt * 0.5f;
-                // p.speed = glm::vec3(0.0f, 0.0f, 0.0f);
-                p.pos += p.speed * (float)dt;
+                p.speed += m_gravity * (float)dt;
+                p.pos += p.speed * dt;
                 p.cameradistance = glm::length2( p.pos - m_cameraPosition );
 
                 // Fill the GPU buffer
@@ -177,7 +156,6 @@ ParticleGenerator::update(float dt)
                 m_colorBuffer.at(4 * m_particlesCount + 1) = p.g;
                 m_colorBuffer.at(4 * m_particlesCount + 2) = p.b;
                 m_colorBuffer.at(4 * m_particlesCount + 3) = p.a;
-
             }
             else
             {

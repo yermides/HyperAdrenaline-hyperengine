@@ -7,30 +7,37 @@ struct Particle;
 struct ParticleGenerator;
 
 struct ParticleGeneratorFunctions {
-    static void generateRandomColors(Particle& p);
+    // Generar color de las partículas
+    static void generateParticleColorsStandard(Particle& p);                // "blanca" y opaca
+    static void generateParticleColorsRandomly(Particle& p);                // color blendeado random y opaca
+    static void generateParticleTransparencyRandomly(Particle& p);          // "blanca"y transparencia variable
+    static void generateParticleColorsAndTransparencyRandomly(Particle& p); // Todo variable
+    using ParticleColor = void(*)(Particle&);
+
+    // Generar tamaño de partículas
+    static void generateParticleSizeBetween(Particle& p, float min, float max); // Todo variable
+    using ParticleSize = void(*)(Particle&, float, float);
+
+    // Generar direcciones random que influyen a la principal
+    static glm::vec3 generateRandomDirectionStandard();          // Cero influencia
+    static glm::vec3 generateRandomDirectionSoftInfluence();     // Fountain
+    static glm::vec3 generateRandomDirectionHeavyInfluence();    // Outburst
+    using GeneratorRandomDir = void(*)();
+
+    // Generar distribución de la posición
+    static void generateRandomPositionBoxShape(ParticleGenerator& generator, Particle& p, glm::vec3 const& mainDir);
+    static void generateRandomPositionChaoticSphere(ParticleGenerator& generator, Particle& p, glm::vec3 const& mainDir);
+    static void generatePositionStatic(ParticleGenerator& generator, Particle& p, glm::vec3 const& mainDir); 
+    static void generatePositionCameraTarget(ParticleGenerator& generator, Particle& p, glm::vec3 const& mainDir);
+    using ParticleStartingPosition = void(*)(ParticleGenerator&, Particle&, glm::vec3 const&);
+
+
+    // Generar main direction
+    static glm::vec3 generateMainDirectionStandard(ParticleGenerator& generator);
+    static glm::vec3 generateMainDirectionCameraTarget(ParticleGenerator& generator);
+    using GeneratorMainDir = void(*)(ParticleGenerator& generator);
 };
 
 using PGF = ParticleGeneratorFunctions;
 
-
-using RandomDirFunc = void(*)(glm::vec3&);
-void randomDirFunc_Outburst(glm::vec3& v);
-void randomDirFunc_Snowwarning(glm::vec3& v);
-void randomDirFunc_Static(glm::vec3& v);
-
-using RandomColorFunc = void(*)(uint8_t&);
-void randomColorFunc_random255(uint8_t& i);
-void randomColorFunc_setToZero(uint8_t& i);
-void randomColorFunc_setTo255(uint8_t& i);
-
-using RandomPosFunc = void(*)(glm::vec3&, glm::vec3 const&, glm::vec3 const&);
-void randomPosFunc_spawnInsideBox(glm::vec3& output, glm::vec3 const& offset, glm::vec3 const& boxBounds);
-// quizá un spawnInsideSphere
-
-using MainDirFunc = void(*)(ParticleGenerator&, glm::vec3 const&);
-void mainDirFunc_followCameraTarget(ParticleGenerator& generator, glm::vec3 const& dir = {0,0,0});
-// void mainDirFunc_followStaticDirection(ParticleGenerator& generator, glm::vec3 const& dir = {0,0,0});
-
 } // namespace hyen
-
-

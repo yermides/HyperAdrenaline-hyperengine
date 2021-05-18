@@ -4,8 +4,17 @@
 
 namespace hyen {
 
+void 
+ParticleGeneratorFunctions::generateParticleColorsStandard(Particle& p)
+{
+    p.r = 255;
+    p.g = 255;
+    p.b = 255;
+    p.a = 255;
+}
+
 void
-ParticleGeneratorFunctions::generateRandomColors(Particle& p)
+ParticleGeneratorFunctions::generateParticleColorsRandomly(Particle& p)
 {
     p.r = rand() % 256;
     p.g = rand() % 256;
@@ -14,9 +23,50 @@ ParticleGeneratorFunctions::generateRandomColors(Particle& p)
 }
 
 void 
-randomDirFunc_Outburst(glm::vec3& v)
+ParticleGeneratorFunctions::generateParticleTransparencyRandomly(Particle& p)
 {
-    v = glm::vec3(
+    p.r = 255;
+    p.g = 255;
+    p.b = 255;
+    p.a = rand() % 256;
+}
+
+void 
+ParticleGeneratorFunctions::generateParticleColorsAndTransparencyRandomly(Particle& p)
+{
+    p.r = rand() % 256;
+    p.g = rand() % 256;
+    p.b = rand() % 256;
+    p.a = rand() % 256;
+}
+
+void 
+ParticleGeneratorFunctions::generateParticleSizeBetween(Particle& p, float min, float max)
+{
+    float percent = (float)(rand() % 1000) / 1000.0f;
+    p.size = ((max - min) * percent) + min;
+}
+
+glm::vec3
+ParticleGeneratorFunctions::generateRandomDirectionStandard()
+{
+    return glm::vec3(0,0,0);
+}
+
+glm::vec3
+ParticleGeneratorFunctions::generateRandomDirectionSoftInfluence()
+{
+    return glm::vec3(
+        (rand()%2000 - 1000.0f)/1000.0f
+    ,   (rand()%2000 - 1000.0f)/1000.0f
+    ,   (rand()%2000 - 1000.0f)/1000.0f
+    );
+}
+
+glm::vec3
+ParticleGeneratorFunctions::generateRandomDirectionHeavyInfluence()
+{
+    return glm::vec3(
         (rand()%2000 - 1000.0f)/100.0f
     ,   (rand()%2000 - 1000.0f)/100.0f
     ,   (rand()%2000 - 1000.0f)/100.0f
@@ -24,54 +74,55 @@ randomDirFunc_Outburst(glm::vec3& v)
 }
 
 void 
-randomDirFunc_Snowwarning(glm::vec3& v)
+ParticleGeneratorFunctions::generateRandomPositionBoxShape(ParticleGenerator& generator, Particle& p, glm::vec3 const& mainDir)
 {
-    v = glm::vec3(
-        (rand()%2000 - 1000.0f)/1000.0f
-    ,   (rand()%2000 - 1000.0f)/1000.0f
-    ,   (rand()%2000 - 1000.0f)/1000.0f
+    auto const& offset = generator.m_origin;
+    auto const& r = generator.m_shapeRadius;
+
+    p.pos = glm::vec3(
+        offset.x - (r/2.0f) + (rand() % 1000 / 1000.0f * r )
+    ,   offset.y - (r/2.0f) + (rand() % 1000 / 1000.0f * r )
+    ,   offset.z - (r/2.0f) + (rand() % 1000 / 1000.0f * r )
     );
 }
 
 void 
-randomDirFunc_Static(glm::vec3& v)
+ParticleGeneratorFunctions::generateRandomPositionChaoticSphere(ParticleGenerator& generator, Particle& p, glm::vec3 const& mainDir)
 {
-    v = glm::vec3(0.0f, 0.0f, 0.0f);
+    // ya iba mal, esto es lo de antes
+    //     auto dir = glm::normalize(
+    //     glm::vec3(
+    //         rand() % 1000 
+    //     ,   rand() % 1000 
+    //     ,   rand() % 1000 
+    //     )
+    // );
+
+    // v = dir * r;
 }
 
 void 
-randomColorFunc_random255(uint8_t& i)
+ParticleGeneratorFunctions::generatePositionStatic(ParticleGenerator& generator, Particle& p, glm::vec3 const& mainDir)
 {
-    i = rand() % 256;
+    p.pos = generator.m_origin;
 }
 
 void 
-randomColorFunc_setToZero(uint8_t& i)
+ParticleGeneratorFunctions::generatePositionCameraTarget(ParticleGenerator& generator, Particle& p, glm::vec3 const& mainDir)
 {
-    i = 0;
+    p.pos = generator.m_cameraPosition + ( glm::normalize(mainDir) * 2.0f);
 }
 
-void 
-randomColorFunc_setTo255(uint8_t& i)
+glm::vec3 
+ParticleGeneratorFunctions::generateMainDirectionStandard(ParticleGenerator& generator)
 {
-    i = 255;
+    return generator.m_mainDir;
 }
 
-void 
-randomPosFunc_spawnInsideBox(glm::vec3& output, glm::vec3 const& offset, glm::vec3 const& boxBounds)
+glm::vec3 
+ParticleGeneratorFunctions::generateMainDirectionCameraTarget(ParticleGenerator& generator)
 {
-    output = glm::vec3(
-        offset.x + (rand()%(int)boxBounds.x)
-    ,   offset.y + (rand()%(int)boxBounds.y)
-    ,   offset.z + (rand()%(int)boxBounds.z)
-    );
+    return generator.m_cameraTarget - generator.m_cameraPosition;
 }
-
-void 
-mainDirFunc_followCameraTarget(ParticleGenerator& generator, glm::vec3 const&)
-{
-    // generator.m_mainDir = generator.m_cameraTarget - generator.m_cameraPosition;
-}
-
 
 }
