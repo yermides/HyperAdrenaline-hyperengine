@@ -164,6 +164,19 @@ ParticleGenerator::update(float dt)
 {
     int newparticles = (int)(dt * m_particlesPerSecond);
 
+    if(!m_isActive) goto simulation;
+
+    if(m_useTimeout)
+    {
+        m_elapsed += dt;
+
+        if(m_elapsed >= m_timeout)
+        {
+            m_isActive = false;
+            m_useTimeout = false;
+        }
+    }
+
     //  Por la cantidad que se generen, 
     for(int i {0}; i < newparticles; ++i) 
     {
@@ -195,6 +208,8 @@ ParticleGenerator::update(float dt)
         // PGF::generateParticleSizeBetween(particle, m_minParticleSize, m_maxParticleSize);
         m_funcSize(particle, m_minParticleSize, m_maxParticleSize);
     }
+
+simulation:
 
     // Simulate all particles
     m_particlesCount = 0;

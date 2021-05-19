@@ -979,7 +979,7 @@ void test_particle_system_2(void) {
     hyen::ParticleGenerator::CInfo cInfo
     {
         .maxParticles{10000}
-    ,   .texturePath{"assets/particles/enlazame-esta.png"}
+    ,   .texturePath{"assets/particles/particle.DDS"}
     ,   .origin{0,0,0}
     ,   .gravity{0.0f, -9.81f, 0.0f}
     ,   .mainDir{0.0f,  10.0f, 0.0f}
@@ -1016,7 +1016,20 @@ void test_particle_system_2(void) {
     // ,   .funcMaindir{&hyen::PGF::generateMainDirectionStandard}
     // };
 
+    static std::vector<hyen::ParticleGenerator*> generators;
+    generators.reserve(50);
+
+    // for (size_t i = 0; i < 50; i++)
+    // {
+    //     generators.push_back(engine->createParticleGenerator(cInfo));
+    // }
+    
+
     auto generator = engine->createParticleGenerator(cInfo);
+    generator->setActive(true, true, 3.0f);
+    // auto generator2 = engine->createParticleGenerator(cInfo);
+
+    
 
     const double fpsLimit = 1.0 / 60.0;
     double lastUpdateTime = 0;  // number of seconds since the last loop
@@ -1038,13 +1051,44 @@ void test_particle_system_2(void) {
             if(engine->getKeyContinuousPress(GLFW_KEY_DOWN))            camnode->translate(glm::vec3{  0.0f,  0.0f,  5.0f} * dt);
             if(engine->getKeyContinuousPress(GLFW_KEY_SPACE))           camnode->translate(glm::vec3{  0.0f,  5.0f,  0.0f} * dt);
             if(engine->getKeyContinuousPress(GLFW_KEY_LEFT_CONTROL))    camnode->translate(glm::vec3{  0.0f, -5.0f,  0.0f} * dt);
+            
+            auto const& pos { camnode->getTranslation() + glm::vec3{0,0,10} };
+
+            generator->setOrigin({0,0,0});
+
+            if(engine->getKeyContinuousPress(GLFW_KEY_KP_1))
+            { 
+                // generator->setGravity({0,0,0});
+                generator->setFuncPos(&hyen::PGF::generatePositionStatic);
+                generator->setFuncMaindir(&hyen::PGF::generateMainDirectionStandard);
+                generator->setOrigin(pos);
+            }
+
+            if(engine->getKeyContinuousPress(GLFW_KEY_KP_2))
+            {
+                generator->setActive(true);
+            }
+
+            if(engine->getKeyContinuousPress(GLFW_KEY_KP_3))
+            {
+                generator->setActive(false);
+            }
 
             // updating stuff
             camnode->setCameraTarget({0,0,0});
             engine->updatePhysics(deltaTime);
 
             generator->setMatrices(camnode);
+            // generator2->setMatrices(camnode);
+
+            for (auto gen : generators)
+            {
+                gen->setMatrices(camnode);
+                gen->update(dt);
+            }
+
             generator->update(dt);
+            // generator2->update(dt);
 
             lastFrameTime = now;
         }
@@ -1053,7 +1097,13 @@ void test_particle_system_2(void) {
         engine->beginRender();
         engine->drawScene();
 
+        for (auto gen : generators)
+        {
+            gen->render();
+        }
+
         generator->render();
+        // generator2->render();
 
         engine->endRender();
 
