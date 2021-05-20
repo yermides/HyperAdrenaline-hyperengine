@@ -29,7 +29,7 @@ void
 ESkybox::loadFromFile(SkyboxNamelist const& paths)
 {
     // Check de si ya ha sido inicializado
-    if(this->m_textureID) return;
+    if(m_textureID) return;
 
     // Carga
     m_top     = ResourceManager::getResource_t<RTexture>( paths.at(0) );
@@ -59,6 +59,7 @@ ESkybox::loadFromFile(SkyboxNamelist const& paths)
     // Inicialización de los atributos de los vértices
     glGenVertexArrays(1, &m_vao);
     glGenBuffers(1, &m_vbo);
+    
     glBindVertexArray(m_vao);
     glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
     glBufferData(GL_ARRAY_BUFFER, sizeof(m_positions), &m_positions, GL_STATIC_DRAW);

@@ -1,0 +1,644 @@
+# Blender MTL File: 'SalaMenu2.blend'
+# Material Count: 53
+
+newmtl Apoyo
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.000000 0.000000 0.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump texture\\dummy\\Apoyo_normal.png
+map_Ns texture\\dummy\\Apoyo_roughness.jpg
+map_Kd texture\\dummy\\Apoyo_baseColor.jpg
+refl texture\\dummy\\Apoyo_metallic.jpg
+
+newmtl Base_maniqui
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump texture\\dummy\\Base_normal.png
+map_Ns texture\\dummy\\Base_roughness.jpg
+map_Kd texture\\dummy\\Base_baseColor.jpg
+refl texture\\dummy\\Base_metallic.jpg
+
+newmtl Base_plataforma
+Ns 614.406973
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.009705 0.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd texture\\generalmap\\texture_floor.jpg
+
+newmtl Base_plataforma.001
+Ns 614.406973
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.009705 0.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd texture\\generalmap\\texture_floor.jpg
+
+newmtl InnerCaja
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.128239 0.061525 0.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+
+newmtl Lclose
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.000000 0.600627
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump texture\\doorNormal\\doors-1-both_Lclose_Normal.png
+map_Ns texture\\doorNormal\\doors-1-both_Lclose_Roughness.png
+map_Kd texture\\doorNormal\\doors-1-both_Lclose_BaseColor.png
+
+newmtl Lclose.001
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.000000 0.600627
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump texture\\doorNormal\\doors-1-both_Lclose_Normal.png
+map_Ns texture\\doorNormal\\doors-1-both_Lclose_Roughness.png
+map_Kd texture\\doorNormal\\doors-1-both_Lclose_BaseColor.png
+
+newmtl Lclose.002
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.000000 0.600627
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump texture\\doorNormal\\doors-1-both_Lclose_Normal.png
+map_Ns texture\\doorNormal\\doors-1-both_Lclose_Roughness.png
+map_Kd texture\\doorNormal\\doors-1-both_Lclose_BaseColor.png
+
+newmtl Lframe
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.012433 0.800000 0.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd texture\\doorNormal\\doors-1-both_Lframe_BaseColor.png
+
+newmtl Lframe.001
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.012433 0.800000 0.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd texture\\doorNormal\\doors-1-both_Lframe_BaseColor.png
+
+newmtl Lframe.002
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.012433 0.800000 0.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd texture\\doorNormal\\doors-1-both_Lframe_BaseColor.png
+
+newmtl Linner
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.005769 0.000000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Ns texture\\doorNormal\\doors-1-both_Linner_Roughness.png
+map_Kd texture\\doorNormal\\doors-1-both_Linner_BaseColor.png
+refl texture\\doorNormal\\doors-1-both_Linner_Metallic.png
+
+newmtl Linner.001
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.005769 0.000000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Ns texture\\doorNormal\\doors-1-both_Linner_Roughness.png
+map_Kd texture\\doorNormal\\doors-1-both_Linner_BaseColor.png
+refl texture\\doorNormal\\doors-1-both_Linner_Metallic.png
+
+newmtl Linner.002
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.005769 0.000000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Ns texture\\doorLocked\\doors-1-both_Linner_Roughness.png
+map_Kd texture\\doorLocked\\doors-1-both_Linner_BaseColor.png
+refl texture\\doorLocked\\doors-1-both_Linner_Metallic.png
+
+newmtl Locks
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.019229 0.800000 0.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump texture\\box2\\box2_Locks_Normal.png
+map_Ns texture\\box2\\box2_Locks_Roughness.png
+map_Kd texture\\box2\\box2_Locks_BaseColor.png
+refl texture\\box2\\box2_Locks_Metallic.png
+
+newmtl Maderos
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Ns texture\\barratiro\\Maderos_roughness.jpg
+map_Kd texture\\barratiro\\Maderos_baseColor.jpg
+
+newmtl Marco
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.025394 0.025394 0.025394
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+
+newmtl ParedBaseEntrenamiento
+Ns 225.000000
+Ka 0.829787 0.829787 0.829787
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 3
+map_Ns texture\\salaEntrenamiento\\ParedBase_roughness.jpg
+map_Kd texture\\salaEntrenamiento\\ParedBase_baseColor.jpg
+
+newmtl ParedBaseEntrenamiento.001
+Ns 225.000000
+Ka 0.829787 0.829787 0.829787
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 3
+map_Ns texture\\salaEntrenamiento\\ParedBase_roughness.jpg
+map_Kd texture\\salaEntrenamiento\\ParedBase_baseColor.jpg
+
+newmtl ParedEntrenamiento.001
+Ns 225.000000
+Ka 0.829787 0.829787 0.829787
+Kd 0.800000 0.067500 0.091408
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 3
+map_Ns texture\\salaEntrenamiento\\ParedEntrenamiento_roughness.jpg
+map_Kd texture\\salaEntrenamiento\\ParedEntrenamiento_baseColor.jpg
+
+newmtl Rclose
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.000000 0.620096
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump texture\\doorNormal\\doors-1-both_Rclose_Normal.png
+map_Ns texture\\doorNormal\\doors-1-both_Rclose_Roughness.png
+map_Kd texture\\doorNormal\\doors-1-both_Rclose_BaseColor.png
+
+newmtl Rclose.001
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.000000 0.620096
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump texture\\doorNormal\\doors-1-both_Rclose_Normal.png
+map_Ns texture\\doorNormal\\doors-1-both_Rclose_Roughness.png
+map_Kd texture\\doorNormal\\doors-1-both_Rclose_BaseColor.png
+
+newmtl Rclose.002
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.000000 0.620096
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+
+newmtl Rframe
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.000526 0.800000 0.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd texture\\doorNormal\\doors-1-both_Rframe_BaseColor.png
+
+newmtl Rframe.001
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.000526 0.800000 0.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd texture\\doorNormal\\doors-1-both_Rframe_BaseColor.png
+
+newmtl Rframe.002
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.000526 0.800000 0.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd texture\\doorNormal\\doors-1-both_Rframe_BaseColor.png
+
+newmtl Rinner
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.000000 0.002103 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Ns texture\\doorNormal\\doors-1-both_Rinner_Roughness.png
+map_Kd texture\\doorNormal\\doors-1-both_Rinner_BaseColor.png
+refl texture\\doorNormal\\doors-1-both_Rinner_Metallic.png
+
+newmtl Rinner.001
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.000000 0.002103 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Ns texture\\doorNormal\\doors-1-both_Rinner_Roughness.png
+map_Kd texture\\doorNormal\\doors-1-both_Rinner_BaseColor.png
+refl texture\\doorNormal\\doors-1-both_Rinner_Metallic.png
+
+newmtl Rinner.002
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.000000 0.002103 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Ns texture\\doorLocked\\doors-1-both_Rinner_Roughness.png
+map_Kd texture\\doorLocked\\doors-1-both_Rinner_BaseColor.png
+refl texture\\doorLocked\\doors-1-both_Rinner_Metallic.png
+
+newmtl Semento
+Ns 65.696865
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.800000 0.800000 0.800000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump texture\\barratiro\\Semento_normal.png
+map_Kd texture\\barratiro\\Semento_baseColor.jpg
+
+newmtl Shell
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.297298 0.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump texture\\box2\\box2_Shell_Normal.png
+map_Ns texture\\box2\\box2_Shell_Roughness.png
+map_Kd texture\\box2\\box2_Shell_BaseColor.png
+refl texture\\box2\\box2_Shell_Metallic.png
+
+newmtl Sides
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.167949 0.063876 0.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump texture\\box2\\box2_Sides_Normal.png
+map_Ns texture\\box2\\box2_Sides_Roughness.png
+map_Kd texture\\box2\\box2_Sides_BaseColor.png
+refl texture\\box2\\box2_Sides_Metallic.png
+
+newmtl Suelo
+Ns 165.697124
+Ka 0.170213 0.170213 0.170213
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 3
+map_Kd texture\\generalmap\\texture_floor.jpg
+
+newmtl Suelo.001
+Ns 165.697124
+Ka 0.170213 0.170213 0.170213
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 3
+map_Kd texture\\generalmap\\texture_floor.jpg
+
+newmtl TechoEntrenamiento.001
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump texture\\salaEntrenamiento\\TechoEntrenamiento_normal.png
+map_Ns texture\\salaEntrenamiento\\TechoEntrenamiento_roughness.jpg
+map_Kd texture\\salaEntrenamiento\\TechoEntrenamiento_baseColor.jpg
+refl texture\\salaEntrenamiento\\TechoEntrenamiento_metallic.jpg
+
+newmtl decoracion
+Ns 225.000000
+Ka 0.248227 0.248227 0.248227
+Kd 0.119276 0.119276 0.119276
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 3
+
+newmtl decoracion.001
+Ns 225.000000
+Ka 0.248227 0.248227 0.248227
+Kd 0.119276 0.119276 0.119276
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 3
+
+newmtl decorationLeft
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.000000 0.733277 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump texture\\doorFrame\\door-1-frame_decorationLeft_Normal.png
+map_Ns texture\\doorFrame\\door-1-frame_decorationLeft_Roughness.png
+map_Kd texture\\doorFrame\\door-1-frame_decorationLeft_BaseColor.png
+
+newmtl decorationLeft.001
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.000000 0.733277 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump texture\\doorFrame\\door-1-frame_decorationLeft_Normal.png
+map_Ns texture\\doorFrame\\door-1-frame_decorationLeft_Roughness.png
+map_Kd texture\\doorFrame\\door-1-frame_decorationLeft_BaseColor.png
+
+newmtl decorationLeft.002
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.000000 0.733277 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump texture\\doorFrame\\door-1-frame_decorationLeft_Normal.png
+map_Ns texture\\doorFrame\\door-1-frame_decorationLeft_Roughness.png
+map_Kd texture\\doorFrame\\door-1-frame_decorationLeft_BaseColor.png
+
+newmtl decorationTop
+Ns 35.999996
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.000000 0.002184
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd texture\\doorFrame\\door-1-frame_decorationTop_BaseColor.png
+
+newmtl decorationTop.001
+Ns 35.999996
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.000000 0.002184
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd texture\\doorFrame\\door-1-frame_decorationTop_BaseColor.png
+
+newmtl decorationTop.002
+Ns 35.999996
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.000000 0.002184
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd texture\\doorFrame\\door-1-frame_decorationTop_BaseColor.png
+
+newmtl floor
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.000000 0.001525 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Ns texture\\doorFrame\\door-1-frame_floor_Roughness.png
+map_Kd texture\\doorFrame\\door-1-frame_floor_BaseColor.png
+refl texture\\doorFrame\\door-1-frame_floor_Metallic.png
+
+newmtl floor.001
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.000000 0.001525 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Ns texture\\doorFrame\\door-1-frame_floor_Roughness.png
+map_Kd texture\\doorFrame\\door-1-frame_floor_BaseColor.png
+refl texture\\doorFrame\\door-1-frame_floor_Metallic.png
+
+newmtl floor.002
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.000000 0.001525 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Ns texture\\doorFrame\\door-1-frame_floor_Roughness.png
+map_Kd texture\\doorFrame\\door-1-frame_floor_BaseColor.png
+refl texture\\doorFrame\\door-1-frame_floor_Metallic.png
+
+newmtl frameInner
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.667261 0.000000
+Ks 0.250000 0.250000 0.250000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Ns texture\\doorFrame\\door-1-frame_frameInner_Roughness.png
+map_Kd texture\\doorFrame\\door-1-frame_frameInner_BaseColor.png
+
+newmtl frameInner.001
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.667261 0.000000
+Ks 0.250000 0.250000 0.250000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Ns texture\\doorFrame\\door-1-frame_frameInner_Roughness.png
+map_Kd texture\\doorFrame\\door-1-frame_frameInner_BaseColor.png
+
+newmtl frameInner.002
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.667261 0.000000
+Ks 0.250000 0.250000 0.250000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Ns texture\\doorFrame\\door-1-frame_frameInner_Roughness.png
+map_Kd texture\\doorFrame\\door-1-frame_frameInner_BaseColor.png
+
+newmtl frameOutter
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.017602 0.800000 0.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Ns texture\\doorFrame\\door-1-frame_frameOutter_Roughness.png
+map_Kd texture\\doorFrame\\door-1-frame_frameOutter_BaseColor.png
+
+newmtl frameOutter.001
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.017602 0.800000 0.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Ns texture\\doorFrame\\door-1-frame_frameOutter_Roughness.png
+map_Kd texture\\doorFrame\\door-1-frame_frameOutter_BaseColor.png
+
+newmtl frameOutter.002
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.017602 0.800000 0.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Ns texture\\doorFrame\\door-1-frame_frameOutter_Roughness.png
+map_Kd texture\\doorFrame\\door-1-frame_frameOutter_BaseColor.png
+
+newmtl murosEntrenamiento.001
+Ns 225.000000
+Ka 0.113475 0.113475 0.113475
+Kd 0.406882 0.800000 0.060253
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 3
+map_Ns texture\\salaEntrenamiento\\muros_roughness.jpg
+map_Kd texture\\salaEntrenamiento\\muros_baseColor.jpg

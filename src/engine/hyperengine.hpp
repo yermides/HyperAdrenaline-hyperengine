@@ -367,9 +367,6 @@ struct HyperEngine
         ,   int collisionMaskFlags = 0
     );
 
-    void createPhysicPropertiesFromArchive(Node* const node, std::string const& filepath);
-
-    // Solo comprueba el AABB, seguramente ni se use
     bool getAABBCollisionBetweenNodes(Node* const nodeA, Node* const nodeB);
 
     bool getCollisionBetweenNodes(Node* const nodeA, Node* const nodeB, CollisionPairResult& collPairResult);
@@ -404,9 +401,6 @@ struct HyperEngine
 
     void setDebugDrawer(DebugDrawer* debugDrawer);
 
-    // Partículas
-
-
     void resetKeyStates(void);
     void resetMouseKeyStates(void);
     void resetMouseWheelStatus(void);
@@ -440,7 +434,6 @@ private:
     ,   m_active_viewport{engine_invalid_id};
 
     Node* m_skybox  { nullptr };
-    ParticleGenerator * m_generator {nullptr};
 
     // std::vector<LightData> m_lights;
     std::vector<Node*> m_lights;
@@ -452,9 +445,6 @@ private:
     bool m_useDebugDrawer               { false   };
     std::vector<CollisionPairResult> m_collisionPairs;
     std::vector<btKinematicCharacterController*> m_characterControllers; // Necesario para el cleanup de las físicas de la escena
-    btBulletWorldImporter* m_importer   { nullptr };
-
-    // std::vector<std::pair<Node::NodeID, Node::NodeID>> m_collisionPairs;
 
     // imgui
     ImGuiIO* m_io;

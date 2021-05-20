@@ -16,18 +16,20 @@ RMesh::RMesh(std::string const& path)
 RMesh::~RMesh()
 {
     for(auto m : m_meshes)
+    {
         delete m;
+        m = nullptr;
+    }
+
+    m_meshes.clear();
 }
 
 void 
 RMesh::draw(RShader* const shader)
 {
-    if(!shader) return;
-
     for(auto m : m_meshes) 
         m->draw(shader);
 }
-
 
 void 
 RMesh::loadMesh(std::string const& filepath)

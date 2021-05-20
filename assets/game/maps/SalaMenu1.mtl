@@ -1,0 +1,492 @@
+# Blender MTL File: 'SalaMenu1.blend'
+# Material Count: 40
+
+newmtl Base
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.001012 0.000000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump texture\\box1\\box1_Base_Normal.png
+map_Ns texture\\box1\\box1_Base_Roughness.png
+map_Kd texture\\box1\\box1_Base_Roughness.png
+refl texture\\box1\\box1_Base_Metallic.png
+
+newmtl BaseMesaCurva
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.292952 0.075954 0.013398
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd texture\\MesaCurva\\Mesa_baseColor.jpg
+
+newmtl BaseSilla
+Ns 0.062500
+Ka 0.124333 0.124333 0.124333
+Kd 0.099999 0.000000 0.000000
+Ks 0.166667 0.166667 0.166667
+Ke 0.000000 0.000000 0.000000
+Ni 0.000000
+d 1.000000
+illum 3
+map_Kd texture\\chair2\\chair2_Base_BaseColor.png
+
+newmtl Basemesa
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Ns texture\\MesaDosPatas\\Mesa.001_roughness.jpg
+map_Kd texture\\MesaDosPatas\\Mesa.001_baseColor.jpg
+refl texture\\MesaDosPatas\\Mesa.001_metallic.jpg
+
+newmtl Borde
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.014472 0.019328
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Ns texture\\MesaDosPatas\\Borde.001_roughness.jpg
+map_Kd texture\\MesaDosPatas\\Borde.001_baseColor.jpg
+refl texture\\MesaDosPatas\\Borde.001_metallic.jpg
+
+newmtl Cover
+Ns 24.999988
+Ka 1.000000 1.000000 1.000000
+Kd 0.026594 0.026594 0.026594
+Ks 0.083333 0.083333 0.083333
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd texture\\chair2\\chair2_Cover_BaseColor.png
+
+newmtl Cristal
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.119276 0.097043 0.113467
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 0.120567
+illum 9
+
+newmtl Hand
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.006146 0.006146 0.006146
+Ks 0.191667 0.191667 0.191667
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+map_Ns texture\\chair2\\chair2_Hand_Roughness.png
+illum 2
+
+newmtl Inner
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.001313 0.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump texture\\box1\\box1_Inner.001_Normal.png
+map_Ns texture\\box1\\box1_Inner.001_Roughness.png
+map_Kd texture\\box1\\box1_Inner.001_BaseColor.png
+refl texture\\box1\\box1_Inner.001_Metallic.png
+
+newmtl InnerCaja
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.128239 0.061525 0.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+
+newmtl Lclose.001
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.000000 0.600627
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump texture\\doorNormal\\doors-1-both_Lclose_Normal.png
+map_Ns texture\\doorNormal\\doors-1-both_Lclose_Roughness.png
+map_Kd texture\\doorNormal\\doors-1-both_Lclose_BaseColor.png
+
+newmtl Lframe.001
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.012433 0.800000 0.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd texture\\doorNormal\\doors-1-both_Lframe_BaseColor.png
+
+newmtl Linner.001
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.005769 0.000000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Ns texture\\doorNormal\\doors-1-both_Linner_Roughness.png
+map_Kd texture\\doorNormal\\doors-1-both_Linner_BaseColor.png
+refl texture\\doorNormal\\doors-1-both_Linner_Metallic.png
+
+newmtl Lock
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump texture\\box1\\box1_Lock_Normal.png
+map_Ns texture\\box1\\box1_Lock_Roughness.png
+map_Kd texture\\box1\\box1_Lock_BaseColor.png
+refl texture\\box1\\box1_Lock_Metallic.png
+
+newmtl Locks
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.019229 0.800000 0.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump texture\\box2\\box2_Locks_Normal.png
+map_Ns texture\\box2\\box2_Locks_Roughness.png
+map_Kd texture\\box2\\box2_Locks_BaseColor.png
+refl texture\\box2\\box2_Locks_Metallic.png
+
+newmtl MarcoVentanasLanzamiento
+Ns 650.249991
+Ka 1.000000 1.000000 1.000000
+Kd 0.042028 0.042028 0.042028
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 3
+
+newmtl PatasMesa
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Ns texture\\MesaDosPatas\\Metal.001_roughness.jpg
+map_Kd texture\\MesaDosPatas\\Metal.001_baseColor.jpg
+refl texture\\MesaDosPatas\\Metal.001_baseColor.jpg
+
+newmtl Rclose.001
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.000000 0.620096
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump texture\\doorNormal\\doors-1-both_Rclose_Normal.png
+map_Ns texture\\doorNormal\\doors-1-both_Rclose_Roughness.png
+map_Kd texture\\doorNormal\\doors-1-both_Rclose_BaseColor.png
+
+newmtl Rframe.001
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.000526 0.800000 0.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd texture\\doorNormal\\doors-1-both_Rframe_BaseColor.png
+
+newmtl Rinner.001
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.000000 0.002103 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Ns texture\\doorNormal\\doors-1-both_Rinner_Roughness.png
+map_Kd texture\\doorNormal\\doors-1-both_Rinner_BaseColor.png
+refl texture\\doorNormal\\doors-1-both_Rinner_Metallic.png
+
+newmtl Seat
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.045040 0.045040 0.045040
+Ks 0.100000 0.100000 0.100000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd texture\\chair2\\chair2_Seat_BaseColor.png
+
+newmtl Shell
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.297298 0.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump texture\\box2\\box2_Shell_Normal.png
+map_Ns texture\\box2\\box2_Shell_Roughness.png
+map_Kd texture\\box2\\box2_Shell_BaseColor.png
+refl texture\\box2\\box2_Shell_Metallic.png
+
+newmtl Sides
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.167949 0.063876 0.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump texture\\box2\\box2_Sides_Normal.png
+map_Ns texture\\box2\\box2_Sides_Roughness.png
+map_Kd texture\\box2\\box2_Sides_BaseColor.png
+refl texture\\box2\\box2_Sides_Metallic.png
+
+newmtl Spawners
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+
+newmtl StripesBlue
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump texture\\box1\\stripes\\box1_Stripes_Normal.png
+map_Ns texture\\box1\\stripes\\box1_Stripes_Roughness.png
+map_Kd texture\\box1\\stripes\\b_box1_Stripes_BaseColor.png
+refl texture\\box1\\stripes\\box1_Stripes_Metallic.png
+
+newmtl Teclado
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd texture\\MesaDosPatas\\Teclado.png
+
+newmtl Yoveria
+Ns 225.000000
+Ka 0.255319 0.255319 0.255319
+Kd 0.201901 0.201901 0.201901
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 0.198582
+illum 6
+
+newmtl ceiling.001
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.000298 0.000000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump texture\\hangar\\hangar_ceiling_Normal.png
+map_Ns texture\\hangar\\hangar_ceiling_Roughness.png
+map_Kd texture\\hangar\\hangar_ceiling_BaseColor.png
+refl texture\\hangar\\hangar_ceiling_Metallic.png
+
+newmtl ceillingLanzamiento
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.000000 0.000927 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Ns texture\\salaControl\\salaControl_ceiling_Roughness.png
+map_Kd texture\\salaControl\\salaControl_ceiling_BaseColor.png
+refl texture\\salaControl\\salaControl_ceiling_Metallic.png
+
+newmtl decorationLeft.001
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.000000 0.733277 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump texture\\doorFrame\\door-1-frame_decorationLeft_Normal.png
+map_Ns texture\\doorFrame\\door-1-frame_decorationLeft_Roughness.png
+map_Kd texture\\doorFrame\\door-1-frame_decorationLeft_BaseColor.png
+
+newmtl decorationTop.001
+Ns 35.999996
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.000000 0.002184
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd texture\\doorFrame\\door-1-frame_decorationTop_BaseColor.png
+
+newmtl floor.002
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.000000 0.001525 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Ns texture\\doorFrame\\door-1-frame_floor_Roughness.png
+map_Kd texture\\doorFrame\\door-1-frame_floor_BaseColor.png
+refl texture\\doorFrame\\door-1-frame_floor_Metallic.png
+
+newmtl floor.003
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.068058 0.800000 0.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump texture\\hangar\\hangar_floor_Normal.png
+map_Ns texture\\hangar\\hangar_floor_Roughness.png
+map_Kd texture\\hangar\\hangar_floor_BaseColor.png
+refl texture\\hangar\\hangar_floor_Metallic.png
+
+newmtl foot
+Ns 81.000006
+Ka 0.508333 0.508333 0.508333
+Kd 0.007392 0.007528 0.015873
+Ks 0.175000 0.175000 0.175000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 3
+
+newmtl frameInner.001
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.667261 0.000000
+Ks 0.250000 0.250000 0.250000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Ns texture\\doorFrame\\door-1-frame_frameInner_Roughness.png
+map_Kd texture\\doorFrame\\door-1-frame_frameInner_BaseColor.png
+
+newmtl frameOutter.001
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.017602 0.800000 0.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Ns texture\\doorFrame\\door-1-frame_frameOutter_Roughness.png
+map_Kd texture\\doorFrame\\door-1-frame_frameOutter_BaseColor.png
+
+newmtl gates.001
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.000000 0.582651
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump texture\\hangar\\hangar_gates_Normal.png
+map_Ns texture\\hangar\\hangar_gates_Roughness.png
+map_Kd texture\\hangar\\hangar_gates_BaseColor.png
+refl texture\\hangar\\hangar_gates_Metallic.png
+
+newmtl murosLanzamiento
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.000000 0.007420
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Ns texture\\salaControl\\salaControl_walls_Roughness.png
+map_Kd texture\\salaControl\\salaControl_walls_BaseColor.png
+
+newmtl sueloLanzamiento
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.011105 0.800000 0.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump texture\\salaControl\\salaControl_floor_Normal.png
+map_Ns texture\\salaControl\\salaControl_floor_Roughness.png
+map_Kd texture\\salaControl\\salaControl_floor_BaseColor.png
+
+newmtl walls.001
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.000000 0.006415
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Ns texture\\hangar\\hangar_walls_Roughness.png
+map_Kd texture\\hangar\\hangar_walls_BaseColor.png

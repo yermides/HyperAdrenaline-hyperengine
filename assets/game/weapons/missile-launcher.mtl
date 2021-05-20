@@ -1,0 +1,114 @@
+# Blender MTL File: 'missile-launcher.blend'
+# Material Count: 8
+
+newmtl LC_Canon
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.003597 0.000000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.0 0.0 0.0
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump texture\\missile-laucher\\LC_Canon_normal.png
+map_Ns texture\\missile-laucher\\LC_Canon_roughness.jpg
+map_Kd texture\\missile-laucher\\LC_Canon_baseColor.jpg
+refl texture\\missile-laucher\\LC_Canon_metallic.jpg
+
+newmtl LC_Cuerpo
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.007326 0.800000 0.001545
+Ks 0.500000 0.500000 0.500000
+Ke 0.0 0.0 0.0
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump texture\\missile-laucher\\LC_Cuerpo_normal.png
+map_Ns texture\\missile-laucher\\LC_Cuerpo_roughness.jpg
+map_Kd texture\\missile-laucher\\LC_Cuerpo_baseColor.jpg
+refl texture\\missile-laucher\\LC_Cuerpo_metallic.jpg
+
+newmtl LC_Handle
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.000000 0.650875 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.0 0.0 0.0
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump texture\\missile-laucher\\LC_Handle_normal.png
+map_Ns texture\\missile-laucher\\LC_Handle_roughness.jpg
+map_Kd texture\\missile-laucher\\LC_Handle_baseColor.jpg
+refl texture\\missile-laucher\\LC_Handle_metallic.jpg
+
+newmtl LC_Medio
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.000000 0.701853
+Ks 0.500000 0.500000 0.500000
+Ke 0.0 0.0 0.0
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump texture\\missile-laucher\\LC_Medio_normal.png
+map_Ns texture\\missile-laucher\\LC_Medio_roughness.jpg
+map_Kd texture\\missile-laucher\\LC_Medio_baseColor.jpg
+refl texture\\missile-laucher\\LC_Medio_metallic.jpg
+
+newmtl LC_PuntasArcoMedio
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.709815 0.800000 0.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.0 0.0 0.0
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump texture\\missile-laucher\\LC_PuntasArcoMedio_normal.png
+map_Ns texture\\missile-laucher\\LC_PuntasArcoMedio_roughness.jpg
+map_Kd texture\\missile-laucher\\LC_PuntasArcoMedio_baseColor.jpg
+refl texture\\missile-laucher\\LC_PuntasArcoMedio_metallic.jpg
+
+newmtl LC_PuntasFinal
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.005581 0.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.0 0.0 0.0
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump texture\\missile-laucher\\LC_PuntasFinal_normal.png
+map_Ns texture\\missile-laucher\\LC_PuntasFinal_roughness.jpg
+map_Kd texture\\missile-laucher\\LC_PuntasFinal_baseColor.jpg
+refl texture\\missile-laucher\\LC_PuntasFinal_metallic.jpg
+
+newmtl LC_PuntasMedio
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.282007 0.000746
+Ks 0.500000 0.500000 0.500000
+Ke 0.0 0.0 0.0
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump texture\\missile-laucher\\LC_PuntasMedio_normal.png
+map_Ns texture\\missile-laucher\\LC_PuntasMedio_roughness.jpg
+map_Kd texture\\missile-laucher\\LC_PuntasMedio_baseColor.jpg
+refl texture\\missile-laucher\\LC_PuntasMedio_metallic.jpg
+
+newmtl LC_RemacheFinal
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.000000 0.000000 0.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.0 0.0 0.0
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump texture\\missile-laucher\\LC_RemacheFinal_normal.png
+map_Ns texture\\missile-laucher\\LC_RemacheFinal_roughness.jpg
+map_Kd texture\\missile-laucher\\LC_RemacheFinal_baseColor.jpg
+refl texture\\missile-laucher\\LC_RemacheFinal_metallic.jpg

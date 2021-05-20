@@ -1,0 +1,116 @@
+# Blender MTL File: 'francotirador.blend'
+# Material Count: 10
+
+newmtl Base_Clara
+Ns 70.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.076240 0.800000 0.137868
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd texture\\franco\\Base_Clara_baseColor.jpg
+
+newmtl Base_Oscura
+Ns 70.000000
+Ka 0.868182 0.868182 0.868182
+Kd 0.800000 0.647653 0.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 3
+map_Kd texture\\franco\\Base_Oscura_baseColor.jpg
+
+newmtl Cañon
+Ns 70.000000
+Ka 0.631206 0.631206 0.631206
+Kd 0.012217 0.012217 0.012217
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 3
+map_Kd texture\\franco\\Cañon_baseColor.jpg
+
+newmtl Cuerpo
+Ns 70.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.002208 0.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump texture\\franco\\Cuerpo_normal.png
+map_Ns texture\\franco\\Cuerpo_roughness.jpg
+map_Kd texture\\franco\\Cuerpo_baseColor.jpg
+
+newmtl Empunadura
+Ns 70.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.246195 0.246195 0.246195
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd texture\\franco\\Empunadura_baseColor.jpg
+
+newmtl Mango
+Ns 70.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.297013 0.418376 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd texture\\franco\\Mango_baseColor.jpg
+
+newmtl Mirilla
+Ns 70.000000
+Ka 0.914894 0.914894 0.914894
+Kd 0.054969 0.054969 0.054969
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 3
+map_Bump texture\\franco\\Mirilla_normal.png
+map_Ns texture\\franco\\Mirilla_roughness.jpg
+map_Kd texture\\franco\\Mirilla_baseColor.jpg
+
+newmtl Respiradero
+Ns 70.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.134043 0.255128
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Ns texture\\franco\\Respiradero_roughness.jpg
+map_Kd texture\\franco\\Respiradero_baseColor.jpg
+
+newmtl cristal_mirilla
+Ns 855.873721
+Ka 0.822695 0.822695 0.822695
+Kd 0.253906 0.476562 0.589844
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 3
+
+newmtl goma
+Ns 70.000000
+Ka 0.078014 0.078014 0.078014
+Kd 0.800000 0.102167 0.428347
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 3
+map_Kd texture\\franco\\goma_baseColor.jpg

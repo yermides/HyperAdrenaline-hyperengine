@@ -5,7 +5,7 @@
 #include <GLFW/glfw3.h>
 
 // 45° Field of View, 16:9 ratio, display range : 0.1 unit <-- | --> 1000 units
-#define default_camera_projection glm::perspective(glm::radians(45.0f), 16.0f/9.0f, 0.1f, 1000.0f)
+#define default_camera_projection glm::perspective(glm::radians(45.0f), 16.0f/9.0f, 0.1f, 300.0f)
 
 namespace hyen {
 

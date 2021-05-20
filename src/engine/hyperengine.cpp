@@ -12,6 +12,7 @@ HyperEngine::~HyperEngine()
 {
 	// Hyperengine
 	Node::deleteBranch(m_rootnode);
+	m_skybox = nullptr;
 
 	for(auto iter = m_shaders.begin(); iter != m_shaders.end(); ++iter)
 	{
@@ -78,6 +79,8 @@ HyperEngine::clearTree(void)
 	
 	// this->deleteAllWorldPhysics();
 	Node::deleteBranchChilds(m_rootnode);
+	m_skybox = nullptr;
+
 	m_cameras.clear();
 	m_active_camera = engine_invalid_id;
 	m_lights.clear();
@@ -257,14 +260,7 @@ HyperEngine::drawScene(void)
 
 	// Si quiero pintar el debug de las físicas, lo pinto
 	if(m_useDebugDrawer)
-		this->drawDebugPhysics(view, projection);
-
-	// Nuevo, pintar partículas 2, it works! Aunque no debería tener el hyperengine un hold de un solo generador, mirar lo de registrar generadores
-	// if(m_generator)
-	// {
-	// 	m_generator->setMatrices(projection, view, camnode->getTranslation());
-	// 	m_generator->render();
-	// }
+		drawDebugPhysics(view, projection);
 
 	// Ahora, pintar skybox si hay
 	if(!m_skybox) return;
@@ -476,7 +472,7 @@ HyperEngine::getMousePositionAbsolute(void) const noexcept
 void 
 HyperEngine::setMousePositionAbsolute(float x, float y)
 {
-	auto size = this->getWindowSize();
+	auto size = getWindowSize();
 	x = std::clamp((int)x, 0, size.x);
 	y = std::clamp((int)y, 0, size.y);
 	glfwSetCursorPos(m_window, x, y);
@@ -903,45 +899,6 @@ HyperEngine::createPhysicPropertiesKinematicCharacterController(
 	node->setPhysicProperties(prop);
 
 	m_characterControllers.push_back(charCon);
-}
-
-void 
-HyperEngine::createPhysicPropertiesFromArchive(Node* const node, std::string const& filepath)
-{
-	INFOLOG("num bodies before" << VAR(m_importer->getNumRigidBodies()) )
-	// INFOLOG("getCollisionObjectArray.size " << VAR(objects.size()) )
-
-	bool loaded = m_importer->loadFile(filepath.c_str());
-
-	INFOLOG("loaded?" << VAR(loaded) )
-
-	INFOLOG("num bodies after" << VAR(m_importer->getNumCollisionShapes() ))
-
-    btCollisionObjectArray &objects = m_world->getCollisionObjectArray();
-
-	INFOLOG("getCollisionObjectArray.size " << VAR(objects.size()) )
-	INFOLOG("rigidbodies.size " << VAR(m_importer->getNumRigidBodies()) )
-	INFOLOG("collshapes.size " << VAR(m_importer->getNumCollisionShapes()) )
-
-	// auto* body = m_importer->getRigidBodyByIndex(0);
-	// btTransform transform;
-	// transform.setIdentity();
-	// transform.setOrigin({0,0,0});
-	// body->setWorldTransform(transform);
-	// m_world->addCollisionObject(body);
-
-
-    // btCollisionObjectArray &objects = m_world->getCollisionObjectArray();
-	// for(int i=0;i<objects.size();i++) {
-    //     btCollisionObject *obj = objects[i];
-    //     if(obj->getCollisionShape()->getShapeType() == SCALED_TRIANGLE_MESH_SHAPE_PROXYTYPE) {
-    //         btScaledBvhTriangleMeshShape *shape = static_cast<btScaledBvhTriangleMeshShape *>(obj->getCollisionShape());
-    //         if(!shape->getChildShape()->getOwnsBvh()) {
-    //             shape->getChildShape()->buildOptimizedBvh();
-    //         }
-    //     }
-		
-    // }
 }
 
 bool 
@@ -1374,7 +1331,6 @@ HyperEngine::initializePhysics(void)
 
 	// World seteado
 	m_world 											=     new btDiscreteDynamicsWorld(dispatcher, broadPhase, solver, collisionConfiguration);
-	m_importer											=	  new btBulletWorldImporter(m_world);
 
 	// setear su debug drawer y opciones por defecto
 	m_debugDrawer = new DebugDrawer;
