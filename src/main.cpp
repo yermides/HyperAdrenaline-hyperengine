@@ -981,15 +981,18 @@ void test_particle_system_2(void) {
         .maxParticles{10000}
     ,   .texturePath{"assets/particles/particle.DDS"}
     ,   .origin{0,0,0}
-    ,   .gravity{0.0f, -9.81f, 0.0f}
-    ,   .mainDir{0.0f,  10.0f, 0.0f}
+    // ,   .gravity{0.0f, -9.81f, 0.0f}
+    ,   .gravity{0.0f, 0.0f, 0.0f}
+    ,   .mainDir{0.0f, 10.0f, 0.0f}
     ,   .particlesPerSecond{100.0f}
     ,   .spreadFactor{1.5f}
     ,   .lifeSpan{5.0f}
     ,   .minParticleSize{0.15f}
     ,   .maxParticleSize{0.5f}
     ,   .shapeRadius{3.f}
-    ,   .funcColor{&hyen::PGF::generateParticleColorsStandard}
+    // ,   .funcColor{&hyen::PGF::generateParticleColorsStandard}
+    ,   .funcColor{&hyen::PGF::generateParticleColorsRandomly}
+    // ,   .funcColor{&hyen::PGF::generateParticleColorsAndTransparencyRandomly}
     ,   .funcSize{&hyen::PGF::generateParticleSizeBetween}
     ,   .funcRandomdir{&hyen::PGF::generateRandomDirectionSoftInfluence}
     ,   .funcPos{&hyen::PGF::generatePositionCameraTarget}
