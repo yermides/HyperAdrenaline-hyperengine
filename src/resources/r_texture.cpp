@@ -10,7 +10,7 @@ RTexture::RTexture()
 RTexture::RTexture(std::string const& path)
 : Resource{}
 {
-    this->loadFromFile(path);
+    loadFromFile(path);
 }
 
 RTexture::~RTexture()
@@ -79,8 +79,8 @@ RTexture::loadTexture(std::string const& path)
 void 
 RTexture::loadFromFile(std::string const& path) 
 {
-    this->setName(path);
-    this->loadTexture(path);
+    setName(path);
+    loadTexture(path);
 }
 
 }

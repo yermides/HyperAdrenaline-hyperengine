@@ -57,8 +57,6 @@ RMaterial::initialize(void)
 void 
 RMaterial::draw(RShader* const shader)
 {
-    if(!shader) return;
-    
     // Aumentar el indice de textura para cada una que se le pase al shader
     int i {0};
 

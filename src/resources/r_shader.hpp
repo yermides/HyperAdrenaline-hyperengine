@@ -78,7 +78,6 @@ struct RShader : public Resource
 		{ m_programID = newID;  }
 private:
     ProgramIdentifier m_programID { 0 };
-    std::string m_vertexPath, m_fragmentPath;
 };
 
 }

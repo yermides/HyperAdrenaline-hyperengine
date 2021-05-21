@@ -7,9 +7,13 @@
 #include <resources/r_shader.hpp>
 #include <util/macros.hpp>
 
-#define default_max_lines_debug 200
+#define default_max_lines_debug 1000000
 
 namespace hyen {
+
+struct Line3d {
+    glm::vec3 from, to, color;
+};
 
 struct DebugDrawer : public btIDebugDraw
 {

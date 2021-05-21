@@ -10,26 +10,37 @@ Mesh::~Mesh()
 {
     m_vertices.clear();
     m_normals.clear();
+    m_tangents.clear();
+    m_bitangents.clear();
+
     m_texture_coords.clear();
     m_indices.clear();
 
     for(auto m : m_materials)
+    {
         delete m;
+        m = nullptr;
+    }
 
     m_materials.clear();
 
-    // free buffers
-    glDeleteBuffers(3, vbo);
+    // Limpiando buffers
+    if(vbo) 
+    {
+        glDeleteBuffers(3, vbo);
+        delete[] vbo;
+    }
+
     glDeleteBuffers(1, &ebo);
     glDeleteVertexArrays(1, &vao);
-    if(vbo) delete[] vbo;
-
-    // textures are cleared once we exit thanks to the ResourceManager destructor
 }
 
 void 
 Mesh::initialize(void)
 {
+    // se necesitan más vbo's por cómo hace él la struct, que le pasa los datos en bruto seguidos y luego los diferencia
+    // nosotros necesitamos un buffer por cada tipo de datos por no estar seguidos en memoria, de ahí el array de vbo
+
     // create buffers/arrays
     glGenVertexArrays(1, &vao);
     vbo = new GLuint[3];
@@ -39,8 +50,6 @@ Mesh::initialize(void)
     glBindVertexArray(vao);
 
     // load data into vertex buffers
-    // se necesitan más vbo's por cómo hace él la struct, que le pasa los datos en bruto seguidos y luego los diferencia
-    // nosotros necesitamos un buffer por cada tipo de datos por no estar seguidos en memoria, de ahí el array de vbo
     glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
     glBufferData(GL_ARRAY_BUFFER, m_vertices.size() * sizeof(GLfloat), &m_vertices.front(), GL_STATIC_DRAW);  
 
@@ -54,19 +63,23 @@ Mesh::initialize(void)
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_indices.size() * sizeof(GLuint), &m_indices.front(), GL_STATIC_DRAW);
 
     // set the vertex attribute pointers
+
     // vertex Positions
     glEnableVertexAttribArray(0);	
     glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+
     // vertex normals
     glEnableVertexAttribArray(1);	
     glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+
     // vertex texture coords
     glEnableVertexAttribArray(2);	
     glBindBuffer(GL_ARRAY_BUFFER, vbo[2]);
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
+    // unbing vertex array, we've already sent it the data
     glBindVertexArray(0);
 
     // Initialize materials
@@ -86,17 +99,15 @@ Mesh::initialize(void)
 void 
 Mesh::draw(RShader* const shader)
 {
-    if(!shader) return;
-
     for(auto m : m_materials)
         m->draw(shader);
 
     // draw mesh
     glBindVertexArray(vao);
     glDrawElements(GL_TRIANGLES, m_indices.size(), GL_UNSIGNED_INT, 0);
-    glBindVertexArray(0);
 
     // always good practice to set everything back to defaults once configured.
+    glBindVertexArray(0);
     glActiveTexture(GL_TEXTURE0);
 }
 

@@ -236,7 +236,7 @@ Node::setCameraTarget(glm::vec3 const& target)
     auto forcedViewMatrix = glm::lookAt(
             getTranslation()
         ,   m_target
-        ,   glm::vec3(0,1,0)
+        ,   glm::vec3(0,1,0) // Hardcoded up
     );
 
     // auto position = glm::vec4(0,0,0,1) * forcedViewMatrix ;
@@ -245,46 +245,12 @@ Node::setCameraTarget(glm::vec3 const& target)
 
     camera->setViewMatrix(forcedViewMatrix);
 
-    
-    // glm::quat orientation = glm::toQuat(forcedViewMatrix);
-    glm::quat orientation = glm::conjugate(glm::toQuat(forcedViewMatrix));
-    // auto newrot = glm::eulerAngleXYZ(orientation);
-    // glm::vec3 newrot = glm::eulerAngles(orientation) * 3.14159f / 180.f;
-    auto newrot = glm::eulerAngles(orientation);
+    // Meter en la rotación de la cámara su inversa de su rotación para los hijos que tenga
+    glm::quat orientation = glm::quat_cast( glm::mat3(forcedViewMatrix) ); 
+    auto newrot = glm::degrees( glm::eulerAngles(orientation) ) * (-1.0f);
 
-    setRotation
-    ( 
-        // newrot
-        glm::vec3
-        (
-                glm::degrees(newrot.x) 
-            ,   glm::degrees(newrot.y)
-            ,   glm::degrees(newrot.z) 
-        )
-    );
+    setRotation( newrot );
 
-    // trasladar la rotación, test de descomponer la matriz
-    // glm::mat4 transformation; // your transformation matrix.
-    // glm::vec3 scale;
-    // glm::quat rotation;
-    // glm::vec3 translation;
-    // glm::vec3 skew;
-    // glm::vec4 perspective;
-    // glm::decompose(transformation, scale, rotation, translation, skew, perspective);
-    // rotation = glm::conjugate(rotation);
-    // auto newrot = glm::eulerAngles(rotation);
-    // newrot.x *=1.0f;
-    // newrot.y *=1.0f;
-    // newrot.z *=1.0f;
-    // setRotation( 
-    //     glm::degrees(
-    //         glm::vec3{newrot.z, newrot.y, newrot.x}
-    //         ) 
-    //     );
-
-    // setRotation( {69,69,69} );
-
-    // setMatrixTransform(forcedViewMatrix);
 }
 
 }

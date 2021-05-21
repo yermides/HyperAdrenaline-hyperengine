@@ -60,11 +60,14 @@ DebugDrawer::drawLine(const btVector3& from, const btVector3& to, const btVector
 
     glDeleteBuffers(1, &m_vbo);
     glDeleteVertexArrays(1, &m_vao);
+
     glGenBuffers(1, &m_vbo);
     glGenVertexArrays(1, &m_vao);
+
     glBindVertexArray(m_vao);
     glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
     glBufferData(GL_ARRAY_BUFFER, sizeof(points), &points, GL_STATIC_DRAW);
+
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), 0);
     glEnableVertexAttribArray(1);

@@ -1,0 +1,35 @@
+# Blender MTL File: 'finalgun.blend'
+# Material Count: 3
+
+newmtl MetalGrey
+Ns 165.306149
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.440000 0.440000 0.440000
+Ke 0.0 0.0 0.0
+Ni 1.450000
+d 1.000000
+illum 3
+map_Kd texture\\gun\\Black-Background-Fabric.jpg
+
+newmtl blue-paint.001
+Ns 84.115082
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.054286 0.054286 0.054286
+Ke 0.0 0.0 0.0
+Ni 1.450000
+d 1.000000
+illum 3
+map_Kd texture\\gun\\Media_Militia_BTOB_011.jpg
+
+newmtl red-paint
+Ns 683.448945
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 1.000000 1.000000 1.000000
+Ke 0.0 0.0 0.0
+Ni 1.450000
+d 1.000000
+illum 3
+map_Kd texture\\gun\\Media_Militia_BTOB_002.jpg

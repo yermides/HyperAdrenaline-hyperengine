@@ -19,8 +19,6 @@ EModel::~EModel()
 void 
 EModel::draw(glm::mat4 const& transform)
 {
-    if(!m_shader) return;
-    
     // Use our shader
     m_shader->bind();
 

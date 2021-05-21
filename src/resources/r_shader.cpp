@@ -21,15 +21,16 @@ RShader::RShader(Cstring path_vertex, Cstring path_fragment, Cstring path_geomet
 
 RShader::~RShader()
 {
-	glDeleteProgram(m_programID);
+	if(m_programID)
+		glDeleteProgram(m_programID);
 }
 
 ProgramIdentifier 
 RShader::loadShaders( Cstring path_vertex, Cstring path_fragment )
 {
 	// Guardar los valores de las rutas en nuestra clase, por si acaso
-	m_vertexPath = path_vertex;
-	m_fragmentPath = path_fragment;
+	// m_vertexPath = path_vertex;
+	// m_fragmentPath = path_fragment;
 
 	// Create the shaders
 	GLuint VertexShaderID = glCreateShader(GL_VERTEX_SHADER);
@@ -233,17 +234,17 @@ RShader::loadShadersFromMemory( Cstring path_vertex, Cstring path_fragment, Cstr
 void 
 RShader::loadFromFile( std::string const& path )
 {
-	constexpr static Cstring extensionVertex 	{ ".vs" };
-	constexpr static Cstring extensionFragment 	{ ".fs" };
+	// constexpr static Cstring extensionVertex 	{ ".vs" };
+	// constexpr static Cstring extensionFragment 	{ ".fs" };
 	// constexpr static Cstring extensionGeometry 	{ ".gs" };
 
 	// Como necesita dos paths, el método asume mismo nombre
-    this->setName(path);
-	m_vertexPath 	= path + extensionVertex; 
-	m_fragmentPath 	= path + extensionFragment; 
+    setName(path);
+	auto vertexPath 		= path + ".vs"; 
+	auto fragmentPath 	= path + ".fs"; 
 	// TODO:: incluir el geometry opcional
 
-	this->loadShaders(m_vertexPath.c_str(), m_fragmentPath.c_str());
+	loadShaders(vertexPath.c_str(), fragmentPath.c_str());
 }
 
 }
