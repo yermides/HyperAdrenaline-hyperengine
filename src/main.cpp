@@ -291,7 +291,86 @@ void test_frustum(void)
 
 }
 
+void test_normal_mapping(void)
+{
+    using namespace hyen;
+
+    auto engine = std::make_unique<HyperEngine>(true);
+    engine->setWindowTitle("test_normal_mapping");
+    engine->setWindowIcon("assets/engine/logo.jpg");
+
+    auto camnode = engine->createCamera(
+        nullptr
+    ,   {0,0,-5}
+    ,   default_rot_and_scale
+    );
+
+    auto lightnode = engine->createLight(
+        nullptr
+    ,   {0,0,0}
+    ,   default_rot_and_scale
+    ,   hyen::LightType::Point
+    ,   hyen::LightIntensity   { .ambient{0.25f, 0.25f, 0.25f}, .diffuse{0.8f, 0.8f, 0.8f}, .specular{1.0f, 1.0f, 1.0f} }
+    ,   hyen::LightAttenuation { .constant{1.0f}, .linear{0.00009}, .quadratic{0.000032} }
+    ,   hyen::LightAperture    { .innerCutoff{0.0f}, .outerCutoff{0.0f} }
+    ,   hyen::LightDirection   { 0,0,0 }
+    );
+
+    auto missile_launcher = engine->createModel(
+        camnode
+    ,   camnode->getTranslation() + glm::vec3{1.6f,-0.9f,0.9f}
+    ,   {0,180,0}
+    ,   default_scale
+    ,   "assets/engine/missile-launcher.obj"
+    );
+
+        auto m = engine->createModel(
+            nullptr
+        ,   {0,0,0}
+        ,   default_rot_and_scale
+        ,   "assets/game/characters/melee/noanim.obj"
+        );
+
+    constexpr double const fpsLimit = 1.0 / 60.0;
+    double lastUpdateTime = 0.0;  // number of seconds since the last loop
+    double lastFrameTime = 0.0;   // number of seconds since the last frame
+    float camSpeed = 10.0f;
+
+    while(engine->isWindowActive())
+    {
+        double now = glfwGetTime();
+        double deltaTime = now - lastUpdateTime;
+        float dt { static_cast<float>(deltaTime) }; 
+
+        if ((now - lastFrameTime) >= fpsLimit)
+        {
+            if(engine->getKeyContinuousPress(GLFW_KEY_ESCAPE))
+                engine->setWindowActive(false);
+
+            if(engine->getKeyContinuousPress(GLFW_KEY_LEFT))            camnode->translate(glm::vec3{ -camSpeed,  0.0f,  0.0f} * dt);
+            if(engine->getKeyContinuousPress(GLFW_KEY_RIGHT))           camnode->translate(glm::vec3{  camSpeed,  0.0f,  0.0f} * dt);
+            if(engine->getKeyContinuousPress(GLFW_KEY_UP))              camnode->translate(glm::vec3{  0.0f,  0.0f, -camSpeed} * dt);
+            if(engine->getKeyContinuousPress(GLFW_KEY_DOWN))            camnode->translate(glm::vec3{  0.0f,  0.0f,  camSpeed} * dt);
+            if(engine->getKeyContinuousPress(GLFW_KEY_SPACE))           camnode->translate(glm::vec3{  0.0f,  camSpeed,  0.0f} * dt);
+            if(engine->getKeyContinuousPress(GLFW_KEY_LEFT_CONTROL))    camnode->translate(glm::vec3{  0.0f, -camSpeed,  0.0f} * dt);
+
+            camnode->setCameraTarget({0,0,0});
+            engine->updatePhysics(deltaTime);
+
+            lastFrameTime = now;
+        }
+
+        engine->beginRender();
+        engine->drawScene();
+        engine->endRender();
+
+        lastUpdateTime = now;
+    }
+
+}
+
 int main(void)
 {
-    test_frustum();
+    // test_frustum();
+    test_normal_mapping();
 }

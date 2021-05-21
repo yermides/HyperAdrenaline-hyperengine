@@ -1092,7 +1092,8 @@ HyperEngine::deleteAllWorldPhysics(void)
 		obj = nullptr;
 	}
 
-
+	m_collisionPairs.clear();
+	
 	// m_world->removeCharacter()
 
 	// auto m_collisionShapes = m_world->
