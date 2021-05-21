@@ -367,6 +367,14 @@ struct HyperEngine
         ,   int collisionMaskFlags = 0
     );
 
+    btPairCachingGhostObject* createGhostObject(btCollisionShape* pShape, btVector3 pOrigin = {0,0,0});
+
+    btPairCachingGhostObject* createPhysicPropertiesGhostObject(Node* node, btCollisionShape* pShape);
+
+    void getGhostObjectCollisions(btPairCachingGhostObject* pGhostObj);
+
+    bool getCollisionBetweenGhostAndCollisionobject(btPairCachingGhostObject* pGhostObj, btCollisionObject* pCollObj);
+
     bool getAABBCollisionBetweenNodes(Node* const nodeA, Node* const nodeB);
 
     bool getCollisionBetweenNodes(Node* const nodeA, Node* const nodeB, CollisionPairResult& collPairResult);

@@ -85,6 +85,7 @@
 
 void test_frustum(void)
 {
+    // última prueba, 
     using namespace hyen;
 
     auto engine = std::make_unique<HyperEngine>(true);
@@ -113,9 +114,25 @@ void test_frustum(void)
     ,   "assets/game/maps/theHangarJoined.obj"
     );
 
-    engine->createPhysicPropertiesTriangleMeshShape(
+    map->setNameID(1);
+
+    engine->createPhysicPropertiesRigidBody(
         map
+        ,   new btBoxShape({50,1,20})
+        ,   0
+        ,   -1
+        ,   -1
     );
+
+    // engine->createPhysicPropertiesTriangleMeshShape(
+    //     map
+    // );
+
+    // auto ghostObject = engine->createGhostObject(new btBoxShape({60, 10, 30}));
+
+    auto sensornode = engine->createNode(default_createnode_params);
+    engine->createPhysicPropertiesGhostObject(sensornode, new btBoxShape({60, 10, 30}));
+    map->setNameID(2);
 
     std::vector<Node*> enemies;
     enemies.reserve(100);
@@ -124,12 +141,15 @@ void test_frustum(void)
     {
         auto m = engine->createModel(
             nullptr
-        ,   {-69,0,10*i}
+        ,   {-3,0,10*i}
+        // ,   {-69,0,10*i}
         ,   default_rot_and_scale
         ,   "assets/game/characters/melee/noanim.obj"
         );
 
-        // engine->createPhysicPropertiesCollisionObject(m, new btBoxShape({1,1,1}), -1, -1);
+        m->setNameID(i+3);
+
+        engine->createPhysicPropertiesCollisionObject(m, new btBoxShape({1,1,1}), -1, -1);
         enemies.push_back(m);
     }
     
@@ -187,6 +207,8 @@ void test_frustum(void)
             // tests.insert(tests.end(), vertices.begin(), vertices.end());
             // tests.insert(tests.end(), vertices.begin(), vertices.end());
             // tests.insert(tests.end(), vertices.begin(), vertices.end());
+            INFOLOG("collision for the ghostObj? " << VAR(engine->getAABBCollisionBetweenNodes(sensornode, map)) )
+
             for(auto enemy : enemies)
             {
                 // Test, no dibujar si estamos lejos (para mejorar performance)
@@ -198,16 +220,27 @@ void test_frustum(void)
                 // INFOLOG("length " << length )
                 // INFOLOG("length from enemy = " << le)
 
-                if(length > 50)
+                bool inside = engine->getAABBCollisionBetweenNodes(sensornode, enemy);
+
+                if(inside)
                 {
-                    enemy->setVisible(false);
-                }
-                else{
                     enemy->setVisible(true);
                 }
+                else{
+                    enemy->setVisible(false);
+                }
+
+                // if(length > 50)
+                // {
+                //     enemy->setVisible(false);
+                // }
+                // else{
+                //     enemy->setVisible(true);
+                // }
 
             }
 
+            // engine->getGhostObjectCollisions(ghostObject);
 
             if(engine->getKeyContinuousPress(GLFW_KEY_ESCAPE))
                 engine->setWindowActive(false);
@@ -224,6 +257,8 @@ void test_frustum(void)
             if(engine->getKeyContinuousPress(GLFW_KEY_DOWN))            camnode->translate(glm::vec3{  0.0f,  0.0f,  -camSpeed} * dt);
             if(engine->getKeyContinuousPress(GLFW_KEY_SPACE))           camnode->translate(glm::vec3{  0.0f,  camSpeed,  0.0f} * dt);
             if(engine->getKeyContinuousPress(GLFW_KEY_LEFT_CONTROL))    camnode->translate(glm::vec3{  0.0f, -camSpeed,  0.0f} * dt);
+
+            sensornode->translate(glm::vec3{  0.0f,  0.0f, 3.0f} * dt);
 
             if(engine->getKeyContinuousPress(GLFW_KEY_1))           
                 engine->enableDebugDraw();

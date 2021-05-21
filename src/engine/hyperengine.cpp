@@ -901,6 +901,90 @@ HyperEngine::createPhysicPropertiesKinematicCharacterController(
 	m_characterControllers.push_back(charCon);
 }
 
+btPairCachingGhostObject* 
+HyperEngine::createGhostObject(btCollisionShape* pShape, btVector3 pOrigin)
+{
+	btPairCachingGhostObject* ghostObject { new btPairCachingGhostObject };
+
+	btTransform startTransform;
+    startTransform.setIdentity();
+    startTransform.setOrigin(pOrigin);
+
+	m_world->getBroadphase()->getOverlappingPairCache()->setInternalGhostPairCallback(new btGhostPairCallback());
+	ghostObject->setCollisionShape(pShape);
+	m_world->addCollisionObject(ghostObject);
+
+	// quizá esto se hace dos veces y se sobreescribe en el characterController, TODO:: comprobar
+
+	return ghostObject;
+}
+
+btPairCachingGhostObject* 
+HyperEngine::createPhysicPropertiesGhostObject(Node* node, btCollisionShape* pShape)
+{
+	btPairCachingGhostObject* ghostObject { new btPairCachingGhostObject };
+
+	btTransform startTransform;
+    startTransform.setIdentity();
+	auto trans = util::glmVec3TobtVec3(node->getTranslation());
+    startTransform.setOrigin(trans);
+
+	m_world->getBroadphase()->getOverlappingPairCache()->setInternalGhostPairCallback(new btGhostPairCallback());
+
+	ghostObject->setWorldTransform(startTransform);
+	ghostObject->setUserPointer(node);
+	ghostObject->setCollisionShape(pShape);
+
+	m_world->addCollisionObject(ghostObject);
+
+	PhysicProperties* prop = new PhysicProperties;
+	prop->m_type = PhysicProperties::COLLISION_OBJECT;
+	prop->m_data.ghostObj = ghostObject;
+	node->setPhysicProperties(prop);
+
+	// quizá esto se hace dos veces y se sobreescribe en el characterController, TODO:: comprobar
+
+	return ghostObject;
+}
+
+
+void
+HyperEngine::getGhostObjectCollisions(btPairCachingGhostObject* pGhostObj)
+{
+	btManifoldArray manifoldArray;
+	btBroadphasePairArray &pairs = pGhostObj->getOverlappingPairCache()->getOverlappingPairArray();
+
+	for(int i {0}; i < pairs.size(); ++i) 
+	{
+		manifoldArray.clear();
+		const btBroadphasePair &pair = pairs[i];
+		btBroadphasePair *collisionPair = m_world->getPairCache()->findPair(pair.m_pProxy0, pair.m_pProxy1);
+
+		if(!collisionPair)
+			continue;
+
+		if(collisionPair->m_algorithm) 
+		{
+			collisionPair->m_algorithm->getAllContactManifolds(manifoldArray);
+		}
+		for(int j {0}; j < manifoldArray.size(); ++j) 
+		{
+			btPersistentManifold *manifold = manifoldArray[j];
+			for(int p {0}; p < manifold->getNumContacts(); ++p) 
+			{
+				INFOLOG("Yes, there are " << VAR(manifold->getNumContacts()) << " contacs.")
+				const btManifoldPoint &contact = manifold->getContactPoint(p);
+			}
+		}
+	}
+}
+
+bool 
+HyperEngine::getCollisionBetweenGhostAndCollisionobject(btPairCachingGhostObject* pGhostObj, btCollisionObject* pCollObj)
+{
+
+}
+
 bool 
 HyperEngine::getAABBCollisionBetweenNodes(Node* const nodeA, Node* const nodeB)
 {
@@ -1356,6 +1440,10 @@ HyperEngine::initializePhysics(void)
 			auto* contactManifold = world->getDispatcher()->getManifoldByIndexInternal(i);
 			auto* obA = contactManifold->getBody0();
 			auto* obB = contactManifold->getBody1();
+
+			if(!obA->getUserPointer() || !obB->getUserPointer())
+				continue;
+
 			auto* nodeA = static_cast<Node*>(obA->getUserPointer());
 			auto* nodeB = static_cast<Node*>(obB->getUserPointer());
 
