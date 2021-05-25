@@ -122,18 +122,26 @@ ParticleGenerator::ParticleGenerator(RShader* shader, CInfo const& cInfo)
     m_shader->unbind();
 }
 
-
 ParticleGenerator::~ParticleGenerator()
 {
-    // delete[] g_particule_position_size_data;
+    INFOLOG("~ParticleGenerator()");
+	// Cleanup VBOs and VAO
+	glDeleteBuffers(1, &m_colorsVBO);
+	glDeleteBuffers(1, &m_positionsVBO);
+	glDeleteBuffers(1, &m_billboardVBO);
+	glDeleteVertexArrays(1, &m_vertexArrayVAO);
 
-	// // Cleanup VBO and shader
-	// glDeleteBuffers(1, &particles_color_buffer);
-	// glDeleteBuffers(1, &particles_position_buffer);
-	// glDeleteBuffers(1, &billboard_vertex_buffer);
-	// glDeleteProgram(programID);
-	// glDeleteTextures(1, &TextureID);
-	// glDeleteVertexArrays(1, &VertexArrayID);
+    m_shader            = nullptr;
+    m_texture           = nullptr;
+    m_funcColor         = nullptr;
+    m_funcSize          = nullptr;
+    m_funcRandomdir     = nullptr;
+    m_funcPos           = nullptr;
+    m_funcMaindir       = nullptr;
+
+    m_particles.clear();
+    m_positionBuffer.clear();
+    m_colorBuffer.clear();
 }
 
 void 

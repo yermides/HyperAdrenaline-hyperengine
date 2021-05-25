@@ -560,7 +560,6 @@ HyperEngine::getWindowSizeCenter(void)
 	return size;
 }
 
-
 void 
 HyperEngine::setWindowSize(int const width, int const height)
 {
@@ -1053,9 +1052,12 @@ HyperEngine::deletePhysicProperties(Node* const node)
 
 	INFOLOG("m_characterControllers.size() " << VAR(m_characterControllers.size()) )
 
-
+	// if(prop->m_type != PhysicProperties::KINEMATIC_CHARACTER)
 	m_world->removeCollisionObject(prop->m_data.collObj);
+
+	// Borrar propiedades
 	delete prop;
+	prop = nullptr;
 	node->setPhysicProperties(NULL);
 }
 
@@ -1093,8 +1095,6 @@ HyperEngine::deleteAllWorldPhysics(void)
 	}
 
 	m_collisionPairs.clear();
-	
-	// m_world->removeCharacter()
 
 	// auto m_collisionShapes = m_world->
 
@@ -1418,6 +1418,7 @@ HyperEngine::initializePhysics(void)
 	m_world 											=     new btDiscreteDynamicsWorld(dispatcher, broadPhase, solver, collisionConfiguration);
 
 	// setear su debug drawer y opciones por defecto
+	
 	m_debugDrawer = new DebugDrawer;
 	using DBG = DebugDrawer;
 	m_debugDrawer->setDebugMode(
@@ -1426,6 +1427,7 @@ HyperEngine::initializePhysics(void)
 		| 	DBG::DBG_DrawContactPoints
 	);
 	m_world->setDebugDrawer(m_debugDrawer);
+
 	// debug de cuántos contactos hay entre objetos
 	m_world->setInternalTickCallback([](btDynamicsWorld *world, btScalar timeStep) {
 		auto engine = static_cast<HyperEngine*>(world->getWorldUserInfo());

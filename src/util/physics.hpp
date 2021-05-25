@@ -36,6 +36,41 @@ struct PhysicProperties {
     btCollisionShape*   m_collisionShape    { nullptr };
     OpenGLMotionState*  m_motionState       { nullptr };
     btKinematicCharacterController* charCon { nullptr };
+
+    ~PhysicProperties()
+    {
+        switch (m_type)
+        {
+        case COLLISION_OBJECT:
+            /* code */
+            if(m_data.collObj) delete m_data.collObj;
+            m_data.collObj = nullptr;
+            break;
+
+        case RIGID_BODY:
+            if(m_data.body) delete m_data.body;
+            m_data.body = nullptr;
+            /* code */
+            break;
+
+        case KINEMATIC_CHARACTER:
+            if(m_data.ghostObj) delete m_data.ghostObj;
+            m_data.ghostObj = nullptr;
+            /* code */
+            break;
+        
+        default:
+            break;
+        }
+
+        if(charCon) delete charCon;
+            charCon = nullptr;
+        if(m_collisionShape) delete m_collisionShape;
+            m_collisionShape = nullptr;
+        // if(m_motionState) delete m_motionState;
+            m_motionState = nullptr;
+    };
+    
 };
 
 // using CollisionPoint = btManifoldPoint;

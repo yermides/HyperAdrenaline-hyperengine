@@ -99,6 +99,10 @@ INCDIRS			:= -I$(LIB) -I$(LIB)/imgui -I$(SRC) -I/usr/include/GL/ -I/usr/include/
 ## Tools
 MKDIR		:= mkdir -p
 
+ifdef ASAN
+	CCFLAGS += -fsanitize=address
+endif
+
 #---------------------------------#
 # DEPENDECIES AND GENERATED RULES #
 #---------------------------------#
