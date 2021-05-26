@@ -17,20 +17,20 @@ struct ECamera : public Entity
 
 	void draw(glm::mat4 const& transform) final;
 
-	// TODO::
 	inline void setPerspective(float fov = 45.0f, float ratio = 16.0f/9.0f, float zNear = 0.1f, float zFar = 1000.f) noexcept
 	{ 
 		m_isPerspective = true;
 		m_projection = glm::perspective(glm::radians(fov), ratio, zNear, zFar);
 	}	
 
-	// TODO:: casi, pero no
 	inline void setParallel(float fov = 45.0f, float ratio = 16.0f/9.0f, float zNear = 0.1f, float zFar = 1000.f) noexcept
 	{ 
 		m_isPerspective = false;
 		float ratio_size_per_depth = atan(glm::radians(fov / 2.0f)) * 2.0f;
+
 		// auto distance = glm::length(mTarget - mEye);
 		auto distance = glm::length(glm::vec3(0,0,100));
+		
 		float aspect = ratio;
 		float size_y = ratio_size_per_depth * zFar;
 		float size_x = ratio_size_per_depth * zFar * aspect;

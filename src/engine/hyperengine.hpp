@@ -296,6 +296,8 @@ struct HyperEngine
 
     void setWindowActive(bool const value); 
 
+    void setWindowFullScreen(bool const value);
+
     // Optimizaciones de renderizado
 
     void enableZBuffer(int const method = GL_LESS);
@@ -309,8 +311,6 @@ struct HyperEngine
     // Físicas
 
     void updatePhysics(float const deltatime = 1.0f / 60.0f);
-
-    // Las crea como objeto estático, TODO:: hacer una función para objetos estáticos, cinemáticos y dinámicos
 
     // Función llamada por todas las que crean rigidbody, sea static, kinematic o dynamic
     void createPhysicPropertiesRigidBody(

@@ -1,7 +1,7 @@
 #pragma once
 #include <iostream>
 
-#define __HYPER_ENGINE_LOG_SYSTEM
+// #define __HYPER_ENGINE_LOG_SYSTEM
 
 #ifdef  __HYPER_ENGINE_LOG_SYSTEM
     #define LOG(x)      std::cout << x << "\n";

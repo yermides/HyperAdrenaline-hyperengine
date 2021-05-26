@@ -354,6 +354,15 @@ void test_normal_mapping(void)
             if(engine->getKeyContinuousPress(GLFW_KEY_SPACE))           camnode->translate(glm::vec3{  0.0f,  camSpeed,  0.0f} * dt);
             if(engine->getKeyContinuousPress(GLFW_KEY_LEFT_CONTROL))    camnode->translate(glm::vec3{  0.0f, -camSpeed,  0.0f} * dt);  
 
+            if(engine->getKeyContinuousPress(GLFW_KEY_1))
+            {
+                engine->setWindowFullScreen(true);
+            } 
+            if(engine->getKeyContinuousPress(GLFW_KEY_2))
+            {
+                engine->setWindowFullScreen(false);
+            } 
+
             camnode->setCameraTarget({0,0,0});
             engine->updatePhysics(deltaTime);
 

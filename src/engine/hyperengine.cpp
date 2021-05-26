@@ -126,7 +126,7 @@ HyperEngine::drawScene(void)
 	auto camentity = camnode->getEntityAsCamera();
 	auto camerashader = camentity->getShader();
 
-	// TODO:: luces
+	// Luces
 	int count {0};			// Para no cambiar el range-for loop
 	int numDirLights {0};
 	int numPointLights {0};
@@ -159,16 +159,10 @@ HyperEngine::drawScene(void)
 			{
 				// INFOLOG("Luz puntual!");
 
-				// esto debería de pasarse en Emodel
-				// para saber por cada modelo si debe usar la luz o la textura difusa
 				lightshader->bind();
 
 				lightshader->setInt("numPointLights", numPointLights + 1);
 				lightshader->setVec3("viewPos", viewPos);
-
-				// Estos ya no se usan, pero por si acaso quiero volver al shader de materiales
-				// lightshader->setInt("usesLightning", 1);
-				// lightshader->setVec3("lightColor", lightColor);
 
 				lightshader->setVec3("pointLights["+ std::to_string(numPointLights) +"].position", lightPos);
 				lightshader->setVec3("pointLights["+ std::to_string(numPointLights) +"].ambient", lightentity->getIntensity().ambient);
@@ -178,8 +172,6 @@ HyperEngine::drawScene(void)
 				lightshader->setFloat("pointLights["+ std::to_string(numPointLights) +"].linear", lightentity->getAttenuation().linear);
 				lightshader->setFloat("pointLights["+ std::to_string(numPointLights) +"].quadratic", lightentity->getAttenuation().quadratic);
 				
-				// esto ni se llama así, TODO:: implementar bien el pasar el dato a opengl
-				// lightshader->setMat4("lightmatrix", lightmatrix);
 				lightshader->unbind();
 
 				++numPointLights;
@@ -600,6 +592,21 @@ HyperEngine::setWindowActive(bool const value)
 	glfwSetWindowShouldClose(m_window, !value);
 }
 
+void 
+HyperEngine::setWindowFullScreen(bool const value)
+{
+	
+	if(value)
+	{
+		const GLFWvidmode * mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+		glfwSetWindowMonitor(m_window, glfwGetPrimaryMonitor(), 0, 0, mode->width, mode->height, 0);
+	}
+	else
+	{
+		auto size = getWindowSize();
+		glfwSetWindowMonitor( m_window, nullptr,  0, 0, size.x, size.y, 0 );
+	}
+}
 
 void 
 HyperEngine::enableZBuffer(int const method)
@@ -887,7 +894,7 @@ HyperEngine::createPhysicPropertiesKinematicCharacterController(
     charCon->setGravity(m_world->getGravity());
 
     // m_world->addCollisionObject(ghostObj, btBroadphaseProxy::CharacterFilter, btBroadphaseProxy::AllFilter);
-    m_world->addCollisionObject(ghostObj, 0, collisionMaskFlags);
+    m_world->addCollisionObject(ghostObj, 1, collisionMaskFlags);
     m_world->addAction(charCon);
     charCon->setMaxJumpHeight(jumpHeight);
 
@@ -909,11 +916,12 @@ HyperEngine::createGhostObject(btCollisionShape* pShape, btVector3 pOrigin)
     startTransform.setIdentity();
     startTransform.setOrigin(pOrigin);
 
+	// quizá esto se hace dos veces y se sobreescribe en el characterController, TODO:: comprobar
 	m_world->getBroadphase()->getOverlappingPairCache()->setInternalGhostPairCallback(new btGhostPairCallback());
+
 	ghostObject->setCollisionShape(pShape);
 	m_world->addCollisionObject(ghostObject);
 
-	// quizá esto se hace dos veces y se sobreescribe en el characterController, TODO:: comprobar
 
 	return ghostObject;
 }
@@ -928,6 +936,7 @@ HyperEngine::createPhysicPropertiesGhostObject(Node* node, btCollisionShape* pSh
 	auto trans = util::glmVec3TobtVec3(node->getTranslation());
     startTransform.setOrigin(trans);
 
+	// quizá esto se hace dos veces y se sobreescribe en el characterController, TODO:: comprobar
 	m_world->getBroadphase()->getOverlappingPairCache()->setInternalGhostPairCallback(new btGhostPairCallback());
 
 	ghostObject->setWorldTransform(startTransform);
@@ -941,7 +950,6 @@ HyperEngine::createPhysicPropertiesGhostObject(Node* node, btCollisionShape* pSh
 	prop->m_data.ghostObj = ghostObject;
 	node->setPhysicProperties(prop);
 
-	// quizá esto se hace dos veces y se sobreescribe en el characterController, TODO:: comprobar
 
 	return ghostObject;
 }

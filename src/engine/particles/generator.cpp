@@ -11,11 +11,8 @@ ParticleGenerator::ParticleGenerator(RShader* shader, int size)
 :   m_shader(shader)
 ,   m_maxsize(size)
 {
-    // anterior TODO:: falta cargar e initialize() de la textura
-    // ahora:  pls parametrizar
+    // TODO:: no usar, usar el constructor de cInfo
     m_texture = ResourceManager::getResource_t<RTexture>("assets/particles/particle.DDS");
-    // m_texture = ResourceManager::getResource_t<RTexture>("assets/particles/smoke.png");
-    // m_texture = ResourceManager::getResource_t<RTexture>("assets/particles/enlazame-esta.png");
     
     m_texture->initialize();
 

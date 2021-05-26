@@ -137,7 +137,7 @@ RMesh::loadMesh(std::string const& filepath)
         mesh->m_indices.resize(mesh->m_indices.size());
 
         // Guardar texturas y materiales
-        // TODO:: mejorar los materiales (irse al RMaterial::draw() y considerar más texturas aparte de la difusa)
+        // TODO:: irse al RMaterial::draw() y considerar más texturas como el normal mapping
         auto* amaterial = scene->mMaterials[amesh->mMaterialIndex];
         RMaterial* rmaterial = new RMaterial(amaterial, getDirectory());
         mesh->m_materials.push_back(rmaterial);
