@@ -1,4 +1,14 @@
 ## HyperAdrenaline's Hyperengine
+
+Though reusable, this was created for a University Project that you can find here:
+
+- Windows 
+- https://archive.org/details/hyper-adrenaline
+- Linux
+- https://archive.org/details/hyper-adrenaline-linux
+- Twitter
+- https://twitter.com/Hard_Bytes
+
 # OpenGl engine
 
 This is an OpenGL-based game engine build from scratch.
@@ -21,7 +31,7 @@ and go from there.
 
 There is included a main.cpp for testing purposes, though will not have my test assets, try using a .obj and loading it or some other things :).
 
-If you want to use this as a library, you will need all other dependencies to be linked. Also give proper credits.
+If you want to use this as a library, you will need all other dependencies to be linked. Also remember to give proper credits.
 
 Shaders are build-in, as this is a university project.
 
