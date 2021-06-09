@@ -1,0 +1,76 @@
+# Blender MTL File: 'door-1.blend'
+# Material Count: 6
+
+newmtl Lclose
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.000000 0.600627
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump texture\\doorLocked\\doors-1-both_Lclose_Normal.png
+map_Kd texture\\doorLocked\\doors-1-both_Lclose_BaseColor.png
+map_Ns texture\\doorLocked\\doors-1-both_Lclose_Roughness.png
+
+newmtl Lframe
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.012433 0.800000 0.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd texture\\doorLocked\\doors-1-both_Lframe_BaseColor.png
+
+newmtl Linner
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.005769 0.000000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd texture\\doorLocked\\doors-1-both_Linner_BaseColor.png
+map_Ns texture\\doorLocked\\doors-1-both_Linner_Roughness.png
+refl texture\\doorLocked\\doors-1-both_Linner_Metallic.png
+
+newmtl Rclose
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.000000 0.620096
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump texture\\doorLocked\\doors-1-both_Rclose_Normal.png
+map_Kd texture\\doorLocked\\doors-1-both_Rclose_BaseColor.png
+map_Ns texture\\doorLocked\\doors-1-both_Rclose_Roughness.png
+
+newmtl Rframe
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.000526 0.800000 0.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd texture\\doorLocked\\doors-1-both_Rframe_BaseColor.png
+
+newmtl Rinner
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.000000 0.002103 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd texture\\doorLocked\\doors-1-both_Rinner_BaseColor.png
+map_Ns texture\\doorLocked\\doors-1-both_Rinner_Roughness.png
+refl texture\\doorLocked\\doors-1-both_Rinner_Metallic.png

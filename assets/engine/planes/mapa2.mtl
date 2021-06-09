@@ -1,0 +1,121 @@
+# Blender MTL File: 'None'
+# Material Count: 11
+
+newmtl Cables
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.771232 0.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Kd ProyectoABP/HyperAdrenaline-hyperengine/assets/texture/pasillosPeque/Cables.jpg
+
+newmtl ParedEntrenamiento.001
+Ns 225.000000
+Ka 0.829787 0.829787 0.829787
+Kd 0.800000 0.067500 0.091408
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 3
+map_Kd ProyectoABP/HyperAdrenaline-hyperengine/assets/texture/salaEntrenamiento/ParedEntrenamiento_baseColor.jpg
+
+newmtl Suelo.001
+Ns 165.697124
+Ka 0.170213 0.170213 0.170213
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 3
+map_Kd ProyectoABP/HyperAdrenaline-hyperengine/assets/texture/generalmap/texture_floor.jpg
+
+newmtl Suelo.002
+Ns 165.697124
+Ka 0.170213 0.170213 0.170213
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 3
+map_Kd ProyectoABP/HyperAdrenaline-hyperengine/assets/texture/generalmap/texture_floor.jpg
+
+newmtl TechoEntrenamiento.001
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump ProyectoABP/HyperAdrenaline-hyperengine/assets/texture/salaEntrenamiento/TechoEntrenamiento_normal.png
+map_Kd ProyectoABP/HyperAdrenaline-hyperengine/assets/texture/salaEntrenamiento/TechoEntrenamiento_metallic.jpg
+
+newmtl decoracion.001
+Ns 225.000000
+Ka 0.248227 0.248227 0.248227
+Kd 0.119276 0.119276 0.119276
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 3
+
+newmtl murosEntrenamiento.001
+Ns 225.000000
+Ka 0.113475 0.113475 0.113475
+Kd 0.406882 0.800000 0.060253
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 3
+map_Kd ProyectoABP/HyperAdrenaline-hyperengine/assets/texture/salaEntrenamiento/muros_baseColor.jpg
+
+newmtl murospasillo
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd ProyectoABP/HyperAdrenaline-hyperengine/assets/texture/pasillosPeque/textura-metal.jpeg
+
+newmtl pasilloRojo
+Ns 10.875963
+Ka 1.000000 1.000000 1.000000
+Kd 0.200000 0.200000 0.200000
+Ks 0.124113 0.124113 0.124113
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+
+newmtl pasilloVerde
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.200000 0.200000 0.200000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+
+newmtl techoPasillo
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd ProyectoABP/HyperAdrenaline-hyperengine/assets/texture/pasillosPeque/techo.png

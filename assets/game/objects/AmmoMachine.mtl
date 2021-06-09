@@ -1,0 +1,85 @@
+# Blender MTL File: 'maquina.blend'
+# Material Count: 7
+
+newmtl Boton
+Ns 35.000008
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.022455 0.007598
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump texture\\MaquinaAmmo\\Boton_normal.png
+map_Ns texture\\MaquinaAmmo\\Boton_roughness.jpg
+map_Kd texture\\MaquinaAmmo\\Boton_baseColor.jpg
+
+newmtl Cable
+Ns 35.000008
+Ka 1.000000 1.000000 1.000000
+Kd 0.005236 0.800000 0.009391
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Ns texture\\MaquinaAmmo\\Cable_roughness.jpg
+map_Kd texture\\MaquinaAmmo\\Cable_baseColor.jpg
+
+newmtl Maquina
+Ns 35.000008
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.214895 0.006997
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump texture\\MaquinaAmmo\\Maquina_normal.png
+map_Kd texture\\MaquinaAmmo\\Maquina_baseColor.jpg
+
+newmtl Mirror
+Ns 35.000008
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump texture\\MaquinaAmmo\\Pantalla_normal.png
+map_Kd texture\\MaquinaAmmo\\Pantalla_baseColor.jpg
+
+newmtl Numeros
+Ns 35.000008
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd texture\\MaquinaAmmo\\numpad-specular.png
+
+newmtl Power
+Ns 35.000008
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.544722 0.035120
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd texture\\MaquinaAmmo\\Conector_baseColor.jpg
+
+newmtl Shop
+Ns 35.000008
+Ka 1.000000 1.000000 1.000000
+Kd 0.788218 0.800000 0.029471
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump texture\\MaquinaAmmo\\Señal_normal.png
+map_Kd texture\\MaquinaAmmo\\Señal_baseColor.jpg

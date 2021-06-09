@@ -1,0 +1,83 @@
+# Blender MTL File: 'maquinahealth.blend'
+# Material Count: 7
+
+newmtl Boton
+Ns 30.000009
+Ka 0.418440 0.418440 0.418440
+Kd 0.800000 0.022455 0.007598
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 3
+map_Ns texture\\MaquinaHealth\\Boton_roughness.jpg
+map_Kd texture\\MaquinaHealth\\Boton_baseColor.jpg
+
+newmtl Cable
+Ns 30.000009
+Ka 1.000000 1.000000 1.000000
+Kd 0.005236 0.800000 0.009391
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd texture\\MaquinaHealth\\Cable_baseColor.jpg
+
+newmtl Cristal
+Ns 727.196863
+Ka 0.382979 0.382979 0.382979
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 3
+map_Bump texture\\MaquinaHealth\\Pantalla_normal.png
+map_Kd texture\\MaquinaHealth\\Pantalla_baseColor.jpg
+
+newmtl Maquina
+Ns 30.000009
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.214895 0.006997
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump texture\\MaquinaHealth\\Maquina_normal.png
+map_Ns texture\\MaquinaHealth\\Maquina_roughness.jpg
+map_Kd texture\\MaquinaHealth\\Maquina_baseColor.jpg
+
+newmtl Numeros
+Ns 30.000009
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd texture\\MaquinaAmmo\\numpad-specular.png
+
+newmtl Power
+Ns 30.000009
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.544722 0.035120
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd texture\\MaquinaAmmo\\Conector_baseColor.jpg
+
+newmtl Shop
+Ns 30.000009
+Ka 1.000000 1.000000 1.000000
+Kd 0.788218 0.800000 0.029471
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd texture\\MaquinaHealth\\health.png
