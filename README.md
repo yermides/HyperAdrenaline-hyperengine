@@ -19,7 +19,7 @@ Scene nodes can be models, cameras, lights, skyboxes, etc.
 Create a Hyperengine class, then build the typical while loop that checks window's display
 and go from there.
 
-There is included a main.cpp for testing purposes.
+There is included a main.cpp for testing purposes, though will not have my test assets, try using a .obj and loading it or some other things :).
 
 If you want to use this as a library, you will need all other dependencies to be linked. Also give me the proper credits.
 
