@@ -1,10 +1,28 @@
-## Importante
-En esta versión se ha retocado el dibujado de la escena para usar cámaras. Esto hace que, para volver a lo anterior
-se deba copiar la intencionalidad previa de pasarle directamente al rootnode la projection * view
-y de ahí acumulase y enviase la mvp, todo ello sin usar cámaras. 
-(aunque los shaders son iguales en verdad)
-
-## HyperAdrenaline-hyperengine
+## HyperAdrenaline's Hyperengine
 # OpenGl engine
 
-Como no es lo suyo mezclar el proyecto con el motor propio, esto se queda aquí de momento
+This is an OpenGL-based game engine build from scratch.
+
+It uses some technologies like:
+- SOIL, for image loading
+- Assimp, for model loading
+- Bullet, for physics 
+- ImGui, for 2D menu graphics
+- etc.
+
+All credits go to their respective contributors.
+
+# How it works
+
+This engine uses a superclass called Hyperengine to manage the window, input and scene nodes. 
+Scene nodes can be models, cameras, lights, skyboxes, etc.
+Create a Hyperengine class, then build the typical while loop that checks window's display
+and go from there.
+
+There is included a main.cpp for testing purposes.
+
+If you want to use this as a library, you will need all other dependencies to be linked. Also give me the proper credits.
+
+Shaders are build-in, as this is a university project.
+
+If this has helped you, awesome.
