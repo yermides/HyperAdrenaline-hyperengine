@@ -2,6 +2,9 @@
 
 Though reusable, this was created for a University Project that you can find here:
 
+- Itch.io
+- https://hard-bytes.itch.io/hyper-adrenaline
+
 - Windows 
 - https://archive.org/details/hyper-adrenaline
 - Linux
